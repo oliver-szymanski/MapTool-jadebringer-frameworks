@@ -50,9 +50,9 @@ public class OutputToFunction extends AbstractFunction implements PrefixAware {
 	}
 		
 	public void outputTo(Parser parser, String who, String message, boolean defer, String target) throws ParserException {
-		LinkFunction linkFunction = LinkFunction.getInstance();
+	  LinkFunctions linkFunction = LinkFunctions.getInstance();
 		String callbackFunction = "unpackArgs";
-		if (prefix != null) callbackFunction = prefix + callbackFunction;
+		//if (prefix != null) callbackFunction = prefix + callbackFunction;
 		String link = (String)linkFunction.createLink(parser, callbackFunction, who, message, target);
 		linkFunction.execLink(link, false, parser, FunctionCaller.toBoolean(defer));
 	}

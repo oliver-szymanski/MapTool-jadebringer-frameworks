@@ -45,12 +45,12 @@ import net.sf.json.JSONObject;
  * 
  * @author oliver.szymanski
  */
-public class LinkFunction extends AbstractFunction {
-	public LinkFunction() {
-		super(1, UNLIMITED_PARAMETERS, "execLink", "unpackArgs", "createLink");
+public class LinkFunctions extends AbstractFunction {
+	public LinkFunctions() {
+		super(1, UNLIMITED_PARAMETERS, "execLink", "createLink", "createAnchor");
 	}
 
-	private final static LinkFunction instance = new LinkFunction();
+	private final static LinkFunctions instance = new LinkFunctions();
 
 	private final static String[] SPECIAL_OUTPUT_CHANNELS = {"self", "gm", "all", "none", "gm-self" };
 	
@@ -60,7 +60,7 @@ public class LinkFunction extends AbstractFunction {
 		SELF, NONE, GM, ALL, SELF_AND_GM, LIST
 	}
 
-	public static LinkFunction getInstance() {
+	public static LinkFunctions getInstance() {
 		return instance;
 	}
 
@@ -76,16 +76,56 @@ public class LinkFunction extends AbstractFunction {
 			Object message = FunctionCaller.getParam(parameters, 0);
 			execLink((String)message, false, parser, defer);
 			return "";
-		} if ("unpackArgs".equals(functionName)) {
-			Object message = FunctionCaller.getParam(parameters, 0);
-			return JSONObject.fromObject(message).get("args");
 		} else if ("createLink".equals(functionName)) {
 			return createLink(parser, parameters);
-		}
+		} else if ("createAnchor".equals(functionName)) {
+      return createAnchor(parser, parameters);
+    }
 		
 		return "";
 	}
 
+	public Object createAnchor(Parser parser, List<Object> parameters)
+      throws ParserException {
+    String message = FunctionCaller.getParam(parameters, 0, "Click");
+    String linkTo = FunctionCaller.getParam(parameters, 1);
+    String who = FunctionCaller.getParam(parameters, 2, "GM");
+    String args = FunctionCaller.getParam(parameters, 3);
+    String target = FunctionCaller.getParam(parameters, 4, "impersonated");   
+    String image = FunctionCaller.getParam(parameters, 5, "");   
+    String tooltipText = FunctionCaller.getParam(parameters, 6, "");   
+    String cssClass = FunctionCaller.getParam(parameters, 7, "");   
+    return createAnchor(parser, message, linkTo, who, args, target, image, tooltipText, cssClass);
+  }
+	
+	public Object createAnchor(Parser parser, String message, String linkTo, String who, String args, String target, String image, String tooltipText, String cssClass)
+      throws ParserException {
+   
+    if (linkTo == null) who = "ping";
+    if (who == null) who = "GM";
+    if (target == null) target = "impersonated";
+
+    StringBuilder sb = new StringBuilder();
+    
+    sb.append("<span ");
+    if (!StringUtil.isEmpty(tooltipText)) 
+      sb.append("title='<html><b>").append(tooltipText).append("</b></html>'");
+    sb.append("><a ");
+    if (!StringUtil.isEmpty(cssClass))
+      sb.append("class='").append(cssClass).append("' ");
+    sb.append("href='macro://").append(linkTo).append("/");
+    sb.append(who).append("/").append(target).append("?");
+    sb.append(args).append("'>");
+    if (!StringUtil.isEmpty(image)) 
+      sb.append("<img src=").append(image).append("></img");
+    else
+      sb.append("<!-- ").append(image).append(" -->");
+    if (!StringUtil.isEmpty(message)) sb.append(message);
+    sb.append("</a></span>");
+    
+    return sb.toString();
+ 	}
+	
 	public Object createLink(Parser parser, List<Object> parameters)
 			throws ParserException {
 		String linkTo = FunctionCaller.getParam(parameters, 0);

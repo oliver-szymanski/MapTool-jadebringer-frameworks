@@ -79,7 +79,7 @@ import net.rptools.parser.function.ParameterException;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.jadebringer.maptool.frameworks.base.functions.InputFunction.InputType.OptionException;
+import de.jadebringer.maptool.frameworks.base.functions.InputFunctions.InputType.OptionException;
 import de.muntjak.tinylookandfeel.TinyComboBoxButton;
 
 // @formatter:off
@@ -143,18 +143,18 @@ import de.muntjak.tinylookandfeel.TinyComboBoxButton;
  */
 //@formatter:on
 
-public class InputFunction extends AbstractFunction {
+public class InputFunctions extends AbstractFunction {
 	private static final Pattern ASSET_PATTERN = Pattern.compile("^(.*)asset://(\\w+)");
 
 	/** The singleton instance. */
-	private final static InputFunction instance = new InputFunction();
+	private final static InputFunctions instance = new InputFunctions();
 
-	private InputFunction() {
+	private InputFunctions() {
 		super(1, -1, "inputYesNoCancel", "inputOKCancel");
 	}
 
 	/** Gets the singleton instance. */
-	public static InputFunction getInstance() {
+	public static InputFunctions getInstance() {
 		return instance;
 	}
 

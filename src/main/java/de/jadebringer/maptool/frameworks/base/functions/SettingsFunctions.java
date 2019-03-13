@@ -23,14 +23,14 @@ import net.rptools.parser.function.AbstractFunction;
  * 
  * @author oliver.szymanski
  */
-public class SettingsFunction extends AbstractFunction {
-	public SettingsFunction() {
+public class SettingsFunctions extends AbstractFunction {
+	public SettingsFunctions() {
 		super(0, 3, "setSetting", "getSetting", "deleteSetting", "listSettings");
 	}
 
-	private final static SettingsFunction instance = new SettingsFunction();
+	private final static SettingsFunctions instance = new SettingsFunctions();
 
-	public static SettingsFunction getInstance() {
+	public static SettingsFunctions getInstance() {
 		return instance;
 	}
 
@@ -68,6 +68,8 @@ public class SettingsFunction extends AbstractFunction {
 	public void setSetting(Parser parser, String key, Object value, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
+		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+    
 		List<Object> parameters = FunctionCaller.toObjectList(
 				key, value, tokenName);
 		tpFunc.evaluate(parser, "setLibProperty", parameters);
@@ -76,6 +78,8 @@ public class SettingsFunction extends AbstractFunction {
 	public void deleteSetting(Parser parser, String key, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
+		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+    
 		List<Object> parameters = FunctionCaller.toObjectList(
 				key, tokenName);
 		tpFunc.evaluate(parser, "resetProperty", parameters);
@@ -83,6 +87,8 @@ public class SettingsFunction extends AbstractFunction {
 	
 	public Object getSetting(Parser parser, String key, Object defaultValue, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
+		
+		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
 		
 		List<Object> parameters = FunctionCaller.toObjectList(
 				key, tokenName);
@@ -98,6 +104,8 @@ public class SettingsFunction extends AbstractFunction {
 	public Object listSettings(Parser parser, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
+		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+    
 		List<Object> parameters = FunctionCaller.toObjectList(
 				".*", tokenName);
 		String names = (String)tpFunc.evaluate(parser, "getMatchingLibProperties", parameters);

@@ -8,9 +8,13 @@
  */
 package de.jadebringer.maptool.frameworks.base.chatmacros;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import net.rptools.maptool.client.MapTool;
+import net.rptools.maptool.client.MapToolLineParser;
 import net.rptools.maptool.client.MapToolMacroContext;
-import net.rptools.maptool.client.macro.Macro;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.parser.ParserException;
@@ -25,20 +29,47 @@ import net.rptools.parser.ParserException;
 		aliases = { "call" },
 		description = "call.description",
 		expandRolls = false)
-public class CallMacro implements Macro {
+public class CallMacro extends ExtensionChatMacro {
 	
-	public void execute(MacroContext context, String code, MapToolMacroContext executionContext) {
+	public CallMacro() {
+    super(false);
+  }
+
+  public void run(MacroContext context, String code, MapToolMacroContext executionContext) {
 		if (code == null || code.trim().length() == 0) {
 			return;
 		}
 		if (code.indexOf("(")<0) {
 			code = code+"()";
 		}
+		
+		final String executionCode = "[r: "+code+"]";
 
+	  if (executionContext == null) {
+		    executionContext = new MapToolMacroContext(
+                MapToolLineParser.CHAT_INPUT,
+                MapToolLineParser.CHAT_INPUT,
+                MapTool.getPlayer().isGM());
+	  }
+		MapTool.getParser().enterContext(executionContext);
+    
 		try {
-			MapTool.getParser().enterContext(null);
-			String result = MapTool.getParser().parseLine("[r: "+code+"]");
-			if (result != null) MapTool.addLocalMessage(result.toString());
+			String result;
+      try {
+        result = AccessController.doPrivileged((PrivilegedAction<String>) () -> {
+          try {
+            return MapTool.getParser().parseLine(executionCode);
+          }
+          catch (Exception e) {
+              throw new RuntimeException(e);
+          }
+        });
+
+      } catch (Throwable e) {
+        throw new ParserException(e);
+      }
+			    
+			if (result != null && result.length()>0) MapTool.addLocalMessage(result.toString());
 		} catch (ParserException e) {
 			MapTool.showError(null, e);
 		} finally {

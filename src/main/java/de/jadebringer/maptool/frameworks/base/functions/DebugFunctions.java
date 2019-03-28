@@ -9,25 +9,47 @@
 package de.jadebringer.maptool.frameworks.base.functions;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import com.jidesoft.grid.PropertyTable;
+import de.jadebringer.maptool.frameworks.base.ui.PropertiesTableModel;
+import de.jadebringer.maptool.frameworks.base.ui.WordWrapCellRenderer;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.FrameworksFunctions.FunctionCaller;
+import net.rptools.maptool.client.MapToolVariableResolver;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.maptool.language.I18N;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
-import net.rptools.parser.function.AbstractFunction;
 
 /**
  * 
  * @author oliver.szymanski
  */
-public class DebugFunctions extends AbstractFunction {
+public class DebugFunctions extends ExtensionFunction {
 	public DebugFunctions() {
-		super(0, UNLIMITED_PARAMETERS, "isDebug", "debug", "trace", "isTrace", "setDebug", "setTrace", "cc");
+		super(false, 
+		    Alias.create("manipulate"), 
+		    Alias.create("inspect"), 
+		    Alias.create("isDebug", 0, 0), 
+		    Alias.create("debug"), 
+		    Alias.create("trace"), 
+		    Alias.create("isTrace", 0, 0), 
+		    Alias.create("setDebug", 1, 1), 
+		    Alias.create("setTrace", 1, 1), 
+		    Alias.create("cc"), 
+		    Alias.create("warn"), 
+		    Alias.create("error"));
 	}
 
 	private final static DebugFunctions instance = new DebugFunctions();
+	private final static String[] DEFAULT_VARIABLES = { "macro.args", "macro.args.num", "macro.catchAbort", "macro.catchAssert" };
+
 	private final SettingsFunctions settingsFunctions = SettingsFunctions.getInstance();
   
 	public static DebugFunctions getInstance() {
@@ -35,7 +57,7 @@ public class DebugFunctions extends AbstractFunction {
 	}
 
 	@Override
-	public Object childEvaluate(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
 		if (!MapTool.getParser().isMacroTrusted()) {
 			throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
@@ -51,40 +73,52 @@ public class DebugFunctions extends AbstractFunction {
 			return isDebug(parser);
 		} else if ("isTrace".equals(functionName)) {
       return isTrace(parser);
+    } else if ("inspect".equals(functionName)) {
+      return inspect(parser, parameters);
+    } else if ("manipulate".equals(functionName)) {
+      return manipulate(parser, parameters);
     } else if ("debug".equals(functionName)) {
       if (BigDecimal.ONE.equals(isDebug(parser))) {
-        StringBuilder sb = new StringBuilder();
-        for(Object parameter : parameters) {
-          sb.append(parameter.toString());
-        }
-        
-        MapTool.addLocalMessage("DEBUG:" + sb.toString());
+        String result = concatenateParametersToString(parameters);
+        MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
-    } else if ("trade".equals(functionName)) {
+    } else if ("warn".equals(functionName)) {
+      String result = concatenateParametersToString(parameters);
+      MapTool.addLocalMessage("WARN:" + result);
+      return "";
+    } else if ("error".equals(functionName)) {
+      String result = concatenateParametersToString(parameters);
+      MapTool.addLocalMessage("ERROR:" + result);
+      return "";
+    } else if ("trace".equals(functionName)) {
       if (BigDecimal.ONE.equals(isTrace(parser))) {
-        StringBuilder sb = new StringBuilder();
-        for(Object parameter : parameters) {
-          sb.append(parameter.toString());
-        }
-        
-        MapTool.addLocalMessage("DEBUG:" + sb.toString());
+        String result = concatenateParametersToString(parameters);
+        MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
     } else if ("cc".equals(functionName)) {
       if (BigDecimal.ONE.equals(isTrace(parser))) {
-        StringBuilder sb = new StringBuilder();
-        for(Object parameter : parameters) {
-          sb.append(parameter.toString());
-        }
-        
-        MapTool.addLocalMessage("CC reached:" + sb.toString());
+        String result = concatenateParametersToString(parameters);
+        MapTool.addLocalMessage("CC reached:" + result);
       }
       return "";
     }
 	
 		return "";
 	}
+
+  private String concatenateParametersToString(List<Object> parameters) {
+    if (parameters == null || parameters.size() == 0) {
+      return "";
+    }
+    
+    StringBuilder sb = new StringBuilder();
+    for(Object parameter : parameters) {
+      sb.append(parameter.toString());
+    }
+    return sb.toString();
+  }
 
   private Object setTrace(Parser parser, BigDecimal traceEnabled)
       throws ParserException {
@@ -113,5 +147,116 @@ public class DebugFunctions extends AbstractFunction {
       return BigDecimal.ZERO;
     }
   }
+  
+  private Object inspect(Parser parser, List<Object> parameters) throws ParserException {
+    inspector(parser, true, parameters);
+    return "OK";
+  }
 
+  private Object manipulate(Parser parser, List<Object> parameters) throws ParserException {
+    return inspector(parser, false, parameters);
+  }
+  
+  private Object inspector(Parser parser, boolean watch, List<Object> parameters) throws ParserException {
+    MapToolVariableResolver resolver = (MapToolVariableResolver)parser.getVariableResolver();
+    boolean autoPrompt = resolver.getAutoPrompt();
+    resolver.setAutoPrompt(false);
+    
+    // get variables defined in params
+    List<PropertiesTableModel.PropertyModel> props = new LinkedList<>();
+    parameters.stream().forEach(p -> {
+      try {
+        Object value = resolver.getVariable(p.toString());
+        props.add(new PropertiesTableModel.PropertyModel(p.toString(), value));
+      } catch (Exception e) {
+        // safe to ignore
+        props.add(new PropertiesTableModel.PropertyModel(p.toString(), null));
+      }
+    });
+    
+    // add default variables
+    for(String variable : DEFAULT_VARIABLES) {
+      Object value = resolver.getVariable(variable);
+      props.add(new PropertiesTableModel.PropertyModel(variable, value));
+    }
+    resolver.setAutoPrompt(autoPrompt);
+    
+    PropertiesTableModel model = new PropertiesTableModel(props);
+    PropertiesTableModel.PropertyModel selected = null;
+    if (props.size() > 0) { selected = props.get(0); }
+    final InspectTable inspectTable = new InspectTable(model, selected, !watch);
+    
+    int buttons;
+    if (watch) {
+      buttons = JOptionPane.DEFAULT_OPTION;
+    } else {
+      buttons = JOptionPane.OK_CANCEL_OPTION;
+    }
+
+    JOptionPane jop = new JOptionPane(new JScrollPane(inspectTable), JOptionPane.INFORMATION_MESSAGE, buttons);
+    JDialog dlg = jop.createDialog(MapTool.getFrame(), "Inspector");
+    dlg.setResizable(true);
+    
+    Runnable openInspector = new Runnable() {
+      @Override
+      public void run() {
+        dlg.setVisible(true); // this opens the dialog
+        dlg.dispose();        
+        // if required set up callbacks needed for desired runtime behavior
+        //dlg.addComponentListener(new FixupComponentAdapter(ip));
+      }
+    };
+    
+    if (watch) {
+      SwingUtilities.invokeLater(openInspector);
+    } else {
+      openInspector.run();
+      try {
+        int dlgResult = (Integer) jop.getValue();
+        if (dlgResult == JOptionPane.OK_OPTION) {
+          
+          // set the changed variables
+          for (Object row : model.getProperties(true)) {
+            if (row instanceof PropertiesTableModel.PropertyModel) {
+              PropertiesTableModel.PropertyModel p = (PropertiesTableModel.PropertyModel) row;
+              if (p.isDirty()) {
+                String variable = p.getName();
+                Object newValue = p.getValue();
+                parser.getVariableResolver().setVariable(variable, newValue);
+              }
+            }
+          }
+          MapTool.addLocalMessage("variable added");
+        }
+      } catch (NullPointerException npe) {
+      }
+    }
+    
+    return "OK";
+  }
+  
+  static protected class InspectTable extends PropertyTable
+  {
+    private static final long serialVersionUID = 1689554114150152927L;
+    boolean valuesEditable = false;
+    private final WordWrapCellRenderer cellRenderer = new WordWrapCellRenderer();
+    
+    public InspectTable(PropertiesTableModel model, PropertiesTableModel.PropertyModel select, boolean valuesEditable)
+    {
+      super(model);
+      this.valuesEditable = valuesEditable;
+      //this.setCellEditor(new MultilineStringCellEditor());
+      this.setDefaultRenderer(String.class, cellRenderer);
+      this.setDefaultRenderer(Object.class, cellRenderer);   
+      if (select != null) {
+        setSelectedProperty(select);
+      }
+    } 
+    
+    @Override
+    public boolean isCellEditable(int row, int column) {
+      if (column == 1) { return valuesEditable; }
+      return false;
+    };
+  }
 }

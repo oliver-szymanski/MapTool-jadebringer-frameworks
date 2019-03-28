@@ -23,9 +23,10 @@ import net.rptools.lib.MD5Key;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
-import net.rptools.maptool.client.functions.FrameworksFunctions.FunctionCaller;
 import net.rptools.maptool.client.functions.JSONMacroFunctions;
 import net.rptools.maptool.client.functions.MacroLinkFunction;
+import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.GUID;
@@ -37,7 +38,6 @@ import net.rptools.maptool.model.Zone;
 import net.rptools.maptool.util.StringUtil;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
-import net.rptools.parser.function.AbstractFunction;
 import net.rptools.parser.function.Function;
 import net.sf.json.JSONObject;
 
@@ -45,9 +45,9 @@ import net.sf.json.JSONObject;
  * 
  * @author oliver.szymanski
  */
-public class LinkFunctions extends AbstractFunction {
+public class LinkFunctions extends ExtensionFunction {
 	public LinkFunctions() {
-		super(1, UNLIMITED_PARAMETERS, "execLink", "createLink", "createAnchor");
+		super(false, Alias.create("execLink"), Alias.create("createLink"), Alias.create("createAnchor"));
 	}
 
 	private final static LinkFunctions instance = new LinkFunctions();
@@ -65,16 +65,16 @@ public class LinkFunctions extends AbstractFunction {
 	}
 
 	@Override
-	public Object childEvaluate(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 		
 		if ("execLink".equals(functionName)) {
 			if (!MapTool.getParser().isMacroTrusted()) {
 				throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
 			}
 
-			boolean defer = FunctionCaller.getParam(parameters, 1, false);
 			Object message = FunctionCaller.getParam(parameters, 0);
-			execLink((String)message, false, parser, defer);
+      boolean defer = FunctionCaller.getParam(parameters, 1, false);
+      execLink((String)message, false, parser, defer);
 			return "";
 		} else if ("createLink".equals(functionName)) {
 			return createLink(parser, parameters);

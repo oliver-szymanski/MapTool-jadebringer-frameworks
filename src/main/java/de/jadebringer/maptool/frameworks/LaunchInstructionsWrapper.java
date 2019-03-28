@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.rptools.maptool.client.LaunchInstructions;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.FrameworksFunctions;
+import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions;
 import net.rptools.parser.function.Function;
 
 public class LaunchInstructionsWrapper {

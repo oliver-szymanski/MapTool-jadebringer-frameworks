@@ -11,21 +11,24 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import java.util.List;
 
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.FrameworksFunctions.FunctionCaller;
 import net.rptools.maptool.client.functions.TokenPropertyFunctions;
-import net.rptools.maptool.language.I18N;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.maptool.model.Token;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
-import net.rptools.parser.function.AbstractFunction;
 
 /**
  * 
  * @author oliver.szymanski
  */
-public class SettingsFunctions extends AbstractFunction {
+public class SettingsFunctions extends ExtensionFunction {
 	public SettingsFunctions() {
-		super(0, 3, "setSetting", "getSetting", "deleteSetting", "listSettings");
+		super(true, 
+		    Alias.create("setSetting", 2, 3), 
+		    Alias.create("getSetting", 1 ,2), 
+		    Alias.create("deleteSetting", 1, 1), 
+		    Alias.create("listSettings", 0, 0));
 	}
 
 	private final static SettingsFunctions instance = new SettingsFunctions();
@@ -35,18 +38,14 @@ public class SettingsFunctions extends AbstractFunction {
 	}
 
 	@Override
-	public Object childEvaluate(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-		if (!MapTool.getParser().isMacroTrusted()) {
-			throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
-		}
-		
 		if ("setSetting".equals(functionName)) {
 			String key = FunctionCaller.getParam(parameters, 0);
 			Object value = FunctionCaller.getParam(parameters, 1);
 			String tokenName = FunctionCaller.getParam(parameters, 2,"Lib:JadebringerSettings");
 			setSetting(parser, key, value, tokenName);
-			return "";
+			return key + " = " + value;
 		} else if ("getSetting".equals(functionName)) {
 			String key = FunctionCaller.getParam(parameters, 0);
 			Object defaultValue = FunctionCaller.getParam(parameters, 1);
@@ -56,7 +55,7 @@ public class SettingsFunctions extends AbstractFunction {
 			String key = FunctionCaller.getParam(parameters, 0);
 			String tokenName = FunctionCaller.getParam(parameters, 1,"Lib:JadebringerSettings");
 			deleteSetting(parser, key, tokenName);
-			return "";
+			return key + " deleted";
 		} else if ("listSettings".equals(functionName)) {
 			String tokenName = FunctionCaller.getParam(parameters, 0,"Lib:JadebringerSettings");
 			return listSettings(parser, tokenName);
@@ -70,9 +69,7 @@ public class SettingsFunctions extends AbstractFunction {
 		
 		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
     
-		List<Object> parameters = FunctionCaller.toObjectList(
-				key, value, tokenName);
-		tpFunc.evaluate(parser, "setLibProperty", parameters);
+		FunctionCaller.callFunction("setLibProperty", tpFunc, parser, key, value, tokenName);
 	}
 	
 	public void deleteSetting(Parser parser, String key, String tokenName) throws ParserException {
@@ -80,9 +77,7 @@ public class SettingsFunctions extends AbstractFunction {
 		
 		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
     
-		List<Object> parameters = FunctionCaller.toObjectList(
-				key, tokenName);
-		tpFunc.evaluate(parser, "resetProperty", parameters);
+    FunctionCaller.callFunction("resetProperty", tpFunc, parser, key, tokenName);
 	}
 	
 	public Object getSetting(Parser parser, String key, Object defaultValue, String tokenName) throws ParserException {
@@ -90,10 +85,8 @@ public class SettingsFunctions extends AbstractFunction {
 		
 		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
 		
-		List<Object> parameters = FunctionCaller.toObjectList(
-				key, tokenName);
-		Object result = tpFunc.evaluate(parser, "getLibProperty", parameters);
-		
+		Object result = FunctionCaller.callFunction("getLibProperty", tpFunc, parser, key, tokenName);
+
 		if ("".equals(result) && defaultValue != null) {
 			result = defaultValue;
 		}
@@ -106,10 +99,8 @@ public class SettingsFunctions extends AbstractFunction {
 		
 		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
     
-		List<Object> parameters = FunctionCaller.toObjectList(
-				".*", tokenName);
-		String names = (String)tpFunc.evaluate(parser, "getMatchingLibProperties", parameters);
-		
+		String names = (String)FunctionCaller.callFunction("getMatchingLibProperties", tpFunc, parser, ".*", tokenName);
+
 		Token token = MapTool.getParser().getTokenMacroLib(tokenName);
 		//JSONObject result = new JSONObject();
 		StringBuilder sb = new StringBuilder();

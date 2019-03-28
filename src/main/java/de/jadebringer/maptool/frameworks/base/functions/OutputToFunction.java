@@ -11,19 +11,18 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import java.math.BigDecimal;
 import java.util.List;
 
-import net.rptools.maptool.client.functions.FrameworksFunctions.FunctionCaller;
-import net.rptools.maptool.client.functions.FrameworksFunctions.PrefixAware;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
-import net.rptools.parser.function.AbstractFunction;
 
 /**
  * 
  * @author oliver.szymanski
  */
-public class OutputToFunction extends AbstractFunction implements PrefixAware {
+public class OutputToFunction extends ExtensionFunction {
 	public OutputToFunction() {
-		super(1, 4, "outputTo");
+		super(false, Alias.create("outputTo", 2, 4));
 	}
 
 	private final static OutputToFunction instance = new OutputToFunction();
@@ -32,10 +31,8 @@ public class OutputToFunction extends AbstractFunction implements PrefixAware {
 		return instance;
 	}
 
-	private String prefix;
-	
 	@Override
-	public Object childEvaluate(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
 		String who = FunctionCaller.getParam(parameters, 0, "GM");
 		String message = FunctionCaller.getParam(parameters, 1, "");
@@ -54,11 +51,7 @@ public class OutputToFunction extends AbstractFunction implements PrefixAware {
 		String callbackFunction = "unpackArgs";
 		//if (prefix != null) callbackFunction = prefix + callbackFunction;
 		String link = (String)linkFunction.createLink(parser, callbackFunction, who, message, target);
-		linkFunction.execLink(link, false, parser, FunctionCaller.toBoolean(defer));
+		FunctionCaller.callFunction("execLink", linkFunction, parser, link, FunctionCaller.toBoolean(defer));
 	}
 
-	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
 }

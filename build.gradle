@@ -21,7 +21,7 @@ repositories {
     mavenLocal()
     
 	flatDir {
-		dirs '../MapTool-nerps/build/libs'
+		dirs '../MapTool/build/libs'
 	}
 }
 
@@ -31,11 +31,14 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:27.0.1-jre'
+    implementation 'de.muntjak.tinylookandfeel:tinylaf-nocp:1.4.0'
+    implementation 'net.sf.json-lib:json-lib:2.4:jdk15'
+    implementation 'jide-dock:jide-dock:3.2.3'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
-    compile 'net.rptools.maptool.resource:maptool.resource:1.0.b18'
-    compile 'net.rptools.parser:parser:1.4.0.+'
-    compile 'MapTool-1.4.0.+'
+    implementation 'net.rptools.maptool.resource:maptool.resource:1.0.b18'
+    implementation 'net.rptools.parser:parser:1.4.0.+'
+    implementation name: 'MapTool-1.5.0'
 }

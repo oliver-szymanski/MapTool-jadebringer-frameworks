@@ -8,31 +8,49 @@
  */
 package de.jadebringer.maptool.frameworks.base.functions;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFrameworkBundle;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
-import net.rptools.parser.function.AbstractFunction;
 
 /**
  * 
  * @author oliver.szymanski
  */
-public class PingFunction extends AbstractFunction {
-	public PingFunction() {
-		super(0, 0, "ping");
+public class PingFunction extends ExtensionFunction {
+  
+  private ExtensionFrameworkBundle framework;
+  
+	protected PingFunction(ExtensionFrameworkBundle framework) {
+		super(false, Alias.create("ping"));
+		this.framework = framework;
 	}
-
-	private final static PingFunction instance = new PingFunction();
-
-	public static PingFunction getInstance() {
-		return instance;
-	}
+	
+	public static PingFunction getInstance(ExtensionFrameworkBundle framework) {
+    return new PingFunction(framework);
+  }
 
 	@Override
-	public Object childEvaluate(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-		return "pong";
+	  StringBuilder result = new StringBuilder();
+	  result.append("pong ").append(LocalDate.now().toString());
+	  if (parameters != null) {
+	    if (parameters.size() > 0) {
+	      result.append(":");
+        for(Object parameter : parameters) {
+          result.append(" ").append(parameter.toString()).append(";");
+        }
+	    }
+	  }
+	  
+	  if (framework != null) {
+	    result.append("(").append(framework.name()).append("/").append(framework.version()).append(")");
+	  }
+    return result.toString();
 	}
 
 }

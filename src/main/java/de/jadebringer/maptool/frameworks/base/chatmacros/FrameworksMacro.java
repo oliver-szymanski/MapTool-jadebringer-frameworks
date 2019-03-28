@@ -13,8 +13,8 @@ import java.util.List;
 
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolMacroContext;
-import net.rptools.maptool.client.functions.FrameworksFunctions;
-import net.rptools.maptool.client.macro.Macro;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
+import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.parser.ParserException;
@@ -29,9 +29,13 @@ import net.rptools.parser.ParserException;
 		aliases = { "frameworks" },
 		description = "framework.description",
 		expandRolls = false)
-public class FrameworksMacro implements Macro {
+public class FrameworksMacro extends ExtensionChatMacro {
 	
-	public void execute(MacroContext context, String macroParameter, MapToolMacroContext executionContext) {
+	public FrameworksMacro() {
+    super(false);
+  }
+
+  public void run(MacroContext context, String macroParameter, MapToolMacroContext executionContext) {
 		if (macroParameter == null || macroParameter.trim().length() == 0) {
 			return;
 		}

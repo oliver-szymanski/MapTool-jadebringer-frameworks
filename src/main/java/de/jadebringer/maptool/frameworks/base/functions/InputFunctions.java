@@ -66,6 +66,7 @@ import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
 import net.rptools.maptool.client.functions.StrListFunctions;
 import net.rptools.maptool.client.functions.StrPropFunctions;
+import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunctionBridge;
 import net.rptools.maptool.client.ui.htmlframe.HTMLPane;
 import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.Token;
@@ -73,7 +74,6 @@ import net.rptools.maptool.util.ImageManager;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 import net.rptools.parser.VariableResolver;
-import net.rptools.parser.function.AbstractFunction;
 import net.rptools.parser.function.EvaluationException;
 import net.rptools.parser.function.ParameterException;
 
@@ -143,14 +143,14 @@ import de.muntjak.tinylookandfeel.TinyComboBoxButton;
  */
 //@formatter:on
 
-public class InputFunctions extends AbstractFunction {
+public class InputFunctions extends ExtensionFunctionBridge {
 	private static final Pattern ASSET_PATTERN = Pattern.compile("^(.*)asset://(\\w+)");
 
 	/** The singleton instance. */
 	private final static InputFunctions instance = new InputFunctions();
 
 	private InputFunctions() {
-		super(1, -1, "inputYesNoCancel", "inputOKCancel");
+		super(false, 1, -1, "inputYesNoCancel", "inputOKCancel");
 	}
 
 	/** Gets the singleton instance. */

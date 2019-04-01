@@ -8,11 +8,11 @@
  */
 package de.jadebringer.maptool.frameworks.base.functions;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
@@ -22,7 +22,11 @@ import net.rptools.parser.ParserException;
  */
 public class MacroFunctions extends ExtensionFunction {
 	public MacroFunctions() {
-		super(true, Alias.create("executeMT"));
+		super(true, 
+		    Alias.create("executeMT"),
+		    Alias.create("executeMacro", 1, 4),
+        Alias.create("executeMacroSendOutput", 1, 4),
+		    Alias.create("sendExecuteMacro", 3, 6));
 	}
 
 	private final static MacroFunctions instance = new MacroFunctions();
@@ -34,11 +38,29 @@ public class MacroFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if ("executeMT".equals(functionName)) {
-  	  return executeMT(parser, parameters);
-	  }
 	  
-	  return BigDecimal.ZERO;
+	 // try {
+//      return AccessController.doPrivileged(
+  //        new PrivilegedExceptionAction<>() {
+    //        public Object run() throws Exception {
+      if ("executeMT".equals(functionName)) {
+        return executeMT(parser, parameters);
+      } else if ("executeMacro".equals(functionName)) {
+        return executeMacro(parser, parameters, true);
+      } else if ("executeMacroSendOutput".equals(functionName)) {
+        return executeMacro(parser, parameters, false);
+      } else if ("sendExecuteMacro".equals(functionName)) {
+        sendExecuteMacro(parser, parameters);
+        return "";
+      }
+      throw new ParserException("non existing function: " + functionName);
+        //    }
+          //});
+    //} catch (PrivilegedActionException e) {
+      //e.printStackTrace();
+     // throw new ParserException(e);
+   // }
+	  
 	}
 
   private Object executeMT(Parser parser, List<Object> parameters) throws ParserException {
@@ -60,6 +82,38 @@ public class MacroFunctions extends ExtensionFunction {
     }
     
     return result.toString();
+  }
+  
+  private Object executeMacro(Parser parser, List<Object> parameters, boolean omitSendingOutput) throws ParserException {
+    String linkTo = FunctionCaller.getParam(parameters, 0);
+    String who = FunctionCaller.getParam(parameters, 1, "self");
+    String args = FunctionCaller.getParam(parameters, 2);
+    String target = FunctionCaller.getParam(parameters, 3, "impersonated"); 
+    
+    LinkFunctions links = LinkFunctions.getInstance();
+    Object link = links.createLink(parser, linkTo, who, args, target);
+    Object result = links.execLink(link.toString(), parser, omitSendingOutput);
+    if (!omitSendingOutput) { return ""; }
+    return result;
+  }
+  
+  private void sendExecuteMacro(Parser parser, List<Object> parameters) throws ParserException {
+    String sendToWho = FunctionCaller.getParam(parameters, 0);
+    String linkTitle = FunctionCaller.getParam(parameters, 1);
+    String clickableLinkTitle = FunctionCaller.getParam(parameters, 2);
+    String linkTo = FunctionCaller.getParam(parameters, 3);
+    String who = FunctionCaller.getParam(parameters, 4, "self");
+    String args = FunctionCaller.getParam(parameters, 5);
+    String target = FunctionCaller.getParam(parameters, 6, "impersonated");
+    
+    LinkFunctions links = LinkFunctions.getInstance();
+    Object link = links.createLink(parser, linkTo, who, args, target);
+    Object anchor = links.createAnchor(parser, clickableLinkTitle, link.toString(), null,  null, null);    
+
+    if (linkTitle == null) { linkTitle = "%link%"; }
+    if (!linkTitle.contains("%link%")) { linkTitle = linkTitle + " %link%"; }
+    linkTitle = linkTitle.replace("%link%", anchor.toString());
+    OutputToFunction.getInstance().outputTo(parser, sendToWho, linkTitle, false, "impersonated");
   }
 
 }

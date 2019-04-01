@@ -34,12 +34,16 @@ public class OutputToFunction extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-		String who = FunctionCaller.getParam(parameters, 0, "GM");
-		String message = FunctionCaller.getParam(parameters, 1, "");
-		Object defer = FunctionCaller.getParam(parameters, 2, BigDecimal.ZERO);
-		String target = FunctionCaller.getParam(parameters, 3, "impersonated");
-		outputTo(parser, who, message, FunctionCaller.toBoolean(defer), target);
-		return "";
+	  if ("outputTo".equals(functionName)) {
+  		String who = FunctionCaller.getParam(parameters, 0, "GM");
+  		String message = FunctionCaller.getParam(parameters, 1, "");
+  		Object defer = FunctionCaller.getParam(parameters, 2, BigDecimal.ZERO);
+  		String target = FunctionCaller.getParam(parameters, 3, "impersonated");
+  		outputTo(parser, who, message, FunctionCaller.toBoolean(defer), target);
+  		return "";
+	  }
+	  
+	  throw new ParserException("non existing function: " + functionName);
 	}
 
 	public void outputTo(Parser parser, String who, String message) throws ParserException {

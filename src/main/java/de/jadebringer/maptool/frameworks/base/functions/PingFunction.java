@@ -36,21 +36,25 @@ public class PingFunction extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  StringBuilder result = new StringBuilder();
-	  result.append("pong ").append(LocalDate.now().toString());
-	  if (parameters != null) {
-	    if (parameters.size() > 0) {
-	      result.append(":");
-        for(Object parameter : parameters) {
-          result.append(" ").append(parameter.toString()).append(";");
-        }
-	    }
+	  if ("ping".equals(functionName)) {
+  	  StringBuilder result = new StringBuilder();
+  	  result.append("pong ").append(LocalDate.now().toString());
+  	  if (parameters != null) {
+  	    if (parameters.size() > 0) {
+  	      result.append(":");
+          for(Object parameter : parameters) {
+            result.append(" ").append(parameter.toString()).append(";");
+          }
+  	    }
+  	  }
+  	  
+  	  if (framework != null) {
+  	    result.append(" (").append(framework.name()).append("/").append(framework.version()).append(")");
+  	  }
+      return result.toString();
 	  }
 	  
-	  if (framework != null) {
-	    result.append("(").append(framework.name()).append("/").append(framework.version()).append(")");
-	  }
-    return result.toString();
+	  throw new ParserException("non existing function: " + functionName);
 	}
 
 }

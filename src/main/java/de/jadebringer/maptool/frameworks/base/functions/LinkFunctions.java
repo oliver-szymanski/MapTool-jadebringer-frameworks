@@ -74,36 +74,30 @@ public class LinkFunctions extends ExtensionFunction {
 
 			Object message = FunctionCaller.getParam(parameters, 0);
       boolean defer = FunctionCaller.getParam(parameters, 1, false);
-      execLink((String)message, false, parser, defer);
-			return "";
+      return execLink((String)message, parser, defer);
 		} else if ("createLink".equals(functionName)) {
 			return createLink(parser, parameters);
 		} else if ("createAnchor".equals(functionName)) {
       return createAnchor(parser, parameters);
     }
 		
-		return "";
+		throw new ParserException("non existing function: " + functionName);
 	}
 
 	public Object createAnchor(Parser parser, List<Object> parameters)
       throws ParserException {
     String message = FunctionCaller.getParam(parameters, 0, "Click");
-    String linkTo = FunctionCaller.getParam(parameters, 1);
-    String who = FunctionCaller.getParam(parameters, 2, "GM");
-    String args = FunctionCaller.getParam(parameters, 3);
-    String target = FunctionCaller.getParam(parameters, 4, "impersonated");   
-    String image = FunctionCaller.getParam(parameters, 5, "");   
-    String tooltipText = FunctionCaller.getParam(parameters, 6, "");   
-    String cssClass = FunctionCaller.getParam(parameters, 7, "");   
-    return createAnchor(parser, message, linkTo, who, args, target, image, tooltipText, cssClass);
+    String link = FunctionCaller.getParam(parameters, 1);
+    String image = FunctionCaller.getParam(parameters, 2, "");   
+    String tooltipText = FunctionCaller.getParam(parameters, 3, "");   
+    String cssClass = FunctionCaller.getParam(parameters, 4, "");   
+    return createAnchor(parser, message, link, image, tooltipText, cssClass);
   }
 	
-	public Object createAnchor(Parser parser, String message, String linkTo, String who, String args, String target, String image, String tooltipText, String cssClass)
+	public Object createAnchor(Parser parser, String message, String linkTo, String image, String tooltipText, String cssClass)
       throws ParserException {
    
-    if (linkTo == null) who = "ping";
-    if (who == null) who = "GM";
-    if (target == null) target = "impersonated";
+    if (linkTo == null) linkTo = "ping";
 
     StringBuilder sb = new StringBuilder();
     
@@ -113,9 +107,10 @@ public class LinkFunctions extends ExtensionFunction {
     sb.append("><a ");
     if (!StringUtil.isEmpty(cssClass))
       sb.append("class='").append(cssClass).append("' ");
-    sb.append("href='macro://").append(linkTo).append("/");
-    sb.append(who).append("/").append(target).append("?");
-    sb.append(args).append("'>");
+    sb.append("href='");
+    if(!linkTo.startsWith("macro://")) { sb.append("macro://"); }
+    sb.append(linkTo);
+    sb.append("'>");
     if (!StringUtil.isEmpty(image)) 
       sb.append("<img src=").append(image).append("></img");
     else
@@ -140,7 +135,7 @@ public class LinkFunctions extends ExtensionFunction {
 		Function macro = MacroLinkFunction.getInstance();
 		Function json = JSONMacroFunctions.getInstance();
 		
-		if (linkTo == null) who = "ping";
+		if (linkTo == null) linkTo = "ping";
 		if (who == null) who = "GM";
 		if (target == null) target = "impersonated";
 		
@@ -154,8 +149,9 @@ public class LinkFunctions extends ExtensionFunction {
 		if (!specialChannel) {
 			toWho = "list";
 			boolean isArray = "ARRAY".equals(FunctionCaller.callFunction("json.type", json, parser, who));
-			if (isArray) {
-				who = ((JSONObject)FunctionCaller.callFunction("json.fromList", json, parser, who)).toString();
+			if (!isArray) {
+			  who = (FunctionCaller.callFunction("json.append", json, parser, "", who)).toString();
+			      //((JSONObject)FunctionCaller.callFunction("json.fromList", json, parser, who)).toString();
 			}
 			message = ((JSONObject)FunctionCaller.callFunction("json.set", json, parser, message, "mlOutputList", who)).toString();
 		}
@@ -164,22 +160,23 @@ public class LinkFunctions extends ExtensionFunction {
 			message = ((JSONObject)FunctionCaller.callFunction("json.set", json, parser, message, "args", args)).toString();
 		}
 		
-		if (args != null) {
-			return FunctionCaller.callFunction("macroLinkText", macro, parser, linkTo, toWho, message, target);
-		} else {
-			return FunctionCaller.callFunction("macroLinkText", macro, parser, linkTo, toWho);				
-		}
+		//if (target != null) {
+		return FunctionCaller.callFunction("macroLinkText", macro, parser, linkTo, toWho, message, target);
+		//} else {
+		//	return FunctionCaller.callFunction("macroLinkText", macro, parser, linkTo, toWho, message);				
+		//}
 	}
 
-	public void execLink(String link, boolean setVars, Parser parser, boolean defer) {
+	public Object execLink(String link, Parser parser, boolean defer, boolean omitSendingOutput) {
 		if (defer) {
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					execLink(link, setVars, parser);
+					execLink(link, parser, omitSendingOutput);
 				}
 			});
+			return "";
 		} else {
-			this.execLink(link, setVars, parser);
+			return this.execLink(link, parser, omitSendingOutput);
 		}
 	}
 	
@@ -188,13 +185,11 @@ public class LinkFunctions extends ExtensionFunction {
 	 * 
 	 * @param link
 	 *            the link to the macro.
-	 * @param setVars
-	 *            should the variables be set in the macro context as well as passed in as macro.args.
 	 */
 	@SuppressWarnings("unchecked")
-	public void execLink(String link, boolean setVars, Parser parser) {
+	public Object execLink(String link, Parser parser, boolean omitSendingOutput) {
 		if (link == null || link.length() == 0) {
-			return;
+			return "";
 		}
 		Matcher m = macroLink.matcher(link);
 
@@ -259,34 +254,41 @@ public class LinkFunctions extends ExtensionFunction {
 								token = MapTool.getFrame().getCurrentZoneRenderer().getZone().getToken(guid);
 							else
 								token = zone.resolveToken(MapTool.getFrame().getCommandPanel().getIdentity());
-							createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token);
+							return createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token, omitSendingOutput);
 						} else if (t.equalsIgnoreCase("selected")) {
 							for (GUID id : MapTool.getFrame().getCurrentZoneRenderer().getSelectedTokenSet()) {
 								Token token = zone.getToken(id);
-								createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token);
+								return createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token, omitSendingOutput);
 							}
 						} else {
 							Token token = zone.resolveToken(t);
-							createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token);
+							return createAndDoOutput(parser, outputTo, macroName, args, outputToPlayers, token, omitSendingOutput);
 						}
 					}
 				} catch (Exception e) {
 					MapTool.addLocalMessage(e.getMessage());
+					return "";
 				}
 			}
 		}
+    return "";
 	}
 
-	private void createAndDoOutput(Parser parser, OutputTo outputTo, String macroName, String args,
-			Set<String> outputToPlayers, Token token) throws ParserException {
+	private Object createAndDoOutput(Parser parser, OutputTo outputTo, String macroName, String args,
+			Set<String> outputToPlayers, Token token, boolean omitSendingOutput) throws ParserException {
 		MapToolVariableResolver resolver = new MapToolVariableResolver(token);
-		String output = null;
+		Object output = null;
 		if (macroName.indexOf("@") < 0) {
 			output = FunctionCaller.callFunction(macroName, parser, (Object)args).toString();
 		} else {
-			MapTool.getParser().runMacro(resolver, token, macroName, args);
+			output = MapTool.getParser().runMacro(resolver, token, macroName, args);
 		}
-		doOutput(token, outputTo, output, outputToPlayers);
+		
+		if(!omitSendingOutput) {
+	    doOutput(token, outputTo, output.toString(), outputToPlayers);
+		}
+
+    return output;
 	}
 
 	/**

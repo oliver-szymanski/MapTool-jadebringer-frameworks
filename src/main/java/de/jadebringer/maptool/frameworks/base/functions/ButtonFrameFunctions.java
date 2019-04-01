@@ -55,7 +55,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       return isFrameVisible(parser, functionName, parameters);
     }
 	  
-	  return BigDecimal.ZERO;
+    throw new ParserException("non existing function: " + functionName);
 	}
 	
 	private Object isFrameVisible(Parser parser, String functionName, List<Object> parameters) throws ParserException {

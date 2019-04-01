@@ -9,6 +9,7 @@ import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacr
 import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFrameworkBundle;
 import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
 import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunctionButton;
+import net.rptools.maptool.client.functions.frameworkfunctions.Version;
 
 public class JadebringerMidwinterFramework extends ExtensionFrameworkBundle {
 	
@@ -17,6 +18,7 @@ public class JadebringerMidwinterFramework extends ExtensionFrameworkBundle {
   private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
 	
 	public JadebringerMidwinterFramework() {
+	  super(new Version(1,0,0,"jadebringer-midwinter"));
 		functions.add(PingFunction.getInstance(this));
 	}
 	

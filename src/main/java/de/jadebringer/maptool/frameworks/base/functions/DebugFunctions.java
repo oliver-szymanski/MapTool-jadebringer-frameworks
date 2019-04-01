@@ -37,8 +37,10 @@ public class DebugFunctions extends ExtensionFunction {
 		    Alias.create("manipulate"), 
 		    Alias.create("inspect"), 
 		    Alias.create("isDebug", 0, 0), 
+        Alias.create("toggleDebug", 0, 0), 
 		    Alias.create("debug"), 
 		    Alias.create("trace"), 
+        Alias.create("toggleTrace", 0, 0), 
 		    Alias.create("isTrace", 0, 0), 
 		    Alias.create("setDebug", 1, 1), 
 		    Alias.create("setTrace", 1, 1), 
@@ -72,6 +74,12 @@ public class DebugFunctions extends ExtensionFunction {
     } else if ("isDebug".equals(functionName)) {
 			return isDebug(parser);
 		} else if ("isTrace".equals(functionName)) {
+		  return isTrace(parser);
+    } else if ("toggleDebug".equals(functionName)) {
+      setDebug(parser, BigDecimal.ZERO.equals(isDebug(parser)) ? BigDecimal.ONE : BigDecimal.ZERO);
+      return isDebug(parser);
+    } else if ("toggleTrace".equals(functionName)) {
+      setTrace(parser, BigDecimal.ZERO.equals(isTrace(parser)) ? BigDecimal.ONE : BigDecimal.ZERO);
       return isTrace(parser);
     } else if ("inspect".equals(functionName)) {
       return inspect(parser, parameters);
@@ -105,7 +113,7 @@ public class DebugFunctions extends ExtensionFunction {
       return "";
     }
 	
-		return "";
+		throw new ParserException("non existing function: " + functionName);
 	}
 
   private String concatenateParametersToString(List<Object> parameters) {

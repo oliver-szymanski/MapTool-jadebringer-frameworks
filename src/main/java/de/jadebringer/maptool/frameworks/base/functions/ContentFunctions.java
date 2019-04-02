@@ -26,8 +26,8 @@ public class ContentFunctions extends ExtensionFunction {
   
 	protected ContentFunctions() {
 		super(false, 
-		    Alias.create("content.load", 3, 3),
-		    Alias.create("content.save", 4, 4));
+		    Alias.create("content_load", 3, 3),
+		    Alias.create("content_save", 4, 4));
 	}
 	
 	private static final ContentFunctions instance = new ContentFunctions();
@@ -39,9 +39,9 @@ public class ContentFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if ("content.load".equals(functionName)) {
+	  if ("content_load".equals(functionName)) {
 	    return loadContent(parser, parameters);
-	  } else if("content.save".equals(functionName)) {
+	  } else if("content_save".equals(functionName)) {
       return saveContent(parser, parameters);
     }
 	  

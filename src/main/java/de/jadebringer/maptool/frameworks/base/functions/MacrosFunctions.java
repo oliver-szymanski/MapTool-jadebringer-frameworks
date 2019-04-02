@@ -20,31 +20,31 @@ import net.rptools.parser.ParserException;
  * 
  * @author oliver.szymanski
  */
-public class MacroFunctions extends ExtensionFunction {
-	public MacroFunctions() {
+public class MacrosFunctions extends ExtensionFunction {
+	public MacrosFunctions() {
 		super(true, 
-		    Alias.create("executeMT"),
-		    Alias.create("executeMacro", 1, 4),
-        Alias.create("executeMacroSendOutput", 1, 4),
-		    Alias.create("sendExecuteMacro", 3, 6));
+		    Alias.create("macros_executeMT"),
+		    Alias.create("macros_executeMacro", 1, 4),
+        Alias.create("macros_executeMacroSendOutput", 1, 4),
+		    Alias.create("macros_sendExecuteMacro", 3, 6));
 	}
 
-	private final static MacroFunctions instance = new MacroFunctions();
+	private final static MacrosFunctions instance = new MacrosFunctions();
 
-	public static MacroFunctions getInstance() {
+	public static MacrosFunctions getInstance() {
 		return instance;
 	}
 
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-      if ("executeMT".equals(functionName)) {
+      if ("macros_executeMT".equals(functionName)) {
         return executeMT(parser, parameters);
-      } else if ("executeMacro".equals(functionName)) {
+      } else if ("macros_executeMacro".equals(functionName)) {
         return executeMacro(parser, true, parameters);
-      } else if ("executeMacroSendOutput".equals(functionName)) {
+      } else if ("macros_executeMacroSendOutput".equals(functionName)) {
         return executeMacro(parser, true, parameters);
-      } else if ("sendExecuteMacro".equals(functionName)) {
+      } else if ("macros_sendExecuteMacro".equals(functionName)) {
         sendExecuteMacro(parser, parameters);
         return "";
       }

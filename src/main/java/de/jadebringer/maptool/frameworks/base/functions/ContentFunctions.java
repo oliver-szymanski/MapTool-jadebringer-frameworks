@@ -8,6 +8,7 @@
  */
 package de.jadebringer.maptool.frameworks.base.functions;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
@@ -25,8 +26,8 @@ public class ContentFunctions extends ExtensionFunction {
   
 	protected ContentFunctions() {
 		super(false, 
-		    Alias.create("loadContent", 3, 3),
-		    Alias.create("saveContent", 4, 4));
+		    Alias.create("content.load", 3, 3),
+		    Alias.create("content.save", 4, 4));
 	}
 	
 	private static final ContentFunctions instance = new ContentFunctions();
@@ -38,9 +39,11 @@ public class ContentFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if ("loadContent".equals(functionName)) {
+	  if ("content.load".equals(functionName)) {
 	    return loadContent(parser, parameters);
-	  }
+	  } else if("content.save".equals(functionName)) {
+      return saveContent(parser, parameters);
+    }
 	  
 	  throw new ParserException("non existing function: " + functionName);
 	}
@@ -75,6 +78,38 @@ public class ContentFunctions extends ExtensionFunction {
 
 	  return "";
 	}
+
+	 private Object saveContent(Parser parser, List<Object> parameters) throws ParserException {
+	    String name = FunctionCaller.getParam(parameters, 0);
+	    String sourceType = FunctionCaller.getParam(parameters, 1);
+	    String source = FunctionCaller.getParam(parameters, 2);
+      String content = FunctionCaller.getParam(parameters, 3);
+	    
+	    if ("tokenMacro".equalsIgnoreCase(sourceType)) {
+	      TokenWrapper token;
+	      if (source == null) {
+	        token = FunctionCaller.getCurrentToken(parser);
+	        source = token.getToken().getId().toString();
+	      } else {
+	        token = FunctionCaller.findToken(source, null, true);
+	        source = token.getToken().getId().toString();
+	      }
+
+	      // false => even get when player does not own token
+	      List<MacroButtonProperties> macros = token.getToken().getMacroList(false);
+	      for(MacroButtonProperties macro : macros) {
+	        if (macro.getLabel().equals(name)) {
+	          macro.setCommand(content);
+	        }
+	      }
+	    } else if ("tokenProperty".equalsIgnoreCase(sourceType)) {
+	      return FunctionCaller.callFunction("setSetting", SettingsFunctions.getInstance(), parser, name, content, source);
+	    } else if ("table".equalsIgnoreCase(sourceType)) {
+	      return FunctionCaller.callFunction("setTableEntry", parser, source, name, content);
+	    }
+
+	    return BigDecimal.ONE;
+	  }
 
 
 }

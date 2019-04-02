@@ -47,7 +47,10 @@ import net.sf.json.JSONObject;
  */
 public class LinkFunctions extends ExtensionFunction {
 	public LinkFunctions() {
-		super(false, Alias.create("execLink"), Alias.create("createLink"), Alias.create("createAnchor"));
+		super(false, 
+		    Alias.create("links_execLink"), 
+		    Alias.create("links_createLink"), 
+		    Alias.create("links_createAnchor"));
 	}
 
 	private final static LinkFunctions instance = new LinkFunctions();
@@ -67,7 +70,7 @@ public class LinkFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 		
-		if ("execLink".equals(functionName)) {
+		if ("links_execLink".equals(functionName)) {
 			if (!MapTool.getParser().isMacroTrusted()) {
 				throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
 			}
@@ -75,9 +78,9 @@ public class LinkFunctions extends ExtensionFunction {
 			Object message = FunctionCaller.getParam(parameters, 0);
       boolean defer = FunctionCaller.getParam(parameters, 1, false);
       return execLink((String)message, parser, defer);
-		} else if ("createLink".equals(functionName)) {
+		} else if ("links_createLink".equals(functionName)) {
 			return createLink(parser, parameters);
-		} else if ("createAnchor".equals(functionName)) {
+		} else if ("links_createAnchor".equals(functionName)) {
       return createAnchor(parser, parameters);
     }
 		

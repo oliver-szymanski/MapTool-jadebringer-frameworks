@@ -11,7 +11,7 @@ import de.jadebringer.maptool.frameworks.base.functions.ButtonFrameFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.ContentFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.InputFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.LinkFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.MacroFunctions;
+import de.jadebringer.maptool.frameworks.base.functions.MacrosFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.OutputToFunction;
 import de.jadebringer.maptool.frameworks.base.functions.PingFunction;
 import de.jadebringer.maptool.frameworks.base.functions.SettingsFunctions;
@@ -43,7 +43,7 @@ public class BaseFramework extends ExtensionFrameworkBundle {
 		functions.add(OutputToFunction.getInstance());
 		functions.add(SettingsFunctions.getInstance());
 		functions.add(DebugFunctions.getInstance());
-    functions.add(MacroFunctions.getInstance());
+    functions.add(MacrosFunctions.getInstance());
     functions.add(ButtonFrameFunctions.getInstance());
     functions.add(ContentFunctions.getInstance());
     functions.add(TrySecurity.getInstance());

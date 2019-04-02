@@ -27,19 +27,19 @@ public class ButtonFrameFunctions extends ExtensionFunction {
   
   protected ButtonFrameFunctions() {
 		super(false, 
-		    Alias.create("showAllFrames", 0, 0), 
-		    Alias.create("hideAllFrames", 0, 0),
-        Alias.create("showFrame"), 
-        Alias.create("hideFrame"),
-		    Alias.create("isFrameVisible", 1, 1),
-		    Alias.create("addButton", 9, 9),
-        Alias.create("removeButton", 4, 4),
-        Alias.create("showButton", 4, 4),
-        Alias.create("hideButton", 4, 4),
-        Alias.create("enableButton", 4, 4),
-        Alias.create("disableButton", 4, 4),
-        Alias.create("isHiddenButton", 4, 4),
-        Alias.create("isEnabledButton", 4, 4)
+		    Alias.create("frames_showAllFrames", 0, 0), 
+		    Alias.create("frames_hideAllFrames", 0, 0),
+        Alias.create("frames_showFrame"), 
+        Alias.create("frames_hideFrame"),
+		    Alias.create("frames_isFrameVisible", 1, 1),
+		    Alias.create("frames_addButton", 9, 9),
+        Alias.create("frames_removeButton", 4, 4),
+        Alias.create("frames_showButton", 4, 4),
+        Alias.create("frames_hideButton", 4, 4),
+        Alias.create("frames_enableButton", 4, 4),
+        Alias.create("frames_disableButton", 4, 4),
+        Alias.create("frames_isHiddenButton", 4, 4),
+        Alias.create("frames_isEnabledButton", 4, 4)
 		    );
 	}
 	
@@ -52,33 +52,33 @@ public class ButtonFrameFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if("showFrame".equals(functionName)) {
+	  if("frames_showFrame".equals(functionName)) {
 	    return showFrame(parser, functionName, parameters);
-	  } if("hideFrame".equals(functionName)) {
+	  } if("frames_hideFrame".equals(functionName)) {
 	    return hideFrame(parser, functionName, parameters);
-	  } else if("showAllFrames".equals(functionName)) {
+	  } else if("frames_showAllFrames".equals(functionName)) {
       showAllFrames(parser, functionName, parameters);
       return BigDecimal.ONE;
-    } if("hideAllFrames".equals(functionName)) {
+    } if("frames_hideAllFrames".equals(functionName)) {
       hideAllFrames(parser, functionName, parameters);
       return BigDecimal.ONE;
-    } if("isFrameVisible".equals(functionName)) {
+    } if("frames_isFrameVisible".equals(functionName)) {
       return isFrameVisible(parser, functionName, parameters);
-    } if("addButton".equals(functionName)) {
+    } if("frames_addButton".equals(functionName)) {
       return addButton(parser, functionName, parameters);
-    } if("removeButton".equals(functionName)) {
+    } if("frames_removeButton".equals(functionName)) {
       return removeButton(parser, functionName, parameters);
-    } if("hideButton".equals(functionName)) {
+    } if("frames_hideButton".equals(functionName)) {
       return hideButton(parser, functionName, parameters);
-    } if("showButton".equals(functionName)) {
+    } if("frames_showButton".equals(functionName)) {
       return showButton(parser, functionName, parameters);
-    } if("enableButton".equals(functionName)) {
+    } if("frames_enableButton".equals(functionName)) {
       return enableButton(parser, functionName, parameters);
-    } if("disableButton".equals(functionName)) {
+    } if("frames_disableButton".equals(functionName)) {
       return disableButton(parser, functionName, parameters);
-    } if("isHiddenButton".equals(functionName)) {
+    } if("frames_isHiddenButton".equals(functionName)) {
       return isHiddenButton(parser, functionName, parameters);
-    } if("isEnabledButton".equals(functionName)) {
+    } if("frames_isEnabledButton".equals(functionName)) {
       return isEnabledButton(parser, functionName, parameters);
     }
     
@@ -137,7 +137,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       public void run(Parser parser) throws ParserException{
         StringBuffer macroArgs = new StringBuffer();
         macroArgs.append(frame).append(".").append(group).append(".").append("name");
-        MacroFunctions.getInstance().executeMacro(parser, false, FunctionCaller.toObjectList(macroName, "self", macroArgs.toString(), "impersonated"));
+        MacrosFunctions.getInstance().executeMacro(parser, false, FunctionCaller.toObjectList(macroName, "self", macroArgs.toString(), "impersonated"));
       }   
     };
     

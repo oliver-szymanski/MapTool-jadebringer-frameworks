@@ -38,32 +38,21 @@ public class MacroFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  
-	 // try {
-//      return AccessController.doPrivileged(
-  //        new PrivilegedExceptionAction<>() {
-    //        public Object run() throws Exception {
       if ("executeMT".equals(functionName)) {
         return executeMT(parser, parameters);
       } else if ("executeMacro".equals(functionName)) {
-        return executeMacro(parser, parameters, true);
+        return executeMacro(parser, true, parameters);
       } else if ("executeMacroSendOutput".equals(functionName)) {
-        return executeMacro(parser, parameters, false);
+        return executeMacro(parser, true, parameters);
       } else if ("sendExecuteMacro".equals(functionName)) {
         sendExecuteMacro(parser, parameters);
         return "";
       }
       throw new ParserException("non existing function: " + functionName);
-        //    }
-          //});
-    //} catch (PrivilegedActionException e) {
-      //e.printStackTrace();
-     // throw new ParserException(e);
-   // }
 	  
 	}
 
-  private Object executeMT(Parser parser, List<Object> parameters) throws ParserException {
+	public Object executeMT(Parser parser, List<Object> parameters) throws ParserException {
     StringBuilder result = new StringBuilder();
     
     try {
@@ -84,7 +73,7 @@ public class MacroFunctions extends ExtensionFunction {
     return result.toString();
   }
   
-  private Object executeMacro(Parser parser, List<Object> parameters, boolean omitSendingOutput) throws ParserException {
+  public Object executeMacro(Parser parser, boolean omitSendingOutput, List<Object> parameters) throws ParserException {
     String linkTo = FunctionCaller.getParam(parameters, 0);
     String who = FunctionCaller.getParam(parameters, 1, "self");
     String args = FunctionCaller.getParam(parameters, 2);
@@ -97,7 +86,7 @@ public class MacroFunctions extends ExtensionFunction {
     return result;
   }
   
-  private void sendExecuteMacro(Parser parser, List<Object> parameters) throws ParserException {
+  public void sendExecuteMacro(Parser parser, List<Object> parameters) throws ParserException {
     String sendToWho = FunctionCaller.getParam(parameters, 0);
     String linkTitle = FunctionCaller.getParam(parameters, 1);
     String clickableLinkTitle = FunctionCaller.getParam(parameters, 2);

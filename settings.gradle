@@ -9,5 +9,6 @@
 
 rootProject.name = 'MapTool-jadebringer-frameworks'
 
+//includeBuild ('../MapTool')
 include ':MapTool'
 project(':MapTool').projectDir = new File(settingsDir, '../MapTool')

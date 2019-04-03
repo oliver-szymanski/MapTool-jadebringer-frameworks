@@ -14,18 +14,45 @@ plugins {
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()    
+	jcenter()
+    mavenCentral()
     maven { url = 'http://maptool.craigs-stuff.net/repo/' }
     maven { url = 'http://www.nerps.net/repo/' }
     maven { url = 'http://nexus.fyiblue.com/content/groups/public' }
     mavenLocal()
     
-	flatDir {
-		dirs '../MapTool/build/libs', 'lib'
-	}
+	//flatDir {
+	//	dirs '../MapTool/build/libs', 'lib'
+	//}
 }
 
 dependencies {
-    api project(':MapTool')
+
+    implementation 'net.rptools.parser:parser:1.4.0.+'
+    implementation 'net.rptools.decktool:decktool:1.0.b1'
+    implementation 'net.rptools.dicelib:dicelib:1.4.0.+'
+    implementation 'net.rptools.maptool.resource:maptool.resource:1.0.b18'
+    implementation 'net.rptools.parser:parser:1.4.0.+'
+
+    implementation 'jide-common:jide-common:3.2.3'
+    implementation 'jide-components:jide-components:3.2.3'
+    implementation 'jide-dialogs:jide-dialogs:3.2.3'
+    implementation 'jide-dock:jide-dock:3.2.3'
+    implementation 'jide-editor:jide-editor:3.2.3'
+    implementation 'jide-grids:jide-grids:3.2.3'
+    implementation 'jide-properties:jide-properties:3.2.3'
+    implementation 'jide-shortcut:jide-shortcut:3.2.3'
+    
+    implementation 'net.sf.json-lib:json-lib:2.4:jdk15'
+    
+    implementation 'de.muntjak.tinylookandfeel:tinylaf-nocp:1.4.0'
+    
+    // For syntax highlighting in macro editor
+    implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '3.0.2'		// https://mvnrepository.com/artifact/com.fifesoft/rsyntaxtextarea
+    implementation group: 'com.fifesoft', name: 'rstaui', version: '3.0.0'				// https://mvnrepository.com/artifact/com.fifesoft/rstaui
+    implementation group: 'com.fifesoft', name: 'autocomplete', version: '3.0.0'		// https://mvnrepository.com/artifact/com.fifesoft/autocomplete
+
+	//implementation ':MapTool'
+    implementation project(":MapTool")
     
 }

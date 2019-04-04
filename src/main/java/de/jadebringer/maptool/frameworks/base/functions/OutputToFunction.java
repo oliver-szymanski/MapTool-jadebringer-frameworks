@@ -55,7 +55,7 @@ public class OutputToFunction extends ExtensionFunction {
 		String callbackFunction = "unpackArgs";
 		//if (prefix != null) callbackFunction = prefix + callbackFunction;
 		String link = (String)linkFunction.createLink(parser, callbackFunction, who, message, target);
-		FunctionCaller.callFunction("execLink", linkFunction, parser, link, FunctionCaller.toBoolean(defer));
+		FunctionCaller.callFunction("links_execLink", linkFunction, parser, link, FunctionCaller.toBoolean(defer));
 	}
 
 }

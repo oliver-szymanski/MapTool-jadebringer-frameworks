@@ -114,14 +114,14 @@ public class BaseFramework extends ExtensionFrameworkBundle {
     functionButtons.add(new ExtensionFunctionButton("Open frames", "Open frames", "manage", "frames", "/images/window.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("showAllFrames", ButtonFrameFunctions.getInstance(), parser);
+        FunctionCaller.callFunction("frames_showAllFrames", ButtonFrameFunctions.getInstance(), parser);
       }   
     });
     functionButtons.add(new ExtensionFunctionButton("Close frames", "Close frames", "manage", "frames", "/images/closed-doors.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("hideAllFrames", ButtonFrameFunctions.getInstance(), parser);
-        FunctionCaller.callFunction("showFrame", ButtonFrameFunctions.getInstance(), parser, getPrefix()+"frames");
+        FunctionCaller.callFunction("frames_hideAllFrames", ButtonFrameFunctions.getInstance(), parser);
+        FunctionCaller.callFunction("frames_showFrame", ButtonFrameFunctions.getInstance(), parser, getPrefix()+"frames");
       }   
     });
 	}

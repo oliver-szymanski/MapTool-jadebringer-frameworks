@@ -11,6 +11,13 @@ plugins {
     id 'java-library'
 }
 
+// Apply the java plugin to add support for Java
+apply plugin: 'base'
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
+
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.

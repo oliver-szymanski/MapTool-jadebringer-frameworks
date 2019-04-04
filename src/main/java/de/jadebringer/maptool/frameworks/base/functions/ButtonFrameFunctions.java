@@ -141,7 +141,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       }   
     };
     
-    FrameworksFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton);
+    FrameworksFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton, prefix);
     
     return BigDecimal.ONE;
   }

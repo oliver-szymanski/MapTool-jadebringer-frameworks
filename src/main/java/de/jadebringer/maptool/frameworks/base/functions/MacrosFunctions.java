@@ -25,7 +25,7 @@ public class MacrosFunctions extends ExtensionFunction {
 		super(true, 
 		    Alias.create("macros_executeMT"),
 		    Alias.create("macros_executeMacro", 1, 4),
-        Alias.create("macros_executeMacroSendOutput", 1, 4),
+		    Alias.create("macros_executeMacroSendOutput", 1, 4),
 		    Alias.create("macros_sendExecuteMacro", 3, 6));
 	}
 

@@ -46,11 +46,16 @@ import net.sf.json.JSONObject;
  * @author oliver.szymanski
  */
 public class LinkFunctions extends ExtensionFunction {
+	public static final String LINKS_CREATE_ANCHOR = "links_createAnchor";
+	public static final String LINKS_CREATE_LINK = "links_createLink";
+	public static final String LINKS_EXEC_LINK = "links_execLink";
+
 	public LinkFunctions() {
-		super(false, 
-		    Alias.create("links_execLink"), 
-		    Alias.create("links_createLink"), 
-		    Alias.create("links_createAnchor"));
+		super( 
+		    Alias.create(LINKS_EXEC_LINK), 
+		    Alias.create(LINKS_CREATE_LINK), 
+		    Alias.create(LINKS_CREATE_ANCHOR));
+		setTrustedRequired(true);
 	}
 
 	private final static LinkFunctions instance = new LinkFunctions();
@@ -70,7 +75,7 @@ public class LinkFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 		
-		if ("links_execLink".equals(functionName)) {
+		if (LINKS_EXEC_LINK.equals(functionName)) {
 			if (!MapTool.getParser().isMacroTrusted()) {
 				throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
 			}
@@ -78,13 +83,13 @@ public class LinkFunctions extends ExtensionFunction {
 			Object message = FunctionCaller.getParam(parameters, 0);
       boolean defer = FunctionCaller.getParam(parameters, 1, false);
       return execLink((String)message, parser, defer);
-		} else if ("links_createLink".equals(functionName)) {
+		} else if (LINKS_CREATE_LINK.equals(functionName)) {
 			return createLink(parser, parameters);
-		} else if ("links_createAnchor".equals(functionName)) {
+		} else if (LINKS_CREATE_ANCHOR.equals(functionName)) {
       return createAnchor(parser, parameters);
     }
 		
-		throw new ParserException("non existing function: " + functionName);
+	  return throwNotFoundParserException(functionName);
 	}
 
 	public Object createAnchor(Parser parser, List<Object> parameters)

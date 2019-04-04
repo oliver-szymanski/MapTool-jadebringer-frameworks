@@ -22,10 +22,14 @@ import net.rptools.parser.ParserException;
  */
 public class PingFunction extends ExtensionFunction {
   
-  private ExtensionFrameworkBundle framework;
+  public static final String PING = "ping";
+  
+	private ExtensionFrameworkBundle framework;
   
 	protected PingFunction(ExtensionFrameworkBundle framework) {
-		super(false, Alias.create("ping"));
+		super(
+				Alias.create(PING));
+		setTrustedRequired(false);
 		this.framework = framework;
 	}
 	
@@ -36,7 +40,7 @@ public class PingFunction extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if ("ping".equals(functionName)) {
+	  if (PING.equals(functionName)) {
   	  StringBuilder result = new StringBuilder();
   	  result.append("pong ").append(LocalDate.now().toString());
   	  if (parameters != null) {
@@ -54,7 +58,7 @@ public class PingFunction extends ExtensionFunction {
       return result.toString();
 	  }
 	  
-	  throw new ParserException("non existing function: " + functionName);
+	  return throwNotFoundParserException(functionName);
 	}
 
 }

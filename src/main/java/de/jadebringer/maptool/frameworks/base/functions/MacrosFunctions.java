@@ -21,12 +21,18 @@ import net.rptools.parser.ParserException;
  * @author oliver.szymanski
  */
 public class MacrosFunctions extends ExtensionFunction {
+	public static final String MACROS_SEND_EXECUTE_MACRO = "macros_sendExecuteMacro";
+	public static final String MACROS_EXECUTE_MACRO_SEND_OUTPUT = "macros_executeMacroSendOutput";
+	public static final String MACROS_EXECUTE_MACRO = "macros_executeMacro";
+	public static final String MACROS_EXECUTE_MT = "macros_executeMT";
+
 	public MacrosFunctions() {
-		super(true, 
-		    Alias.create("macros_executeMT"),
-		    Alias.create("macros_executeMacro", 1, 4),
-		    Alias.create("macros_executeMacroSendOutput", 1, 4),
-		    Alias.create("macros_sendExecuteMacro", 3, 6));
+		super( 
+		    Alias.create(MACROS_EXECUTE_MT),
+		    Alias.create(MACROS_EXECUTE_MACRO, 1, 4),
+		    Alias.create(MACROS_EXECUTE_MACRO_SEND_OUTPUT, 1, 4),
+		    Alias.create(MACROS_SEND_EXECUTE_MACRO, 3, 6));
+		setTrustedRequired(true);
 	}
 
 	private final static MacrosFunctions instance = new MacrosFunctions();
@@ -38,18 +44,19 @@ public class MacrosFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-      if ("macros_executeMT".equals(functionName)) {
+      if (MACROS_EXECUTE_MT.equals(functionName)) {
         return executeMT(parser, parameters);
-      } else if ("macros_executeMacro".equals(functionName)) {
+      } else if (MACROS_EXECUTE_MACRO.equals(functionName)) {
         return executeMacro(parser, true, parameters);
-      } else if ("macros_executeMacroSendOutput".equals(functionName)) {
+      } else if (MACROS_EXECUTE_MACRO_SEND_OUTPUT.equals(functionName)) {
         return executeMacro(parser, true, parameters);
-      } else if ("macros_sendExecuteMacro".equals(functionName)) {
+      } else if (MACROS_SEND_EXECUTE_MACRO.equals(functionName)) {
         sendExecuteMacro(parser, parameters);
         return "";
       }
-      throw new ParserException("non existing function: " + functionName);
-	  
+      
+      
+  	  return throwNotFoundParserException(functionName);	  
 	}
 
 	public Object executeMT(Parser parser, List<Object> parameters) throws ParserException {

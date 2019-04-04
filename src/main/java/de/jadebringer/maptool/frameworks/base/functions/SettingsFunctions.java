@@ -25,12 +25,19 @@ import net.rptools.parser.ParserException;
  * @author oliver.szymanski
  */
 public class SettingsFunctions extends ExtensionFunction {
+	public static final String LIB_JADEBRINGER_SETTINGS = "Lib:JadebringerSettings";
+	public static final String LIST_SETTINGS = "listSettings";
+	public static final String DELETE_SETTING = "deleteSetting";
+	public static final String GET_SETTING = "getSetting";
+	public static final String SET_SETTING = "setSetting";
+
 	public SettingsFunctions() {
-		super(true, 
-		    Alias.create("setSetting", 2, 3), 
-		    Alias.create("getSetting", 1 ,3), 
-		    Alias.create("deleteSetting", 1, 1), 
-		    Alias.create("listSettings", 0, 0));
+		super( 
+		    Alias.create(SET_SETTING, 2, 3), 
+		    Alias.create(GET_SETTING, 1 ,3), 
+		    Alias.create(DELETE_SETTING, 1, 1), 
+		    Alias.create(LIST_SETTINGS, 0, 0));
+		setTrustedRequired(true);
 	}
 
 	private final static SettingsFunctions instance = new SettingsFunctions();
@@ -42,34 +49,33 @@ public class SettingsFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-		if ("setSetting".equals(functionName)) {
+		if (SET_SETTING.equals(functionName)) {
 			String key = FunctionCaller.getParam(parameters, 0);
 			Object value = FunctionCaller.getParam(parameters, 1);
-			String tokenName = FunctionCaller.getParam(parameters, 2,"Lib:JadebringerSettings");
-			setSetting(parser, key, value, tokenName);
-			return key + " = " + value;
-		} else if ("getSetting".equals(functionName)) {
+			String tokenName = FunctionCaller.getParam(parameters, 2,LIB_JADEBRINGER_SETTINGS);
+			return setSetting(parser, key, value, tokenName);
+		} else if (GET_SETTING.equals(functionName)) {
 			String key = FunctionCaller.getParam(parameters, 0);
 			Object defaultValue = FunctionCaller.getParam(parameters, 1);
-			String tokenName = FunctionCaller.getParam(parameters, 2,"Lib:JadebringerSettings");
+			String tokenName = FunctionCaller.getParam(parameters, 2,LIB_JADEBRINGER_SETTINGS);
 			return getSetting(parser, key, defaultValue, tokenName);
-		} else if ("deleteSetting".equals(functionName)) {
+		} else if (DELETE_SETTING.equals(functionName)) {
 			String key = FunctionCaller.getParam(parameters, 0);
-			String tokenName = FunctionCaller.getParam(parameters, 1,"Lib:JadebringerSettings");
+			String tokenName = FunctionCaller.getParam(parameters, 1,LIB_JADEBRINGER_SETTINGS);
 			deleteSetting(parser, key, tokenName);
 			return key + " deleted";
-		} else if ("listSettings".equals(functionName)) {
-			String tokenName = FunctionCaller.getParam(parameters, 0,"Lib:JadebringerSettings");
+		} else if (LIST_SETTINGS.equals(functionName)) {
+			String tokenName = FunctionCaller.getParam(parameters, 0,LIB_JADEBRINGER_SETTINGS);
 			return listSettings(parser, tokenName);
 		}
 	
-		throw new ParserException("non existing function: " + functionName);
+		return throwNotFoundParserException(functionName);
 	}
 
-	public void setSetting(Parser parser, String key, Object value, String tokenName) throws ParserException {
+	public String setSetting(Parser parser, String key, Object value, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
-		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+		if (tokenName == null) { tokenName = LIB_JADEBRINGER_SETTINGS; }
     
 		if (tokenName.toLowerCase().startsWith("lib:")) {
 		  FunctionCaller.callFunction("setLibProperty", tpFunc, parser, key, value, tokenName);
@@ -85,12 +91,14 @@ public class SettingsFunctions extends ExtensionFunction {
 		    throw new ParserException(e);
 		  }
 		}
+		
+		return key + " = " + value;
 	}
 	
 	public void deleteSetting(Parser parser, String key, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
-		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+		if (tokenName == null) { tokenName = LIB_JADEBRINGER_SETTINGS; }
     
     TokenWrapper token = FunctionCaller.findToken(tokenName, null, true);
     try {
@@ -107,7 +115,7 @@ public class SettingsFunctions extends ExtensionFunction {
 	public Object getSetting(Parser parser, String key, Object defaultValue, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
-		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+		if (tokenName == null) { tokenName = LIB_JADEBRINGER_SETTINGS; }
 		
 		Object result;
     if (tokenName.toLowerCase().startsWith("lib:")) {
@@ -135,7 +143,7 @@ public class SettingsFunctions extends ExtensionFunction {
 	public Object listSettings(Parser parser, String tokenName) throws ParserException {
 		TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 		
-		if (tokenName == null) { tokenName = "Lib:JadebringerSettings"; }
+		if (tokenName == null) { tokenName = LIB_JADEBRINGER_SETTINGS; }
     
 		String names = (String)FunctionCaller.callFunction("getMatchingLibProperties", tpFunc, parser, ".*", tokenName);
 

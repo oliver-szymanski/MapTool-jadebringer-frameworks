@@ -21,8 +21,12 @@ import net.rptools.parser.ParserException;
  * @author oliver.szymanski
  */
 public class OutputToFunction extends ExtensionFunction {
+	public static final String OUTPUT_TO = "outputTo";
+
 	public OutputToFunction() {
-		super(false, Alias.create("outputTo", 2, 4));
+		super(
+				Alias.create(OUTPUT_TO, 2, 4));
+		setTrustedRequired(false);
 	}
 
 	private final static OutputToFunction instance = new OutputToFunction();
@@ -34,7 +38,7 @@ public class OutputToFunction extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if ("outputTo".equals(functionName)) {
+	  if (OUTPUT_TO.equals(functionName)) {
   		String who = FunctionCaller.getParam(parameters, 0, "GM");
   		String message = FunctionCaller.getParam(parameters, 1, "");
   		Object defer = FunctionCaller.getParam(parameters, 2, BigDecimal.ZERO);
@@ -43,7 +47,7 @@ public class OutputToFunction extends ExtensionFunction {
   		return "";
 	  }
 	  
-	  throw new ParserException("non existing function: " + functionName);
+	  return throwNotFoundParserException(functionName);
 	}
 
 	public void outputTo(Parser parser, String who, String message) throws ParserException {

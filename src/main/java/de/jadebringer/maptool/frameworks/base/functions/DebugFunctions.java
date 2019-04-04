@@ -32,21 +32,37 @@ import net.rptools.parser.ParserException;
  * @author oliver.szymanski
  */
 public class DebugFunctions extends ExtensionFunction {
+	public static final String ERROR = "error";
+	public static final String WARN = "warn";
+	public static final String CC = "cc";
+	public static final String TRACE = "trace";
+	public static final String DEBUG = "debug";
+	public static final String DEBUG_SET_TRACE = "debug_setTrace";
+	public static final String DEBUG_SET_DEBUG = "debug_setDebug";
+	public static final String DEBUG_IS_TRACE = "debug_isTrace";
+	public static final String DEBUG_TOGGLE_TRACE = "debug_toggleTrace";
+	public static final String DEBUG_TOGGLE_DEBUG = "debug_toggleDebug";
+	public static final String DEBUG_IS_DEBUG = "debug_isDebug";
+	public static final String DEBUG_INSPECT = "debug_inspect";
+	public static final String DEBUG_MANIPULATE = "debug_manipulate";
+
 	public DebugFunctions() {
-		super(false, 
-		    Alias.create("manipulate"), 
-		    Alias.create("inspect"), 
-		    Alias.create("isDebug", 0, 0), 
-        Alias.create("toggleDebug", 0, 0), 
-		    Alias.create("debug"), 
-		    Alias.create("trace"), 
-        Alias.create("toggleTrace", 0, 0), 
-		    Alias.create("isTrace", 0, 0), 
-		    Alias.create("setDebug", 1, 1), 
-		    Alias.create("setTrace", 1, 1), 
-		    Alias.create("cc"), 
-		    Alias.create("warn"), 
-		    Alias.create("error"));
+		super( 
+		    Alias.create(DEBUG_MANIPULATE), 
+		    Alias.create(DEBUG_INSPECT), 
+		    Alias.create(DEBUG_IS_DEBUG, 0, 0).setTrustedRequired(false), 
+        Alias.create(DEBUG_TOGGLE_DEBUG, 0, 0), 
+        Alias.create(DEBUG_TOGGLE_TRACE, 0, 0), 
+		    Alias.create(DEBUG_IS_TRACE, 0, 0).setTrustedRequired(false), 
+		    Alias.create(DEBUG_SET_DEBUG, 1, 1), 
+		    Alias.create(DEBUG_SET_TRACE, 1, 1), 
+		    Alias.create(DEBUG).setTrustedRequired(false), 
+		    Alias.create(TRACE).setTrustedRequired(false), 
+		    Alias.create(CC).setTrustedRequired(false), 
+		    Alias.create(WARN).setTrustedRequired(false), 
+		    Alias.create(ERROR).setTrustedRequired(false)
+		    );
+		setTrustedRequired(true);
 	}
 
 	private final static DebugFunctions instance = new DebugFunctions();
@@ -85,27 +101,27 @@ public class DebugFunctions extends ExtensionFunction {
       return inspect(parser, parameters);
     } else if ("manipulate".equals(functionName)) {
       return manipulate(parser, parameters);
-    } else if ("debug".equals(functionName)) {
+    } else if (DEBUG.equals(functionName)) {
       if (BigDecimal.ONE.equals(isDebug(parser))) {
         String result = concatenateParametersToString(parameters);
         MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
-    } else if ("warn".equals(functionName)) {
+    } else if (WARN.equals(functionName)) {
       String result = concatenateParametersToString(parameters);
       MapTool.addLocalMessage("WARN:" + result);
       return "";
-    } else if ("error".equals(functionName)) {
+    } else if (ERROR.equals(functionName)) {
       String result = concatenateParametersToString(parameters);
       MapTool.addLocalMessage("ERROR:" + result);
       return "";
-    } else if ("trace".equals(functionName)) {
+    } else if (TRACE.equals(functionName)) {
       if (BigDecimal.ONE.equals(isTrace(parser))) {
         String result = concatenateParametersToString(parameters);
         MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
-    } else if ("cc".equals(functionName)) {
+    } else if (CC.equals(functionName)) {
       if (BigDecimal.ONE.equals(isTrace(parser))) {
         String result = concatenateParametersToString(parameters);
         MapTool.addLocalMessage("CC reached:" + result);
@@ -113,7 +129,7 @@ public class DebugFunctions extends ExtensionFunction {
       return "";
     }
 	
-		throw new ParserException("non existing function: " + functionName);
+		return throwNotFoundParserException(functionName);
 	}
 
   private String concatenateParametersToString(List<Object> parameters) {

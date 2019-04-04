@@ -25,22 +25,37 @@ import net.rptools.parser.ParserException;
  */
 public class ButtonFrameFunctions extends ExtensionFunction {
   
-  protected ButtonFrameFunctions() {
-		super(false, 
-		    Alias.create("frames_showAllFrames", 0, 0), 
-		    Alias.create("frames_hideAllFrames", 0, 0),
-        Alias.create("frames_showFrame"), 
-        Alias.create("frames_hideFrame"),
-		    Alias.create("frames_isFrameVisible", 1, 1),
-		    Alias.create("frames_addButton", 9, 9),
-        Alias.create("frames_removeButton", 4, 4),
-        Alias.create("frames_showButton", 4, 4),
-        Alias.create("frames_hideButton", 4, 4),
-        Alias.create("frames_enableButton", 4, 4),
-        Alias.create("frames_disableButton", 4, 4),
-        Alias.create("frames_isHiddenButton", 4, 4),
-        Alias.create("frames_isEnabledButton", 4, 4)
+  public static final String FRAMES_IS_ENABLED_BUTTON = "frames_isEnabledButton";
+	public static final String FRAMES_IS_HIDDEN_BUTTON = "frames_isHiddenButton";
+	public static final String FRAMES_DISABLE_BUTTON = "frames_disableButton";
+	public static final String FRAMES_ENABLE_BUTTON = "frames_enableButton";
+	public static final String FRAMES_HIDE_BUTTON = "frames_hideButton";
+	public static final String FRAMES_SHOW_BUTTON = "frames_showButton";
+	public static final String FRAMES_REMOVE_BUTTON = "frames_removeButton";
+	public static final String FRAMES_SHOW_FRAME = "frames_showFrame";
+	public static final String FRAMES_ADD_BUTTON = "frames_addButton";
+	public static final String FRAMES_IS_FRAME_VISIBLE = "frames_isFrameVisible";
+	public static final String FRAMES_HIDE_FRAME = "frames_hideFrame";
+	public static final String FRAMES_HIDE_ALL_FRAMES = "frames_hideAllFrames";
+	public static final String FRAMES_SHOW_ALL_FRAMES = "frames_showAllFrames";
+
+	protected ButtonFrameFunctions() {
+		super(
+		    Alias.create(FRAMES_SHOW_ALL_FRAMES, 0, 0), 
+		    Alias.create(FRAMES_HIDE_ALL_FRAMES, 0, 0),
+        Alias.create(FRAMES_SHOW_FRAME), 
+        Alias.create(FRAMES_HIDE_FRAME),
+		    Alias.create(FRAMES_IS_FRAME_VISIBLE, 1, 1),
+		    Alias.create(FRAMES_ADD_BUTTON, 9, 9),
+        Alias.create(FRAMES_REMOVE_BUTTON, 4, 4),
+        Alias.create(FRAMES_SHOW_BUTTON, 4, 4),
+        Alias.create(FRAMES_HIDE_BUTTON, 4, 4),
+        Alias.create(FRAMES_ENABLE_BUTTON, 4, 4),
+        Alias.create(FRAMES_DISABLE_BUTTON, 4, 4),
+        Alias.create(FRAMES_IS_HIDDEN_BUTTON, 4, 4),
+        Alias.create(FRAMES_IS_ENABLED_BUTTON, 4, 4)
 		    );
+		setTrustedRequired(false);
 	}
 	
   private static final ButtonFrameFunctions instance = new ButtonFrameFunctions();
@@ -52,37 +67,37 @@ public class ButtonFrameFunctions extends ExtensionFunction {
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
 
-	  if("frames_showFrame".equals(functionName)) {
+	  if(FRAMES_SHOW_FRAME.equals(functionName)) {
 	    return showFrame(parser, functionName, parameters);
-	  } if("frames_hideFrame".equals(functionName)) {
+	  } if(FRAMES_HIDE_FRAME.equals(functionName)) {
 	    return hideFrame(parser, functionName, parameters);
-	  } else if("frames_showAllFrames".equals(functionName)) {
+	  } else if(FRAMES_SHOW_ALL_FRAMES.equals(functionName)) {
       showAllFrames(parser, functionName, parameters);
       return BigDecimal.ONE;
-    } if("frames_hideAllFrames".equals(functionName)) {
+    } if(FRAMES_HIDE_ALL_FRAMES.equals(functionName)) {
       hideAllFrames(parser, functionName, parameters);
       return BigDecimal.ONE;
-    } if("frames_isFrameVisible".equals(functionName)) {
+    } if(FRAMES_IS_FRAME_VISIBLE.equals(functionName)) {
       return isFrameVisible(parser, functionName, parameters);
-    } if("frames_addButton".equals(functionName)) {
+    } if(FRAMES_ADD_BUTTON.equals(functionName)) {
       return addButton(parser, functionName, parameters);
-    } if("frames_removeButton".equals(functionName)) {
+    } if(FRAMES_REMOVE_BUTTON.equals(functionName)) {
       return removeButton(parser, functionName, parameters);
-    } if("frames_hideButton".equals(functionName)) {
+    } if(FRAMES_HIDE_BUTTON.equals(functionName)) {
       return hideButton(parser, functionName, parameters);
-    } if("frames_showButton".equals(functionName)) {
+    } if(FRAMES_SHOW_BUTTON.equals(functionName)) {
       return showButton(parser, functionName, parameters);
-    } if("frames_enableButton".equals(functionName)) {
+    } if(FRAMES_ENABLE_BUTTON.equals(functionName)) {
       return enableButton(parser, functionName, parameters);
-    } if("frames_disableButton".equals(functionName)) {
+    } if(FRAMES_DISABLE_BUTTON.equals(functionName)) {
       return disableButton(parser, functionName, parameters);
-    } if("frames_isHiddenButton".equals(functionName)) {
+    } if(FRAMES_IS_HIDDEN_BUTTON.equals(functionName)) {
       return isHiddenButton(parser, functionName, parameters);
-    } if("frames_isEnabledButton".equals(functionName)) {
+    } if(FRAMES_IS_ENABLED_BUTTON.equals(functionName)) {
       return isEnabledButton(parser, functionName, parameters);
     }
     
-    throw new ParserException("non existing function: " + functionName);
+    return throwNotFoundParserException(functionName);
 	}
 	
 	private Object isFrameVisible(Parser parser, String functionName, List<Object> parameters) throws ParserException {

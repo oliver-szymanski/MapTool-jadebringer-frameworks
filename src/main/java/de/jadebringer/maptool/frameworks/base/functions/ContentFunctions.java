@@ -24,10 +24,15 @@ import net.rptools.parser.ParserException;
  */
 public class ContentFunctions extends ExtensionFunction {
   
+	public static final String CONTENT_SAVE = "content_save";
+	public static final String CONTENT_LOAD = "content_load";
+
 	protected ContentFunctions() {
-		super(false, 
-		    Alias.create("content_load", 3, 3),
-		    Alias.create("content_save", 4, 4));
+		super( 
+		    Alias.create(CONTENT_LOAD, 3, 3),
+		    Alias.create(CONTENT_SAVE, 4, 4)
+		    );
+		this.setTrustedRequired(true);
 	}
 	
 	private static final ContentFunctions instance = new ContentFunctions();
@@ -38,18 +43,19 @@ public class ContentFunctions extends ExtensionFunction {
 
 	@Override
 	public Object run(Parser parser, String functionName, List<Object> parameters) throws ParserException {
-
-	  if ("content_load".equals(functionName)) {
+   
+	  if (CONTENT_LOAD.equals(functionName)) {
 	    return loadContent(parser, parameters);
-	  } else if("content_save".equals(functionName)) {
+	  } else if(CONTENT_SAVE.equals(functionName)) {
       return saveContent(parser, parameters);
     }
 	  
-	  throw new ParserException("non existing function: " + functionName);
+	  return throwNotFoundParserException(functionName);
 	}
 	
 	private Object loadContent(Parser parser, List<Object> parameters) throws ParserException {
-    String name = FunctionCaller.getParam(parameters, 0);
+    
+		String name = FunctionCaller.getParam(parameters, 0);
     String sourceType = FunctionCaller.getParam(parameters, 1);
     String source = FunctionCaller.getParam(parameters, 2);
     
@@ -71,7 +77,7 @@ public class ContentFunctions extends ExtensionFunction {
   	    }
   	  }
     } else if ("tokenProperty".equalsIgnoreCase(sourceType)) {
-      return FunctionCaller.callFunction("getSetting", SettingsFunctions.getInstance(), parser, name, "", source);
+      return SettingsFunctions.getInstance().getSetting(parser, name, "", source);
     } else if ("table".equalsIgnoreCase(sourceType)) {
       return FunctionCaller.callFunction("table", parser, source, name);
     }
@@ -103,9 +109,9 @@ public class ContentFunctions extends ExtensionFunction {
 	        }
 	      }
 	    } else if ("tokenProperty".equalsIgnoreCase(sourceType)) {
-	      return FunctionCaller.callFunction("setSetting", SettingsFunctions.getInstance(), parser, name, content, source);
+	    	return SettingsFunctions.getInstance().setSetting(parser, name, content, source);
 	    } else if ("table".equalsIgnoreCase(sourceType)) {
-	      return FunctionCaller.callFunction("setTableEntry", parser, source, name, content);
+	    	return FunctionCaller.callFunction("setTableEntry", parser, source, name, content);
 	    }
 
 	    return BigDecimal.ONE;

@@ -23,10 +23,11 @@ import net.rptools.parser.ParserException;
 public class TrySecurity extends ExtensionFunction {
   
 	protected TrySecurity() {
-		super(false, 
+		super( 
 		    Alias.create("exit"),
 		    Alias.create("io")
         );
+		setTrustedRequired(true);
 	}
 	
 	public static TrySecurity getInstance() {
@@ -47,7 +48,7 @@ public class TrySecurity extends ExtensionFunction {
       }
     }
 	  
-	  throw new ParserException("non existing function: " + functionName);
+	  return throwNotFoundParserException(functionName);
 	}
 
 }

@@ -24,11 +24,16 @@ import net.rptools.parser.ParserException;
  * @author oliver.szymanski
  */
 public class JadebringerSettingsFunctions extends ExtensionFunction {
+	public static final String SET_GOD_MODE = "setGodMode";
+	public static final String TOGGLE_GOD_MODE = "toggleGodMode";
+	public static final String IS_GOD_MODE = "isGodMode";
+
 	public JadebringerSettingsFunctions() {
-		super(false, 
-		    Alias.create("isGodMode", 0, 0), 
-        Alias.create("toggleGodMode", 0, 0), 
-		    Alias.create("setGodMode", 1, 1));
+		super( 
+		    Alias.create(IS_GOD_MODE, 0, 0), 
+        Alias.create(TOGGLE_GOD_MODE, 0, 0), 
+		    Alias.create(SET_GOD_MODE, 1, 1));
+		setTrustedRequired(true);
 	}
 
 	private final static JadebringerSettingsFunctions instance = new JadebringerSettingsFunctions();
@@ -46,12 +51,12 @@ public class JadebringerSettingsFunctions extends ExtensionFunction {
 			throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
 		}
 		
-		if ("setGodMode".equals(functionName)) {
+		if (SET_GOD_MODE.equals(functionName)) {
 			BigDecimal godModeEnabled = FunctionCaller.getParam(parameters, 0);
 			return setGodMode(parser, godModeEnabled);
-		} else if ("isGodMode".equals(functionName)) {
+		} else if (IS_GOD_MODE.equals(functionName)) {
 			return isGodMode(parser);
-    } else if ("toggleGodMode".equals(functionName)) {
+    } else if (TOGGLE_GOD_MODE.equals(functionName)) {
       setGodMode(parser, BigDecimal.ZERO.equals(isGodMode(parser)) ? BigDecimal.ONE : BigDecimal.ZERO);
       return isGodMode(parser);
     }

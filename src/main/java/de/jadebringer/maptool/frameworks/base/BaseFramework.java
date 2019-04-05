@@ -53,89 +53,89 @@ public class BaseFramework extends ExtensionFrameworkBundle {
 		chatMacros.add(new FrameworksMacro());
 		chatMacros.add(new CallMacro());
 		
-    functionButtons.add(new ExtensionFunctionButton("list settings", "list setting", "settings", "basics", "/images/settings-knobs.png", false, true) {
+    functionButtons.add(new ExtensionFunctionButton("list settings", "list settings", "list setting", "settings", "basics", "/images/settings-knobs.png", false, true) {
       @Override
       public void run(Parser parser) throws ParserException {
-        Object result = FunctionCaller.callFunction("listSettings", SettingsFunctions.getInstance(), parser);
+        Object result = FunctionCaller.callFunction(SettingsFunctions.LIST_SETTINGS, SettingsFunctions.getInstance(), parser);
         if (result != null) { MapTool.addLocalMessage(result.toString()); }
       }     
     });
-    functionButtons.add(new ExtensionFunctionButton("get setting", "get setting", "settings", "basics", "/images/read.png", false, true) {
+    functionButtons.add(new ExtensionFunctionButton("get setting", "get setting", "get setting", "settings", "basics", "/images/read.png", false, true) {
       @Override
       public void run(Parser parser) throws ParserException{
         Object key = FunctionCaller.askForVariable(parser, "key", null);
         if (key == null) { return; }
-        Object result = FunctionCaller.callFunction("getSetting", SettingsFunctions.getInstance(), parser, key);
+        Object result = FunctionCaller.callFunction(SettingsFunctions.GET_SETTING, SettingsFunctions.getInstance(), parser, key);
         if (result != null) { MapTool.addLocalMessage(key + " = " + result.toString()); }
       }     
     });
-		functionButtons.add(new ExtensionFunctionButton("set setting", "set setting", "settings", "basics", "/images/pencil.png", false, true) {
+		functionButtons.add(new ExtensionFunctionButton("set setting", "set setting", "set setting", "settings", "basics", "/images/pencil.png", false, true) {
       @Override
       public void run(Parser parser) throws ParserException {
         Object key = FunctionCaller.askForVariable(parser, "key", null);
         Object value = FunctionCaller.askForVariable(parser, "value", null);
         if (key == null) { return; }
-        FunctionCaller.callFunction("setSetting", SettingsFunctions.getInstance(), parser, key, value);
+        FunctionCaller.callFunction(SettingsFunctions.SET_SETTING, SettingsFunctions.getInstance(), parser, key, value);
         MapTool.addLocalMessage(key + " = " + value);
       }     
     });
-    functionButtons.add(new ExtensionFunctionButton("delete setting", "delete setting", "settings", "basics", "/images/alligator-clip.png", false, true) {
+    functionButtons.add(new ExtensionFunctionButton("delete setting", "delete setting", "delete setting", "settings", "basics", "/images/alligator-clip.png", false, true) {
       @Override
       public void run(Parser parser) throws ParserException {
         Object key = FunctionCaller.askForVariable(parser, "key", null);
         if (key == null) { return; }
-        FunctionCaller.callFunction("deleteSetting", SettingsFunctions.getInstance(), parser, key);
+        FunctionCaller.callFunction(SettingsFunctions.DELETE_SETTING, SettingsFunctions.getInstance(), parser, key);
         MapTool.addLocalMessage(key + " deleted.");
       }     
     });
 
-    functionButtons.add(new ExtensionFunctionButton("debug", "toggle debug", "debug", "basics", "/images/spotted-bug.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("debug", "debug", "toggle debug", "debug", "basics", "/images/spotted-bug.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException {
-        Object result = FunctionCaller.callFunction("toggleDebug", DebugFunctions.getInstance(), parser);
+        Object result = FunctionCaller.callFunction(DebugFunctions.DEBUG_TOGGLE_DEBUG, DebugFunctions.getInstance(), parser);
         MapTool.addLocalMessage("debug.enabled = " +  result);
       }     
     });
-    functionButtons.add(new ExtensionFunctionButton("trace", "toggle trace", "debug", "basics", "/images/footsteps.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("trace", "trace", "toggle trace", "debug", "basics", "/images/footsteps.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException {
-        Object result = FunctionCaller.callFunction("toggleTrace", DebugFunctions.getInstance(), parser);
+        Object result = FunctionCaller.callFunction(DebugFunctions.DEBUG_TOGGLE_TRACE, DebugFunctions.getInstance(), parser);
         MapTool.addLocalMessage("trace.enabled = " +  result);
       }     
     });
 
-		functionButtons.add(new ExtensionFunctionButton("Ping", "Click for ping", "test", "basics", "/images/ping-pong-bat.png", false, false) {
+		functionButtons.add(new ExtensionFunctionButton("Ping", "Ping", "Click for ping", "test", "basics", "/images/ping-pong-bat.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException {
-        Object pong = FunctionCaller.callFunction("ping", ping, parser);
+        Object pong = FunctionCaller.callFunction(PingFunction.PING, ping, parser);
         MapTool.addLocalMessage(pong.toString());
       }    
 		});
 		
-    functionButtons.add(new ExtensionFunctionButton("Open frames", "Open frames", "manage", "frames", "/images/window.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Open frames", "Open frames", "Open frames", "manage", "frames", "/images/window.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("frames_showAllFrames", ButtonFrameFunctions.getInstance(), parser);
+        FunctionCaller.callFunction(ButtonFrameFunctions.FRAMES_SHOW_ALL_FRAMES, ButtonFrameFunctions.getInstance(), parser);
       }   
     });
-    functionButtons.add(new ExtensionFunctionButton("Close frames", "Close frames", "manage", "frames", "/images/closed-doors.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Close frames", "Close frames", "Close frames", "manage", "frames", "/images/closed-doors.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("frames_hideAllFrames", ButtonFrameFunctions.getInstance(), parser);
-        FunctionCaller.callFunction("frames_showFrame", ButtonFrameFunctions.getInstance(), parser, getPrefix()+"frames");
+        FunctionCaller.callFunction(ButtonFrameFunctions.FRAMES_HIDE_ALL_FRAMES, ButtonFrameFunctions.getInstance(), parser);
+        FunctionCaller.callFunction(ButtonFrameFunctions.FRAMES_SHOW_FRAME, ButtonFrameFunctions.getInstance(), parser, getPrefix()+"frames");
       }   
     });
     
-    functionButtons.add(new ExtensionFunctionButton("Center", "Center", "maps", "basics", "/images/window.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Center", "Center", "Center", "maps", "basics", "/images/convergence-target.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("maps_center", MapFunctions.getInstance(), parser);
+        FunctionCaller.callFunction(MapFunctions.MAPS_CENTER, MapFunctions.getInstance(), parser);
       }   
     });
-    functionButtons.add(new ExtensionFunctionButton("Extent", "Extent", "maps", "basics", "/images/window.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Extent", "Extent", "Extent", "maps", "basics", "/images/treasure-map.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
-        FunctionCaller.callFunction("maps_extent", MapFunctions.getInstance(), parser);
+        FunctionCaller.callFunction(MapFunctions.MAPS_EXTENT, MapFunctions.getInstance(), parser);
       }   
     });
 	}

@@ -27,7 +27,7 @@ public class JadebringerFramework extends ExtensionFrameworkBundle {
 		functions.add(PingFunction.getInstance(this));
     functions.add(JadebringerSettingsFunctions.getInstance());
 		
-    functionButtons.add(new ExtensionFunctionButton("godmode", "toggle godmode", "settings", "GM", "/images/hand-of-god.png", false, true) {
+    functionButtons.add(new ExtensionFunctionButton("godmode", "godmode", "toggle godmode", "settings", "GM", "/images/hand-of-god.png", false, true) {
       @Override
       public void run(Parser parser) throws ParserException {
         Object result = FunctionCaller.callFunction("toggleGodMode", JadebringerSettingsFunctions.getInstance(), parser);

@@ -34,7 +34,9 @@ public class ButtonFrameFunctions extends ExtensionFunction {
 	public static final String FRAMES_REMOVE_BUTTON = "frames_removeButton";
 	public static final String FRAMES_SHOW_FRAME = "frames_showFrame";
 	public static final String FRAMES_ADD_BUTTON = "frames_addButton";
-	public static final String FRAMES_IS_FRAME_VISIBLE = "frames_isFrameVisible";
+	public static final String FRAMES_SET_BUTTON_TEXT = "frames_setButtonText";
+	public static final String FRAMES_SET_BUTTON_IMAGE = "frames_setButtonImage";
+  public static final String FRAMES_IS_FRAME_VISIBLE = "frames_isFrameVisible";
 	public static final String FRAMES_HIDE_FRAME = "frames_hideFrame";
 	public static final String FRAMES_HIDE_ALL_FRAMES = "frames_hideAllFrames";
 	public static final String FRAMES_SHOW_ALL_FRAMES = "frames_showAllFrames";
@@ -46,7 +48,9 @@ public class ButtonFrameFunctions extends ExtensionFunction {
         Alias.create(FRAMES_SHOW_FRAME), 
         Alias.create(FRAMES_HIDE_FRAME),
 		    Alias.create(FRAMES_IS_FRAME_VISIBLE, 1, 1),
-		    Alias.create(FRAMES_ADD_BUTTON, 9, 9),
+		    Alias.create(FRAMES_ADD_BUTTON, 10, 10),
+        Alias.create(FRAMES_SET_BUTTON_TEXT, 5, 5),
+        Alias.create(FRAMES_SET_BUTTON_IMAGE, 5, 5),
         Alias.create(FRAMES_REMOVE_BUTTON, 4, 4),
         Alias.create(FRAMES_SHOW_BUTTON, 4, 4),
         Alias.create(FRAMES_HIDE_BUTTON, 4, 4),
@@ -83,6 +87,10 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       return addButton(parser, functionName, parameters);
     } if(FRAMES_REMOVE_BUTTON.equals(functionName)) {
       return removeButton(parser, functionName, parameters);
+    } if(FRAMES_SET_BUTTON_TEXT.equals(functionName)) {
+      return setButtonText(parser, functionName, parameters);
+    } if(FRAMES_SET_BUTTON_IMAGE.equals(functionName)) {
+      return setButtonImage(parser, functionName, parameters);
     } if(FRAMES_HIDE_BUTTON.equals(functionName)) {
       return hideButton(parser, functionName, parameters);
     } if(FRAMES_SHOW_BUTTON.equals(functionName)) {
@@ -139,15 +147,16 @@ public class ButtonFrameFunctions extends ExtensionFunction {
   public Object addButton(Parser parser, String functionName, List<Object> parameters) throws ParserException {
     String macroName = FunctionCaller.getParam(parameters, 0);
     String name = FunctionCaller.getParam(parameters, 1);
-    String tooltip = FunctionCaller.getParam(parameters, 2);
-    String group = FunctionCaller.getParam(parameters, 3);
-    String frame = FunctionCaller.getParam(parameters, 4);
-    String prefix = FunctionCaller.getParam(parameters, 5);
-    String imageFile = FunctionCaller.getParam(parameters, 6);
-    boolean frameAndImage = FunctionCaller.toBoolean(FunctionCaller.getParam(parameters, 7));
-    boolean trustedRequired = FunctionCaller.toBoolean(FunctionCaller.getParam(parameters, 8));
+    String text = FunctionCaller.getParam(parameters, 2);
+    String tooltip = FunctionCaller.getParam(parameters, 3);
+    String group = FunctionCaller.getParam(parameters, 4);
+    String frame = FunctionCaller.getParam(parameters, 5);
+    String prefix = FunctionCaller.getParam(parameters, 6);
+    String imageFile = FunctionCaller.getParam(parameters, 7);
+    boolean frameAndImage = FunctionCaller.toBoolean(FunctionCaller.getParam(parameters, 8));
+    boolean trustedRequired = FunctionCaller.toBoolean(FunctionCaller.getParam(parameters, 9));
         
-    ExtensionFunctionButton extensionFunctionButton = new ExtensionFunctionButton(name, tooltip, group, frame, imageFile, frameAndImage, trustedRequired) {
+    ExtensionFunctionButton extensionFunctionButton = new ExtensionFunctionButton(name, text, tooltip, group, frame, imageFile, frameAndImage, trustedRequired) {
       @Override
       public void run(Parser parser) throws ParserException{
         StringBuffer macroArgs = new StringBuffer();
@@ -248,5 +257,35 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) { return BigDecimal.ZERO; }
     return FunctionCaller.fromBoolean(buttonFrame.isEnabled(extensionFunctionButton));
+  }
+  
+  public Object setButtonText(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+    String name = FunctionCaller.getParam(parameters, 0);
+    String group = FunctionCaller.getParam(parameters, 1);
+    String frame = FunctionCaller.getParam(parameters, 2);
+    String prefix = FunctionCaller.getParam(parameters, 3);
+    String text = FunctionCaller.getParam(parameters, 4);
+    ExtensionFunctionButton extensionFunctionButton = FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+    if (extensionFunctionButton == null) { return BigDecimal.ZERO; }
+    extensionFunctionButton.setText(text);
+    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    if (buttonFrame == null) { return BigDecimal.ZERO; }
+    buttonFrame.update(extensionFunctionButton);
+    return BigDecimal.ONE;
+  }
+  
+  public Object setButtonImage(Parser parser, String functionName, List<Object> parameters) throws ParserException {
+    String name = FunctionCaller.getParam(parameters, 0);
+    String group = FunctionCaller.getParam(parameters, 1);
+    String frame = FunctionCaller.getParam(parameters, 2);
+    String prefix = FunctionCaller.getParam(parameters, 3);
+    String imageFile = FunctionCaller.getParam(parameters, 4);
+    ExtensionFunctionButton extensionFunctionButton = FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+    if (extensionFunctionButton == null) { return BigDecimal.ZERO; }
+    extensionFunctionButton.setImageFile(imageFile);
+    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    if (buttonFrame == null) { return BigDecimal.ZERO; }
+    buttonFrame.update(extensionFunctionButton);
+    return BigDecimal.ONE;
   }
 }

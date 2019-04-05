@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

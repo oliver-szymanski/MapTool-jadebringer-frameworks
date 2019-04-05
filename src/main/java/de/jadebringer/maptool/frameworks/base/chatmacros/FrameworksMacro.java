@@ -11,10 +11,10 @@ package de.jadebringer.maptool.frameworks.base.chatmacros;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolMacroContext;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
-import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.parser.ParserException;

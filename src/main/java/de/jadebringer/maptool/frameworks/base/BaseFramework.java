@@ -4,6 +4,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
+import de.jadebringer.maptool.extensionframework.ExtensionFrameworkBundle;
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
+import de.jadebringer.maptool.extensionframework.Version;
 import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
 import de.jadebringer.maptool.frameworks.base.chatmacros.FrameworksMacro;
 import de.jadebringer.maptool.frameworks.base.functions.DebugFunctions;
@@ -18,12 +24,6 @@ import de.jadebringer.maptool.frameworks.base.functions.PingFunction;
 import de.jadebringer.maptool.frameworks.base.functions.SettingsFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.TrySecurity;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFrameworkBundle;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunctionButton;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
-import net.rptools.maptool.client.functions.frameworkfunctions.Version;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

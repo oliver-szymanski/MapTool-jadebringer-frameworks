@@ -10,9 +10,9 @@ package de.jadebringer.maptool.frameworks.base.functions;
 
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

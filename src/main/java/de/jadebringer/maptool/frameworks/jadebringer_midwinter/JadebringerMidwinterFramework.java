@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
+import de.jadebringer.maptool.extensionframework.ExtensionFrameworkBundle;
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
+import de.jadebringer.maptool.extensionframework.Version;
 import de.jadebringer.maptool.frameworks.base.functions.PingFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFrameworkBundle;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunctionButton;
-import net.rptools.maptool.client.functions.frameworkfunctions.Version;
 
 public class JadebringerMidwinterFramework extends ExtensionFrameworkBundle {
 	

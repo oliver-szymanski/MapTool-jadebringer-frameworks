@@ -11,8 +11,8 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import java.time.LocalDate;
 import java.util.List;
 
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFrameworkBundle;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.ExtensionFrameworkBundle;
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

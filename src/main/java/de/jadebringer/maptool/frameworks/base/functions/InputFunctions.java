@@ -66,7 +66,6 @@ import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
 import net.rptools.maptool.client.functions.StrListFunctions;
 import net.rptools.maptool.client.functions.StrPropFunctions;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionToExtensionFunctionBridge;
 import net.rptools.maptool.client.ui.htmlframe.HTMLPane;
 import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.Token;
@@ -79,6 +78,7 @@ import net.rptools.parser.function.ParameterException;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.jadebringer.maptool.extensionframework.FunctionToExtensionFunctionBridge;
 import de.jadebringer.maptool.frameworks.base.functions.InputFunctions.InputType.OptionException;
 import de.muntjak.tinylookandfeel.TinyComboBoxButton;
 

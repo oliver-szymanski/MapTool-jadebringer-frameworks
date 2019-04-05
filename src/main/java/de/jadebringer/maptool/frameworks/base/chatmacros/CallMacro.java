@@ -11,10 +11,10 @@ package de.jadebringer.maptool.frameworks.base.chatmacros;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolLineParser;
 import net.rptools.maptool.client.MapToolMacroContext;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionChatMacro;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.parser.ParserException;

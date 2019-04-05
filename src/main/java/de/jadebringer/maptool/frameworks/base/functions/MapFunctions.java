@@ -12,9 +12,9 @@ import java.awt.Rectangle;
 import java.math.BigDecimal;
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.maptool.client.ui.zone.ZoneRenderer;
 import net.rptools.maptool.model.CellPoint;
 import net.rptools.maptool.model.ZonePoint;

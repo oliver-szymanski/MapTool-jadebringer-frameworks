@@ -10,12 +10,12 @@ package de.jadebringer.maptool.frameworks.base.functions;
 
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions.Run;
+import de.jadebringer.maptool.extensionframework.FunctionCaller.TokenWrapper;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.functions.TokenPropertyFunctions;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions.Run;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller.TokenWrapper;
 import net.rptools.maptool.model.Token;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;

@@ -17,12 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import com.jidesoft.grid.PropertyTable;
+
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import de.jadebringer.maptool.frameworks.base.ui.PropertiesTableModel;
 import de.jadebringer.maptool.frameworks.base.ui.WordWrapCellRenderer;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
 import net.rptools.maptool.language.I18N;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;

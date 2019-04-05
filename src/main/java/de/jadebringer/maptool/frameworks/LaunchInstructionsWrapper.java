@@ -2,9 +2,9 @@ package de.jadebringer.maptool.frameworks;
 
 import java.util.List;
 
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
 import net.rptools.maptool.client.LaunchInstructions;
 import net.rptools.maptool.client.MapTool;
-import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions;
 import net.rptools.parser.function.Function;
 
 public class LaunchInstructionsWrapper {

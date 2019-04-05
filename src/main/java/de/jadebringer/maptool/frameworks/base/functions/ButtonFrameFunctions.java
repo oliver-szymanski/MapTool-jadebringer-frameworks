@@ -11,11 +11,11 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import java.math.BigDecimal;
 import java.util.List;
 
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunctionButton;
-import net.rptools.maptool.client.functions.frameworkfunctions.FrameworksFunctions;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
-import net.rptools.maptool.client.functions.frameworkfunctions.ui.ButtonFrame;
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
+import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

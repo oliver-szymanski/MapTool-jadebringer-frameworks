@@ -19,14 +19,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunction;
+import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import net.rptools.lib.MD5Key;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
 import net.rptools.maptool.client.functions.JSONMacroFunctions;
 import net.rptools.maptool.client.functions.MacroLinkFunction;
-import net.rptools.maptool.client.functions.frameworkfunctions.FunctionCaller;
-import net.rptools.maptool.client.functions.frameworkfunctions.ExtensionFunction;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.language.I18N;
 import net.rptools.maptool.model.GUID;

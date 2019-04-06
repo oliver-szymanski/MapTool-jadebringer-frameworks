@@ -50,29 +50,32 @@ ext {
 }
 
 task cloneMapToolLibraryFromGit {
-   	println "looking for MapTool in directory: " + maptoolDirectory
-	def maptoolLib = file(maptoolDirectory)
-	if (!maptoolLib.exists()) {
-    	println "MapTool directory not found, trying to get from Git (" + maptoolGitRef + " from " + maptoolGitUrl + ")"
-    	def grgit = Grgit.clone(dir: file(maptoolDirectory), uri: maptoolGitUrl, bare: false, checkout: true, refToCheckout: maptoolGitRef)
-    	println "download finished in: "+maptoolDirectory
-    	grgit.close()
-    } else {
-    	println "git dependency found in: "+maptoolDirectory
+	doFirst {
+	   	println "looking for MapTool in directory: " + maptoolDirectory
+		def maptoolLib = file(maptoolDirectory)
+		if (!maptoolLib.exists()) {
+	    	println "MapTool directory not found, trying to get from Git (" + maptoolGitRef + " from " + maptoolGitUrl + ")"
+	    	def grgit = Grgit.clone(dir: file(maptoolDirectory), uri: maptoolGitUrl, bare: false, checkout: true, refToCheckout: maptoolGitRef)
+	    	println "download finished in: "+maptoolDirectory
+	    	grgit.close()
+	    } else {
+	    	println "git dependency found in: "+maptoolDirectory
+	    }
     }
 }
 
-task buildMapToolLibraryFromGit(type: GradleBuild) {
-	dependsOn cloneMapToolLibraryFromGit
-   	println "looking for MapTool to build from directory: " + maptoolDirectory
-	def maptoolLib = file(maptoolDirectory)
-	if (maptoolLib.exists()) {
-		println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
-  		buildFile = maptoolDirectory+'/build.gradle'
-  		dir = maptoolDirectory
-  		tasks = ['build']
-  	} else {
-  		println 'liberary dependency from git not found: ' + maptoolDirectory+'/build.gradle'
+task buildMapToolLibraryFromGit(dependsOn: cloneMapToolLibraryFromGit, type: GradleBuild) {
+	doFirst {
+	   	println "looking for MapTool to build from directory: " + maptoolDirectory
+		def maptoolLib = file(maptoolDirectory)
+		if (maptoolLib.exists()) {
+			println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
+	  		buildFile = maptoolDirectory+'/build.gradle'
+	  		dir = maptoolDirectory
+	  		tasks = ['build']
+	  	} else {
+	  		println 'liberary dependency from git not found: ' + maptoolDirectory+'/build.gradle'
+	  	}
   	}
 }
 

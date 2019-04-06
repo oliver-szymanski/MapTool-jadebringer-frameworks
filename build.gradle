@@ -126,13 +126,7 @@ dependencies {
     implementation group: 'com.fifesoft', name: 'rstaui', version: '3.0.0'				// https://mvnrepository.com/artifact/com.fifesoft/rstaui
     implementation group: 'com.fifesoft', name: 'autocomplete', version: '3.0.0'		// https://mvnrepository.com/artifact/com.fifesoft/autocomplete
 
-	//implementation ('rptools:MapTool')  {
-     //   version {
-     //       branch = 'master'
-     //   }
-    //}
-    //compile 'com.github.oliver-szymanski:MapTool:1.5.1-jadebringer'
-     implementation (name:'MapTool', ext:'jar')
+	implementation (name:'MapTool', ext:'jar')
     
 }
 

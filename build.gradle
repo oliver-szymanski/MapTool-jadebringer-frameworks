@@ -19,6 +19,7 @@ apply plugin: 'java'
 
 mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
 applicationDefaultJvmArgs = ["-Xss4M"]
+maptoolDirectory = project.buildDir.absolutePath + "/" + maptoolDirectory
 
 import org.ajoberstar.grgit.Grgit
 
@@ -54,20 +55,32 @@ task cloneLibrariesFromGit {
 	if (!maptoolLib.exists()) {
     	println "MapTool directory not found, trying to get from Git (" + maptoolGitRef + " from " + maptoolGitUrl + ")"
     	def grgit = Grgit.clone(dir: file(maptoolDirectory), uri: maptoolGitUrl, bare: false, checkout: true, refToCheckout: maptoolGitRef)
-    	println "download finished"
+    	println "download finished in: "+maptoolDirectory
     	grgit.close()
+    } else {
+    	println "git dependency found in: "+maptoolDirectory
     }
 }
 
 task buildFromGit(type: GradleBuild) {
 	dependsOn cloneLibrariesFromGit
-	println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
-  	buildFile = maptoolDirectory+'/build.gradle'
-  	dir = maptoolDirectory
-  	tasks = ['build']
+   	println "looking for MapTool to build from directory: " + maptoolDirectory
+	def maptoolLib = file(maptoolDirectory)
+	if (maptoolLib.exists()) {
+		println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
+  		buildFile = maptoolDirectory+'/build.gradle'
+  		dir = maptoolDirectory
+  		tasks = ['build']
+  	} else {
+  		println 'liberary dependency from git not found: ' + maptoolDirectory+'/build.gradle'
+  	}
 }
 
 startScripts {
+    dependsOn buildFromGit
+}
+
+compileJava {
     dependsOn buildFromGit
 }
 
@@ -79,7 +92,6 @@ repositories {
     maven { url = 'http://maptool.craigs-stuff.net/repo/' }
     maven { url = 'http://www.nerps.net/repo/' }
     //maven { url = 'http://nexus.fyiblue.com/content/groups/public' }
-    
     //maven { url "https://jitpack.io" }
     mavenLocal()
     
@@ -120,12 +132,8 @@ dependencies {
      //   }
     //}
     //compile 'com.github.oliver-szymanski:MapTool:1.5.1-jadebringer'
-    //implementation group: 'rptools', name: 'MapTool', version: maptoolGitRef
-    //implementation project(":MapTool")
-     compile (name:'MapTool', ext:'jar')
+     implementation (name:'MapTool', ext:'jar')
     
-//    implementation files "MapTool"
-
 }
 
 jar {

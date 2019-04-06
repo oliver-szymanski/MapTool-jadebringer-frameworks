@@ -19,7 +19,7 @@ apply plugin: 'java'
 
 mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
 applicationDefaultJvmArgs = ["-Xss4M"]
-maptoolDirectory = project.buildDir.absolutePath + "/../" + maptoolDirectory
+//maptoolDirectory = project.buildDir.absolutePath + "/../" + maptoolDirectory
 
 import org.ajoberstar.grgit.Grgit
 

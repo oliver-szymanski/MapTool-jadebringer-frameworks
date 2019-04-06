@@ -1,10 +1,6 @@
 # MapTool-jadebringer-frameworks
 
-## Ideas
-- findToken with returning tokenId, name, map, ...
-- doWithToken, changing to the zone and back again
-
-Features:
+## Features:
 
 - have a "/call functionName(parameters)" chat macro to call any function via chat
 - show chat in fullscreen
@@ -46,3 +42,19 @@ Optional: the Java extension framework (more info for Java developers on request
 - add call macros and macro functions via Java dynamically
 - security build in, checks for trusted and that no not allowed code is executed
 - additional feature: load Java extensions as java jars via file system or any URL
+
+## Install
+
+You can use the existing installation of MapTool v1.5.1 or higher with this extension framework.
+To have the additional functions just change the MapTool config file which you can find inside the MapTool installation directory, e.g. in
+
+C:\Users\username\AppData\Local\MapTool-1.5.1\app\MapTool.cfg
+
+Change the line with "app.classpath" to include the "MapTool-jadebringer-frameworks.jar"
+
+app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-frameworks.jar
+
+And the line with "app.mainclass" to match this:
+app.mainclass=de/jadebringer/maptool/frameworks/LaunchInstructionsWrapper
+
+Then copy the "MapTool-jadebringer.jar" inside this app directory. Now you can start MapTool as usual.

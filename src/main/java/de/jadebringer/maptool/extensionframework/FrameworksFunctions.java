@@ -16,6 +16,7 @@ package de.jadebringer.maptool.extensionframework;
 
 import de.jadebringer.maptool.extensionframework.ui.BaseComponentListener;
 import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
+import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -32,9 +33,11 @@ import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import net.rptools.common.expression.ExpressionParser;
 import net.rptools.maptool.client.MapTool;
@@ -51,7 +54,6 @@ import de.jadebringer.maptool.extensionframework.SecurityManagerPackageAccess;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.maptool.client.macro.MacroManager;
-import net.rptools.maptool.client.ui.syntax.MapToolScriptSyntax;
 import net.rptools.maptool.language.I18N;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
@@ -169,6 +171,22 @@ public class FrameworksFunctions implements Function {
 
     frameworksClassLoader.clear();
     frameworksClassLoaderToLibs.clear();
+    
+    // init call macro, as the loadBaseFramework during getAliases is to late for that
+    ExtensionChatMacro callMacro = new CallMacro();
+    MacroDefinition macroDefinition = callMacro.getClass().getAnnotation(MacroDefinition.class);
+    if (macroDefinition != null) {
+      MacroManager.registerMacro(callMacro);
+    }
+  }
+
+  private void loadBaseFramework() {
+    try {
+      Parser parser = new Parser();
+      this.importFunctionsBundle(parser, true, "importFunctionsBundle", FunctionCaller.toObjectList("", "de.jadebringer.maptool.frameworks.base.BaseFramework"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private synchronized void initFrameworksFromExtensionDirectory() {
@@ -258,7 +276,7 @@ public class FrameworksFunctions implements Function {
 
     if (IMPORT_FUNCTIONS_BUNDLE.equals(functionName)) {
       registerMapToolFrameListener();
-      return importFunctionsBundle(parser, IMPORT_FUNCTIONS_BUNDLE, parameters);
+      return importFunctionsBundle(parser, false, IMPORT_FUNCTIONS_BUNDLE, parameters);
     } else if (RESET_FRAMEWORKS.equals(functionName)) {
       registerMapToolFrameListener();
       init();
@@ -285,7 +303,7 @@ public class FrameworksFunctions implements Function {
   }
 
   private synchronized Object importFunctionsBundle(
-      Parser parser, String functionName, List<Object> parameters)
+      Parser parser, boolean silent, String functionName, List<Object> parameters)
       throws ParameterException, ParserException {
     this.checkParameters(parameters);
 
@@ -297,7 +315,7 @@ public class FrameworksFunctions implements Function {
 
     List<String> newFunctionNames = new LinkedList<String>();
     List<String> newChatMacros = new LinkedList<String>();
-    List<String> newButtonFrames = new LinkedList<String>();
+    Set<String> newButtonFrames = new HashSet<String>();
 
     String prefix = FunctionCaller.getParam(parameters, 0);
     String frameworkFunctionBundle = FunctionCaller.getParam(parameters, 1);
@@ -341,15 +359,17 @@ public class FrameworksFunctions implements Function {
                           this.getClass().getClassLoader())
                       .getDeclaredConstructor()
                       .newInstance();
-          MapTool.addLocalMessage(
-              "imported bundle: '" + frameworkFunctionBundle.toString() + "' from base libraries.");
+          if (!silent && MapTool.getPlayer() != null) {
+            MapTool.addLocalMessage(
+                "imported bundle: '" + frameworkFunctionBundle.toString() + "' from base libraries.");
+          }
         } catch (Exception e) {
           // safe to ignore
         }
       }
 
       // check if bundle was found
-      if (framework == null) {
+      if (framework == null && MapTool.getPlayer() != null) {
         MapTool.addLocalMessage(
             "bundle not found in any lib: " + frameworkFunctionBundle.toString());
         return BigDecimal.ZERO;
@@ -361,7 +381,7 @@ public class FrameworksFunctions implements Function {
       Collection<? extends ExtensionChatMacro> chatMacros = framework.getChatMacros();
 
       // are we running in trusted context
-      boolean trusted = MapTool.getParser().isMacroPathTrusted();
+      boolean trusted = MapTool.getParser().isMacroPathTrusted() || MapTool.getPlayer().isGM();
 
       // init extension functions
       for (ExtensionFunction function : functions) {
@@ -400,21 +420,16 @@ public class FrameworksFunctions implements Function {
         }
 
         this.addExtensionFunctionButton(functionButton, prefix);
-        newButtonFrames.add(functionButton.getFrame());
+        newButtonFrames.add(functionButton.getPrefixedFrameId());
       }
-
-      if (Boolean.FALSE.equals(
-          FunctionCaller.getVariable(parser, "framework.functions.frame.autoshow", false))) {
-        for (ButtonFrame buttonFrame : buttonFrames.values()) {
-          buttonFrame.show();
-        }
-      }
-
     } catch (Exception e) {
-      // MapTool.addLocalMessage(
-      //    "could not load bundle (maybe it's libary was not imported): "
-      //        + frameworkFunctionBundle.toString() + "(" + e.toString() + ")");
-      e.printStackTrace();
+      if (MapTool.getPlayer() != null) {
+      MapTool.addLocalMessage(
+          "could not load bundle (maybe it's libary was not imported): "
+              + frameworkFunctionBundle.toString() + "(" + e.toString() + ")");
+      } else {
+        e.printStackTrace();
+      }
       return BigDecimal.ZERO;
     }
 
@@ -422,23 +437,20 @@ public class FrameworksFunctions implements Function {
     String buttonFrames = newButtonFrames.stream().collect(Collectors.joining(", "));
     String macros = newChatMacros.stream().collect(Collectors.joining(", "));
 
-    // cache current alias list
-    String[] extensionAliases = frameworkFunctionsAliasMap.keySet().toArray(new String[] {});
-    String[] frameworkAliases = getFrameworksFunctionNames();
-    String[] allAliases = new String[extensionAliases.length + frameworkAliases.length];
-    System.arraycopy(extensionAliases, 0, allAliases, 0, extensionAliases.length);
-    System.arraycopy(
-        frameworkAliases, 0, allAliases, extensionAliases.length, frameworkAliases.length);
-    this.aliases = allAliases;
-
-    MapToolScriptSyntax.resetScriptSyntax();
-    MapTool.addLocalMessage(
-        "bundle " + frameworkFunctionBundle + " defined chat macros: " + macros);
-    MapTool.addLocalMessage(
-        "bundle " + frameworkFunctionBundle + " defined button frames macros: " + buttonFrames);
-    MapTool.addLocalMessage(
-        "bundle " + frameworkFunctionBundle + " defined functions: " + functions);
-
+    // make sure the alias list will be recalculated next time it is accessed
+    this.aliases = null;
+    
+    // MapTool might not be fully initialized yet if this is called via startup
+    // this check prevents a null pointer exception which would happen sending the messages
+    if (!silent && MapTool.getPlayer() != null) {
+      MapTool.addLocalMessage(
+          "bundle " + frameworkFunctionBundle + " defined chat macros: " + macros);
+      MapTool.addLocalMessage(
+          "bundle " + frameworkFunctionBundle + " defined button frames macros: " + buttonFrames);
+      MapTool.addLocalMessage(
+          "bundle " + frameworkFunctionBundle + " defined functions: " + functions);  
+    }
+    
     return BigDecimal.ONE;
   }
 
@@ -468,14 +480,12 @@ public class FrameworksFunctions implements Function {
     return buttonFrames.get(frame);
   }
 
-  public void addExtensionFunctionButton(
+  public ButtonFrame addExtensionFunctionButton(
       ExtensionFunctionButton extensionFunctionButton, String prefix) {
     extensionFunctionButton.setPrefix(prefix);
-    String frame = extensionFunctionButton.getFrame();
-    if (prefix != null && prefix.length() > 0) {
-      frame = prefix + frame;
-    }
+    String frame = extensionFunctionButton.getPrefixedFrameId();
     ButtonFrame buttonFrame = buttonFrames.get(frame);
+ 
     if (buttonFrame == null) {
       buttonFrame =
           new ButtonFrame(
@@ -486,6 +496,7 @@ public class FrameworksFunctions implements Function {
     }
 
     buttonFrame.add(extensionFunctionButton);
+    return buttonFrame;
   }
 
   private Object executeFunction(Parser parser, String functionName, List<Object> parameters)
@@ -594,7 +605,7 @@ public class FrameworksFunctions implements Function {
         result = runnable.run();
       } else {
         AccessController.doPrivileged(
-            new PrivilegedExceptionAction<>() {
+            new PrivilegedExceptionAction<Object>() {
               public T run() throws Exception {
                 return runnable.run();
               }
@@ -656,8 +667,19 @@ public class FrameworksFunctions implements Function {
   }
 
   public String[] getAliases() {
+    if (this.frameworkFunctions == null || this.frameworkFunctions.isEmpty()) {
+      loadBaseFramework();
+    }
+
     if (aliases == null) {
-      aliases = getFrameworksFunctionNames();
+      // cache current alias list
+      String[] extensionAliases = frameworkFunctionsAliasMap.keySet().toArray(new String[] {});
+      String[] frameworkAliases = getFrameworksFunctionNames();
+      String[] allAliases = new String[extensionAliases.length + frameworkAliases.length];
+      System.arraycopy(extensionAliases, 0, allAliases, 0, extensionAliases.length);
+      System.arraycopy(
+          frameworkAliases, 0, allAliases, extensionAliases.length, frameworkAliases.length);
+      this.aliases = allAliases;
     }
 
     return aliases;

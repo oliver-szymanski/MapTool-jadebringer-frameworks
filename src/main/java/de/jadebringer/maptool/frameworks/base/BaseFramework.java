@@ -22,7 +22,6 @@ import de.jadebringer.maptool.frameworks.base.functions.MapFunctions;
 import de.jadebringer.maptool.frameworks.base.functions.OutputToFunction;
 import de.jadebringer.maptool.frameworks.base.functions.PingFunction;
 import de.jadebringer.maptool.frameworks.base.functions.SettingsFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.TrySecurity;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
@@ -34,7 +33,7 @@ public class BaseFramework extends ExtensionFrameworkBundle {
 	private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
 	
 	public BaseFramework() {
-	  super(new Version(1,0,0,"jadebringer"));
+	  super(new Version(1,0,0,"jadebringer-base"));
 	  
 	  PingFunction ping = PingFunction.getInstance(this);
 	  
@@ -48,7 +47,6 @@ public class BaseFramework extends ExtensionFrameworkBundle {
     functions.add(ButtonFrameFunctions.getInstance());
     functions.add(ContentFunctions.getInstance());
     functions.add(MapFunctions.getInstance());
-    functions.add(TrySecurity.getInstance());
     
 		chatMacros.add(new FrameworksMacro());
 		chatMacros.add(new CallMacro());
@@ -112,13 +110,13 @@ public class BaseFramework extends ExtensionFrameworkBundle {
       }    
 		});
 		
-    functionButtons.add(new ExtensionFunctionButton("Open frames", "Open frames", "Open frames", "manage", "frames", "/images/window.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Open frames", "Open frames", "Open all frames", "manage", "frames", "/images/window.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
         FunctionCaller.callFunction(ButtonFrameFunctions.FRAMES_SHOW_ALL_FRAMES, ButtonFrameFunctions.getInstance(), parser);
       }   
     });
-    functionButtons.add(new ExtensionFunctionButton("Close frames", "Close frames", "Close frames", "manage", "frames", "/images/closed-doors.png", false, false) {
+    functionButtons.add(new ExtensionFunctionButton("Close frames", "Close frames", "Close all frames", "manage", "frames", "/images/closed-doors.png", false, false) {
       @Override
       public void run(Parser parser) throws ParserException{
         FunctionCaller.callFunction(ButtonFrameFunctions.FRAMES_HIDE_ALL_FRAMES, ButtonFrameFunctions.getInstance(), parser);

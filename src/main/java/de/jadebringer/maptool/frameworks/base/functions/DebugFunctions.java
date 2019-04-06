@@ -82,25 +82,25 @@ public class DebugFunctions extends ExtensionFunction {
 			throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
 		}
 		
-		if ("setDebug".equals(functionName)) {
+		if (DEBUG_SET_DEBUG.equals(functionName)) {
 			BigDecimal debugEnabled = FunctionCaller.getParam(parameters, 0);
 			return setDebug(parser, debugEnabled);
-		} else if ("setTrace".equals(functionName)) {
+		} else if (DEBUG_SET_TRACE.equals(functionName)) {
       BigDecimal traceEnabled = FunctionCaller.getParam(parameters, 0);
       return setTrace(parser, traceEnabled);
-    } else if ("isDebug".equals(functionName)) {
+    } else if (DEBUG_IS_DEBUG.equals(functionName)) {
 			return isDebug(parser);
-		} else if ("isTrace".equals(functionName)) {
+		} else if (DEBUG_IS_TRACE.equals(functionName)) {
 		  return isTrace(parser);
-    } else if ("toggleDebug".equals(functionName)) {
+    } else if (DEBUG_TOGGLE_DEBUG.equals(functionName)) {
       setDebug(parser, BigDecimal.ZERO.equals(isDebug(parser)) ? BigDecimal.ONE : BigDecimal.ZERO);
       return isDebug(parser);
-    } else if ("toggleTrace".equals(functionName)) {
+    } else if (DEBUG_TOGGLE_TRACE.equals(functionName)) {
       setTrace(parser, BigDecimal.ZERO.equals(isTrace(parser)) ? BigDecimal.ONE : BigDecimal.ZERO);
       return isTrace(parser);
-    } else if ("inspect".equals(functionName)) {
+    } else if (DEBUG_INSPECT.equals(functionName)) {
       return inspect(parser, parameters);
-    } else if ("manipulate".equals(functionName)) {
+    } else if (DEBUG_MANIPULATE.equals(functionName)) {
       return manipulate(parser, parameters);
     } else if (DEBUG.equals(functionName)) {
       if (BigDecimal.ONE.equals(isDebug(parser))) {

@@ -37,7 +37,7 @@ public class FunctionCaller {
   public static boolean hasVariable(Parser parser, String name) throws ParserException {
     try {
       return AccessController.doPrivileged(
-          new PrivilegedExceptionAction<>() {
+          new PrivilegedExceptionAction<Boolean>() {
             public Boolean run() throws Exception {
               MapToolVariableResolver resolver =
                   ((MapToolVariableResolver) parser.getVariableResolver());

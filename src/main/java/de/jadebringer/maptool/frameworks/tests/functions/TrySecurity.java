@@ -6,7 +6,7 @@
  * You should have received a copy of the GNU Affero General Public License * along with this source Code. If not, please visit <http://www.gnu.org/licenses/> and specifically the Affero license text
  * at <http://www.gnu.org/licenses/agpl.html>.
  */
-package de.jadebringer.maptool.frameworks.base.functions;
+package de.jadebringer.maptool.frameworks.tests.functions;
 
 import java.io.File;
 import java.io.IOException;

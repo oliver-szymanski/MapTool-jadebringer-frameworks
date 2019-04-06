@@ -69,8 +69,6 @@ public class TranslucentFrame {
   private String prefixedFrameName;
   private boolean minimized = false;
   private Map<ExtensionFunctionButton, JButton> functionButtonsMap = new HashMap<>();
-
-  @SuppressWarnings("unused")
   private String prefixedFrameId;
 
   public TranslucentFrame(String frameName, String prefixedFrameName, String prefixedFrameId) {

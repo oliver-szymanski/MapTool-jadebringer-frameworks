@@ -101,8 +101,8 @@ public abstract class ExtensionFunctionButton {
   }
 
   public String getPrefixedFrameId() {
-    if (this.prefix != null) {
-      return prefix + frame;
+    if (this.prefix != null && this.prefix.length() > 0) {
+      return prefix + "_" + frame;
     }
     return frame;
   }

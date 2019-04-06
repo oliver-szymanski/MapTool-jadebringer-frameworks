@@ -9,14 +9,67 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+	// Access Git info from build script
+    id "org.ajoberstar.grgit" version "3.1.1"
 }
 
-// Apply the java plugin to add support for Java
 apply plugin: 'base'
 apply plugin: 'application'
 apply plugin: 'java'
 
 mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
+applicationDefaultJvmArgs = ["-Xss4M"]
+
+import org.ajoberstar.grgit.Grgit
+
+// Custom properties
+ext {
+    // Get tag and commit info from Git to use for version numbering
+    def repo = org.ajoberstar.grgit.Grgit.open(currentDir: file('.'))
+    def head = repo.head()
+    def tags = repo.tag.list().find {
+        it.commit == head
+    }
+
+    revision = head.abbreviatedId
+    revisionFull = head.id
+
+	if (tags) {
+        version = tags.getName()
+       	enviroment = "Production"
+    } else {
+        version = 'SNAPSHOT-' + revision
+        enviroment = "Development"
+    }
+
+    // vendor, tagVersion defaults are set in gradle.properties
+    project.version = version
+    println 'Configuring for ' + project.name + " " + project.version + " by " + vendor
+    repo.close()
+}
+
+task cloneLibrariesFromGit {
+   	println "looking for MapTool in directory: " + maptoolDirectory
+	def maptoolLib = file(maptoolDirectory)
+	if (!maptoolLib.exists()) {
+    	println "MapTool directory not found, trying to get from Git (" + maptoolGitRef + " from " + maptoolGitUrl + ")"
+    	def grgit = Grgit.clone(dir: file(maptoolDirectory), uri: maptoolGitUrl, bare: false, checkout: true, refToCheckout: maptoolGitRef)
+    	println "download finished"
+    	grgit.close()
+    }
+}
+
+task buildFromGit(type: GradleBuild) {
+	dependsOn cloneLibrariesFromGit
+	println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
+  	buildFile = maptoolDirectory+'/build.gradle'
+  	dir = maptoolDirectory
+  	tasks = ['build']
+}
+
+startScripts {
+    dependsOn buildFromGit
+}
 
 repositories {
     // Use jcenter for resolving your dependencies.
@@ -25,12 +78,14 @@ repositories {
     mavenCentral()
     maven { url = 'http://maptool.craigs-stuff.net/repo/' }
     maven { url = 'http://www.nerps.net/repo/' }
-    maven { url = 'http://nexus.fyiblue.com/content/groups/public' }
+    //maven { url = 'http://nexus.fyiblue.com/content/groups/public' }
+    
+    //maven { url "https://jitpack.io" }
     mavenLocal()
     
-	//flatDir {
-	//	dirs '../MapTool/build/libs', 'lib'
-	//}
+	flatDir {
+		dirs maptoolDirectory+'/build/libs', 'lib'
+	}
 }
 
 dependencies {
@@ -59,7 +114,23 @@ dependencies {
     implementation group: 'com.fifesoft', name: 'rstaui', version: '3.0.0'				// https://mvnrepository.com/artifact/com.fifesoft/rstaui
     implementation group: 'com.fifesoft', name: 'autocomplete', version: '3.0.0'		// https://mvnrepository.com/artifact/com.fifesoft/autocomplete
 
-	//implementation ':MapTool'
-    implementation project(":MapTool")
+	//implementation ('rptools:MapTool')  {
+     //   version {
+     //       branch = 'master'
+     //   }
+    //}
+    //compile 'com.github.oliver-szymanski:MapTool:1.5.1-jadebringer'
+    //implementation group: 'rptools', name: 'MapTool', version: maptoolGitRef
+    //implementation project(":MapTool")
+     compile (name:'MapTool', ext:'jar')
     
+//    implementation files "MapTool"
+
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                   'Implementation-Version': project.version)
+    }
 }

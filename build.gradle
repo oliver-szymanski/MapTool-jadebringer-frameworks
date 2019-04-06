@@ -49,7 +49,7 @@ ext {
     repo.close()
 }
 
-task cloneLibrariesFromGit {
+task cloneMapToolLibraryFromGit {
    	println "looking for MapTool in directory: " + maptoolDirectory
 	def maptoolLib = file(maptoolDirectory)
 	if (!maptoolLib.exists()) {
@@ -62,8 +62,8 @@ task cloneLibrariesFromGit {
     }
 }
 
-task buildFromGit(type: GradleBuild) {
-	dependsOn cloneLibrariesFromGit
+task buildMapToolLibraryFromGit(type: GradleBuild) {
+	dependsOn cloneMapToolLibraryFromGit
    	println "looking for MapTool to build from directory: " + maptoolDirectory
 	def maptoolLib = file(maptoolDirectory)
 	if (maptoolLib.exists()) {
@@ -77,11 +77,11 @@ task buildFromGit(type: GradleBuild) {
 }
 
 startScripts {
-    dependsOn buildFromGit
+    dependsOn buildMapToolLibraryFromGit
 }
 
 compileJava {
-    dependsOn buildFromGit
+    dependsOn buildMapToolLibraryFromGit
 }
 
 repositories {

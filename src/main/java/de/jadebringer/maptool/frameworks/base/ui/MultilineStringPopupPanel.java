@@ -1,31 +1,42 @@
+/*
+ * This software is copyright by the Jadebringer.de development team, and
+ * licensed under the Affero GPL Version 3 or, at your option, any later
+ * version.
+ *
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License * along with this source Code.  If not, please visit
+ * <http://www.gnu.org/licenses/> and specifically the Affero license
+ * text at <http://www.gnu.org/licenses/agpl.html>.
+ */
 package de.jadebringer.maptool.frameworks.base.ui;
 
+import com.jidesoft.combobox.PopupPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import com.jidesoft.combobox.PopupPanel;
-
-//the property popup table
+// the property popup table
 public class MultilineStringPopupPanel extends PopupPanel {
 
   private static final long serialVersionUID = 8573569156309215727L;
-  
+
   private RSyntaxTextArea j = createTextArea();
 
   public MultilineStringPopupPanel() {
-   this("");
+    this("");
   }
 
   public MultilineStringPopupPanel(String paramString) {
@@ -58,13 +69,12 @@ public class MultilineStringPopupPanel extends PopupPanel {
 
     JComboBox<String> syntaxComboBox = new JComboBox<>(syntaxListModel);
     syntaxComboBox.addActionListener(
-
-     new ActionListener() {
-       @Override
-       public void actionPerformed(ActionEvent e) {
-         j.setSyntaxEditingStyle(syntaxComboBox.getSelectedItem().toString());
-       }
-     });
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            j.setSyntaxEditingStyle(syntaxComboBox.getSelectedItem().toString());
+          }
+        });
 
     add(syntaxComboBox, BorderLayout.BEFORE_FIRST_LINE);
     add(wrapToggle, BorderLayout.AFTER_LAST_LINE);

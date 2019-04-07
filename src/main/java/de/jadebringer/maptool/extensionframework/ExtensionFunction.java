@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -91,12 +91,12 @@ public abstract class ExtensionFunction {
       if (alias.functionName.equals(functionName)) {
         notFound = false;
         if (trustedRequired && alias.trustedRequired) {
-        	raiseExceptionIfNotTrustedContext(functionName);
+          raiseExceptionIfNotTrustedContext(functionName);
         }
         checkParameters(parser, functionName, parameters);
       }
     }
-    
+
     if (notFound) {
       throwNotFoundParserException(functionName);
     }
@@ -104,9 +104,9 @@ public abstract class ExtensionFunction {
     return run(parser, functionName, parameters);
   }
 
-	protected Object throwNotFoundParserException(String functionName) throws ParserException {
-		throw new ParserException("not found function: " + functionName);
-	}
+  protected Object throwNotFoundParserException(String functionName) throws ParserException {
+    throw new ParserException("not found function: " + functionName);
+  }
 
   protected String getPrefix() {
     return prefix;
@@ -119,14 +119,14 @@ public abstract class ExtensionFunction {
   public String[] getAliases() {
     return this.aliasNames;
   }
-  
+
   protected void setTrustedRequired(boolean trustedRequired) {
-  	this.trustedRequired = trustedRequired;
+    this.trustedRequired = trustedRequired;
   }
 
-	public boolean isTrustedRequired() {
-		return trustedRequired;
-	}
+  public boolean isTrustedRequired() {
+    return trustedRequired;
+  }
 
   public static class Alias {
     private String functionName;
@@ -164,22 +164,20 @@ public abstract class ExtensionFunction {
     public int getMaxParameters() {
       return maxParameters;
     }
-    
+
     public Alias setTrustedRequired(boolean trustedRequired) {
-    	this.trustedRequired = trustedRequired;
-    	return this;
+      this.trustedRequired = trustedRequired;
+      return this;
     }
 
-		public boolean isTrustedRequired() {
-			return trustedRequired;
-		}
-    
-    
+    public boolean isTrustedRequired() {
+      return trustedRequired;
+    }
   }
-  
+
   protected void raiseExceptionIfNotTrustedContext(String functionName) throws ParserException {
-  	if (!MapTool.getParser().isMacroTrusted()) {
-			throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
-		}
+    if (!MapTool.getParser().isMacroTrusted()) {
+      throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
+    }
   }
 }

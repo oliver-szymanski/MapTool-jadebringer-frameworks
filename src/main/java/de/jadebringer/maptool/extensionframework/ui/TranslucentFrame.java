@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -14,6 +14,7 @@
  */
 package de.jadebringer.maptool.extensionframework.ui;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,17 +45,9 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-
 import net.rptools.lib.MD5Key;
 import net.rptools.maptool.client.MapTool;
-import de.jadebringer.maptool.extensionframework.ui.ComponentResizer;
-import de.jadebringer.maptool.extensionframework.ui.FrameDragListener;
-import de.jadebringer.maptool.extensionframework.ui.PreferenceManager;
-import de.jadebringer.maptool.extensionframework.ui.TranslucentFrame;
-import de.jadebringer.maptool.extensionframework.ui.WrapLayout;
 import net.rptools.maptool.util.ImageManager;
-
-import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
 
 public class TranslucentFrame {
   private TranslucentFrame rootFrame;
@@ -394,7 +387,7 @@ public class TranslucentFrame {
   public void update(ExtensionFunctionButton functionButton) {
     JButton button = functionButtonsMap.get(functionButton);
     ImageIcon icon = null;
-        
+
     if (functionButton.getImageFile() != null && functionButton.getImageFile().length() > 0) {
       icon = createImageIcon(functionButton);
     }
@@ -412,7 +405,7 @@ public class TranslucentFrame {
       button.setIcon(icon);
     }
   }
-  
+
   public void enable(ExtensionFunctionButton functionButton) {
     JButton jButton = functionButtonsMap.get(functionButton);
     jButton.setEnabled(true);
@@ -444,10 +437,11 @@ public class TranslucentFrame {
   }
 
   public void add(ExtensionFunctionButton functionButton) {
-    JButton jButton = new JButton();;    
+    JButton jButton = new JButton();
+    ;
     functionButtonsMap.put(functionButton, jButton);
     update(functionButton);
-    
+
     if (this.group == null) {
       actualFrame.add(jButton);
       actualFrame.invalidate();
@@ -475,7 +469,7 @@ public class TranslucentFrame {
     if (functionButton == null) {
       return null;
     }
-    
+
     String path = functionButton.getImageFile();
     if (path == null) {
       return null;
@@ -488,7 +482,7 @@ public class TranslucentFrame {
       Image newImg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
       return new ImageIcon(newImg, functionButton.getTooltip());
     }
-    
+
     URL imgURL = functionButton.getClass().getResource(path);
     if (imgURL != null) {
       ImageIcon icon = new ImageIcon(imgURL, functionButton.getTooltip());
@@ -530,7 +524,7 @@ public class TranslucentFrame {
       loadPreferences(true);
       contentContainer.setVisible(true);
     }
-    
+
     actualFrame.invalidate();
   }
 }

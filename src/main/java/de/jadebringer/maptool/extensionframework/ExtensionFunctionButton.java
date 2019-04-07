@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -17,7 +17,6 @@ package de.jadebringer.maptool.extensionframework;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolLineParser;
 import net.rptools.maptool.client.MapToolMacroContext;
-import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
@@ -55,7 +54,7 @@ public abstract class ExtensionFunctionButton {
   public void setImageFile(String imageFile) {
     this.imageFile = imageFile;
   }
-  
+
   public String getImageFile() {
     return imageFile;
   }
@@ -88,7 +87,7 @@ public abstract class ExtensionFunctionButton {
   public String getName() {
     return name;
   }
-  
+
   public String getText() {
     return text;
   }
@@ -110,7 +109,7 @@ public abstract class ExtensionFunctionButton {
   public void setName(String name) {
     this.name = name;
   }
-  
+
   public void setText(String text) {
     this.textAndImage = true;
     this.text = text;

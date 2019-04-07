@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-
-import de.jadebringer.maptool.extensionframework.ui.FrameDragListener;
 
 /** The ComponentResizer allows you to resize a component by dragging a border of the component. */
 public class ComponentResizer extends MouseAdapter {

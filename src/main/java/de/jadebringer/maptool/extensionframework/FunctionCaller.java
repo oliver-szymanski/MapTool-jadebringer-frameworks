@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -14,17 +14,15 @@
  */
 package de.jadebringer.maptool.extensionframework;
 
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions.Run;
 import java.math.BigDecimal;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
 import java.util.List;
-
-import de.jadebringer.maptool.extensionframework.FrameworksFunctions.Run;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
-import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import net.rptools.maptool.client.ui.zone.ZoneRenderer;
 import net.rptools.maptool.model.Token;
 import net.rptools.maptool.model.Zone;

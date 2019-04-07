@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -14,17 +14,14 @@
  */
 package de.jadebringer.maptool.extensionframework.ui;
 
+import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
 import net.rptools.maptool.client.MapTool;
-import de.jadebringer.maptool.extensionframework.ui.BaseComponentListener;
-import de.jadebringer.maptool.extensionframework.ui.TranslucentFrame;
 
 public class BaseComponentListener implements ComponentListener {
 
@@ -42,11 +39,11 @@ public class BaseComponentListener implements ComponentListener {
 
   @Override
   public void componentShown(ComponentEvent e) {
-  	if (e.getComponent().equals(MapTool.getFrame().getGlassPane())) {
-  		FrameworksFunctions.getInstance().init();
-  	} else if (e.getComponent().equals(MapTool.getFrame())) {
-  		// happens when fullscreen is closed
-      
+    if (e.getComponent().equals(MapTool.getFrame().getGlassPane())) {
+      FrameworksFunctions.getInstance().init();
+    } else if (e.getComponent().equals(MapTool.getFrame())) {
+      // happens when fullscreen is closed
+
       // restore chat to orginal frame
       Container container = originalParentContainer.get(MapTool.getFrame().getCommandPanel());
       container.add(MapTool.getFrame().getCommandPanel());
@@ -59,10 +56,10 @@ public class BaseComponentListener implements ComponentListener {
       chatFrame.removeComponentListener(this);
       MapTool.getFrame().getChatActionLabel().removeComponentListener(this);
       chatFrame = null;
-      
+
       initiativeFrame.setMinimized(false);
       initiativeFrame.close();
-      
+
       originalParentContainer.clear();
     } else if (e.getComponent().equals(MapTool.getFrame().getChatActionLabel())) {
       if (chatFrame != null && chatFrame.isVisble() && !chatFrame.isMinimized()) {
@@ -86,14 +83,20 @@ public class BaseComponentListener implements ComponentListener {
       originalParentContainer.put(
           MapTool.getFrame().getCommandPanel(), MapTool.getFrame().getCommandPanel().getParent());
       originalParentContainer.put(
-          MapTool.getFrame().getInitiativePanel(), MapTool.getFrame().getInitiativePanel().getParent());
+          MapTool.getFrame().getInitiativePanel(),
+          MapTool.getFrame().getInitiativePanel().getParent());
 
       chatFrame =
           new TranslucentFrame("Chat", "Chat", "Chat", null, MapTool.getFrame().getCommandPanel());
       chatFrame.show();
       chatFrame.addComponentListener(this);
       initiativeFrame =
-          new TranslucentFrame("Initiative", "Initiative", "Initiative", null, MapTool.getFrame().getInitiativePanel());
+          new TranslucentFrame(
+              "Initiative",
+              "Initiative",
+              "Initiative",
+              null,
+              MapTool.getFrame().getInitiativePanel());
       initiativeFrame.show();
       initiativeFrame.addComponentListener(this);
       // add this as a component listener to check the chat new message notification

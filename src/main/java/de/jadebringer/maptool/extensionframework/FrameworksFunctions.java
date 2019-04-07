@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -17,7 +17,6 @@ package de.jadebringer.maptool.extensionframework;
 import de.jadebringer.maptool.extensionframework.ui.BaseComponentListener;
 import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
 import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -43,14 +42,6 @@ import net.rptools.common.expression.ExpressionParser;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolMacroContext;
 import net.rptools.maptool.client.MapToolVariableResolver;
-import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
-import de.jadebringer.maptool.extensionframework.ExtensionFrameworkBundle;
-import de.jadebringer.maptool.extensionframework.ExtensionFunction;
-import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
-import de.jadebringer.maptool.extensionframework.FrameworkClassLoader;
-import de.jadebringer.maptool.extensionframework.FrameworksFunctions;
-import de.jadebringer.maptool.extensionframework.FunctionCaller;
-import de.jadebringer.maptool.extensionframework.SecurityManagerPackageAccess;
 import net.rptools.maptool.client.macro.MacroContext;
 import net.rptools.maptool.client.macro.MacroDefinition;
 import net.rptools.maptool.client.macro.MacroManager;
@@ -154,7 +145,7 @@ public class FrameworksFunctions implements Function {
     }
 
     for (ButtonFrame buttonFrame : buttonFrames.values()) {
-    	buttonFrame.hide();
+      buttonFrame.hide();
       buttonFrame.clear();
     }
     buttonFrames.clear();
@@ -171,7 +162,7 @@ public class FrameworksFunctions implements Function {
 
     frameworksClassLoader.clear();
     frameworksClassLoaderToLibs.clear();
-    
+
     // init call macro, as the loadBaseFramework during getAliases is to late for that
     ExtensionChatMacro callMacro = new CallMacro();
     MacroDefinition macroDefinition = callMacro.getClass().getAnnotation(MacroDefinition.class);
@@ -183,7 +174,11 @@ public class FrameworksFunctions implements Function {
   private void loadBaseFramework() {
     try {
       Parser parser = new Parser();
-      this.importFunctionsBundle(parser, true, "importFunctionsBundle", FunctionCaller.toObjectList("", "de.jadebringer.maptool.frameworks.base.BaseFramework"));
+      this.importFunctionsBundle(
+          parser,
+          true,
+          "importFunctionsBundle",
+          FunctionCaller.toObjectList("", "de.jadebringer.maptool.frameworks.base.BaseFramework"));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -361,7 +356,9 @@ public class FrameworksFunctions implements Function {
                       .newInstance();
           if (!silent && MapTool.getPlayer() != null) {
             MapTool.addLocalMessage(
-                "imported bundle: '" + frameworkFunctionBundle.toString() + "' from base libraries.");
+                "imported bundle: '"
+                    + frameworkFunctionBundle.toString()
+                    + "' from base libraries.");
           }
         } catch (Exception e) {
           // safe to ignore
@@ -424,9 +421,12 @@ public class FrameworksFunctions implements Function {
       }
     } catch (Exception e) {
       if (MapTool.getPlayer() != null) {
-      MapTool.addLocalMessage(
-          "could not load bundle (maybe it's libary was not imported): "
-              + frameworkFunctionBundle.toString() + "(" + e.toString() + ")");
+        MapTool.addLocalMessage(
+            "could not load bundle (maybe it's libary was not imported): "
+                + frameworkFunctionBundle.toString()
+                + "("
+                + e.toString()
+                + ")");
       } else {
         e.printStackTrace();
       }
@@ -439,7 +439,7 @@ public class FrameworksFunctions implements Function {
 
     // make sure the alias list will be recalculated next time it is accessed
     this.aliases = null;
-    
+
     // MapTool might not be fully initialized yet if this is called via startup
     // this check prevents a null pointer exception which would happen sending the messages
     if (!silent && MapTool.getPlayer() != null) {
@@ -448,9 +448,9 @@ public class FrameworksFunctions implements Function {
       MapTool.addLocalMessage(
           "bundle " + frameworkFunctionBundle + " defined button frames macros: " + buttonFrames);
       MapTool.addLocalMessage(
-          "bundle " + frameworkFunctionBundle + " defined functions: " + functions);  
+          "bundle " + frameworkFunctionBundle + " defined functions: " + functions);
     }
-    
+
     return BigDecimal.ONE;
   }
 
@@ -485,7 +485,7 @@ public class FrameworksFunctions implements Function {
     extensionFunctionButton.setPrefix(prefix);
     String frame = extensionFunctionButton.getPrefixedFrameId();
     ButtonFrame buttonFrame = buttonFrames.get(frame);
- 
+
     if (buttonFrame == null) {
       buttonFrame =
           new ButtonFrame(

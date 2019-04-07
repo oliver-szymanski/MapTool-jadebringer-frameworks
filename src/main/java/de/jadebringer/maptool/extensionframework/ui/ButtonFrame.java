@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -14,15 +14,12 @@
  */
 package de.jadebringer.maptool.extensionframework.ui;
 
+import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.SwingUtilities;
-
-import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
-import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
-import de.jadebringer.maptool.extensionframework.ui.TranslucentFrame;
 
 public class ButtonFrame {
   private List<ExtensionFunctionButton> functionButtons = new LinkedList<>();
@@ -62,9 +59,11 @@ public class ButtonFrame {
     }
     frame.update(functionButton);
   }
-  
+
   public boolean remove(ExtensionFunctionButton functionButton) {
-    if (functionButton.getGroup() != null && functionButton.getGroup().length()>0 && this.group == null) {
+    if (functionButton.getGroup() != null
+        && functionButton.getGroup().length() > 0
+        && this.group == null) {
       ButtonFrame subFrame = buttonFrames.get(functionButton.getGroup());
       subFrame.frame.remove(functionButton);
       subFrame.functionButtonsMap.remove(functionButton.getName());
@@ -135,7 +134,8 @@ public class ButtonFrame {
 
       if (subButtonFrame.functionButtonsMap.containsKey(functionButton.getName())) {
         // remove to override if that name already exists
-        ExtensionFunctionButton previousButton = subButtonFrame.functionButtonsMap.get(functionButton.getName());
+        ExtensionFunctionButton previousButton =
+            subButtonFrame.functionButtonsMap.get(functionButton.getName());
         subButtonFrame.remove(previousButton);
       }
       subButtonFrame.functionButtons.add(functionButton);
@@ -219,7 +219,7 @@ public class ButtonFrame {
     SwingUtilities.invokeLater(openInspector);
     return result;
   }
-  
+
   public void clear() {
     functionButtons.clear();
     buttonFrames.clear();

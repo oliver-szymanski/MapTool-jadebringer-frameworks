@@ -5,102 +5,208 @@
  * For more details take a look at the Java Libraries chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.2.1/userguide/java_library_plugin.html
  */
+buildscript {
+    dependencies {
+        //noinspection GradleDynamicVersion
+        classpath "org.eclipse.jgit:org.eclipse.jgit:5.3.0+"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:3.13.0"
+    }
+    repositories {
+        jcenter()
+    }
+}
 
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-	// Access Git info from build script
+    // Access Git info from build script
     id "org.ajoberstar.grgit" version "3.1.1"
 }
 
 apply plugin: 'base'
 apply plugin: 'application'
 apply plugin: 'java'
+apply plugin: 'com.diffplug.gradle.spotless'
+apply plugin: BootstrapPlugin
 
 mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
 applicationDefaultJvmArgs = ["-Xss4M"]
-//maptoolDirectory = project.buildDir.absolutePath + "/../" + maptoolDirectory
 
 import org.ajoberstar.grgit.Grgit
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.storage.file.WindowCacheConfig
+import org.eclipse.jgit.internal.storage.file.GC
+import org.eclipse.jgit.internal.storage.file.WindowCache
+import org.eclipse.jgit.lib.RepositoryCache
 
 // Custom properties
 ext {
     // Get tag and commit info from Git to use for version numbering
-    def repo = org.ajoberstar.grgit.Grgit.open(currentDir: file('.'))
-    def head = repo.head()
-    def tags = repo.tag.list().find {
-        it.commit == head
-    }
+    def grgit
 
-    revision = head.abbreviatedId
-    revisionFull = head.id
+    try {
+        grgit = org.ajoberstar.grgit.Grgit.open(currentDir: file('.'))
+        def head = grgit.head()
+        def tags = grgit.tag.list().find {
+            it.commit == head
+        }
+        grgit.close()
 
-	if (tags) {
-        version = tags.getName()
-       	enviroment = "Production"
-    } else {
-        version = 'SNAPSHOT-' + revision
-        enviroment = "Development"
+        revision = head.abbreviatedId
+        revisionFull = head.id
+
+        if (tags) {
+            version = tags.getName()
+               enviroment = "Production"
+        } else {
+            version = 'SNAPSHOT-' + revision
+            enviroment = "Development"
+        }
+    } finally {
+        // not doing anything as of a bug in grgit when opening with currentDir/dir
+        // https://github.com/ajoberstar/grgit/issues/288
+        grgit.close()
+        // therefore close the underlying repository manually
+        grgit.repository.jgit.getRepository().close()
     }
 
     // vendor, tagVersion defaults are set in gradle.properties
     project.version = version
     println 'Configuring for ' + project.name + " " + project.version + " by " + vendor
-    repo.close()
+
+    print 'setting git based dependencies for: '
+    // create all the required external git based dependencies
+    def gitDep1 = [
+        name: 'MapTool',
+        directory: maptoolDirectory,
+        outputDirectory: maptoolOutputDirectory,
+        artifactName: maptoolArtifactName,
+        artifactExtension: maptoolArtifactExtension,
+        gitUrl: maptoolGitUrl,
+        gitRef: maptoolGitRef,
+        taskNames: ['build']
+    ]
+    gitDeps = [gitDep1]
+    gitDeps.each {
+        print it.name + "; "
+    }
+    println ''
 }
 
-task cloneMapToolLibraryFromGit {
-	doFirst {
-	   	println "looking for MapTool in directory: " + maptoolDirectory
-		def maptoolLib = file(maptoolDirectory)
-		if (!maptoolLib.exists()) {
-	    	println "MapTool directory not found, trying to get from Git (" + maptoolGitRef + " from " + maptoolGitUrl + ")"
-	    	def grgit = Grgit.clone(dir: file(maptoolDirectory), uri: maptoolGitUrl, bare: false, checkout: true, refToCheckout: maptoolGitRef)
-	    	println "download finished in: "+maptoolDirectory
-	    	grgit.close()
-	    } else {
-	    	println "git dependency found in: "+maptoolDirectory
-	    }
+task getDependenciesFromGit () {
+    doFirst {
+
+        project.ext.gitDeps.each {
+            println it.name + ": looking for dependency in directory " + it.directory
+            if (!file(it.directory).exists()) {
+                println it.name + ": directory not found, trying to get from Git (" + it.gitRef + " from " + it.gitUrl + ")"
+                def grgit
+                try {
+                    grgit = Grgit.clone(dir: file(it.directory), uri: it.gitUrl, bare: false, checkout: true, refToCheckout: it.gitRef)
+                    println it.name + ": clone finished"
+                    println it.name + ": checkout finished"
+                } finally {
+                    if (grgit != null) {
+                        grgit.close()
+                    }
+                }
+
+                if (file(it.directory).exists()) {
+                    println it.name + ": download finished in " + it.directory
+                } else {
+                    println it.name + ": error, download not available in " + it.directory
+                }
+            } else {
+                println it.name + ": git dependency found in directory " + it.directory
+            }
+        }
     }
 }
 
-task buildMapToolLibraryFromGit(dependsOn: cloneMapToolLibraryFromGit, type: GradleBuild) {
-	doFirst {
-	   	println "looking for MapTool to build from directory: " + maptoolDirectory
-		def maptoolLib = file(maptoolDirectory)
-		if (maptoolLib.exists()) {
-			println 'trying to build liberary dependency from git: ' + maptoolDirectory+'/build.gradle'
-	  		buildFile = maptoolDirectory+'/build.gradle'
-	  		dir = maptoolDirectory
-	  		tasks = ['build']
-	  	} else {
-	  		println 'liberary dependency from git not found: ' + maptoolDirectory+'/build.gradle'
-	  	}
-  	}
+// dynamic buildDependency tasks and assign the buildDependency_xyz tasks to buildAllDependencies
+// we create the git dependency build tasks dynamically
+// you can check them with ./gradlew tasks --all
+class BootstrapPlugin implements Plugin<Project> {
+  void apply(Project project){
+    project.afterEvaluate {
+      project.task("buildAllDependencies", dependsOn: project.tasks.matching { Task task -> task.name.startsWith("buildDependency_")}) {
+        print "building dependencies for: "
+        project.ext.gitDeps.each {
+            print it.name + "; "
+        }
+        println ''
+      }
+
+        project.ext.gitDeps.each { element ->
+            project.task ("buildDependency_$it.name", dependsOn: "getDependenciesFromGit", type: GradleBuild) {
+                doFirst {
+                  println element.name + ": looking for dependency to build from directory " + element.directory
+                  def directory = new File(element.directory)
+                  if (directory.exists()) {
+                     println element.name + ': trying to build liberary dependency from ' + element.directory+'/build.gradle'
+                     buildFile = element.directory+'/build.gradle'
+                     dir = element.directory
+                     tasks = ['build']
+                  } else {
+                     println element.name + ': liberary dependency not found: ' + element.directory+'/build.gradle'
+                  }
+                   }
+            }
+        }
+    }
+  }
+}
+
+spotless {
+    java {
+        licenseHeaderFile 'spotless.license.java'
+        // Now using the Google Java style guide
+        //eclipse().configFile('build-resources/eclipse.prefs.formatter.xml')
+        googleJavaFormat()
+        // If you get exceptions thrown by spotlessApply, this might
+        // help.  Enable it here if the problem is with a Java file, and
+        // below if it is not.  Don't leave it enabled, as nothing will
+        // actually be updated if you do.
+        // https://github.com/diffplug/spotless/blob/master/PADDEDCELL.md
+        //paddedCell()
+    }
+
+    format 'misc', {
+        target '**/*.gradle', '**/.gitignore'
+
+        // spotless has built-in rules for most basic formatting tasks
+        trimTrailingWhitespace()
+        // or spaces. Takes an integer argument if you don't like 4
+        indentWithSpaces(4)
+        //paddedCell()
+    }
 }
 
 startScripts {
-    dependsOn buildMapToolLibraryFromGit
+    dependsOn "buildAllDependencies"
 }
 
 compileJava {
-    dependsOn buildMapToolLibraryFromGit
+    dependsOn "buildAllDependencies"
 }
 
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-	jcenter()
+    jcenter()
     mavenCentral()
     maven { url = 'http://maptool.craigs-stuff.net/repo/' }
     maven { url = 'http://www.nerps.net/repo/' }
     //maven { url = 'http://nexus.fyiblue.com/content/groups/public' }
     //maven { url "https://jitpack.io" }
     mavenLocal()
-    
-	flatDir {
-		dirs maptoolDirectory+'/build/libs', 'lib'
-	}
+
+    flatDir {
+        project.ext.gitDeps.each {
+            dirs it.outputDirectory
+        }
+        dirs 'lib'
+    }
 }
 
 dependencies {
@@ -119,18 +225,20 @@ dependencies {
     implementation 'jide-grids:jide-grids:3.2.3'
     implementation 'jide-properties:jide-properties:3.2.3'
     implementation 'jide-shortcut:jide-shortcut:3.2.3'
-    
+
     implementation 'net.sf.json-lib:json-lib:2.4:jdk15'
-    
+
     implementation 'de.muntjak.tinylookandfeel:tinylaf-nocp:1.4.0'
-    
+
     // For syntax highlighting in macro editor
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '3.0.2'		// https://mvnrepository.com/artifact/com.fifesoft/rsyntaxtextarea
     implementation group: 'com.fifesoft', name: 'rstaui', version: '3.0.0'				// https://mvnrepository.com/artifact/com.fifesoft/rstaui
     implementation group: 'com.fifesoft', name: 'autocomplete', version: '3.0.0'		// https://mvnrepository.com/artifact/com.fifesoft/autocomplete
 
-	implementation (name:'MapTool', ext:'jar')
-    
+    project.ext.gitDeps.each {
+        implementation (name:it.artifactName, ext:it.artifactExtension)
+    }
+    //implementation (name:'MapTool', ext:'jar')
 }
 
 jar {

@@ -1,57 +1,53 @@
+/*
+ * This software is copyright by the Jadebringer.de development team, and
+ * licensed under the Affero GPL Version 3 or, at your option, any later
+ * version.
+ *
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License * along with this source Code.  If not, please visit
+ * <http://www.gnu.org/licenses/> and specifically the Affero license
+ * text at <http://www.gnu.org/licenses/agpl.html>.
+ */
 package de.jadebringer.maptool.frameworks.tests;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import de.jadebringer.maptool.extensionframework.ExtensionChatMacro;
 import de.jadebringer.maptool.extensionframework.ExtensionFrameworkBundle;
 import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import de.jadebringer.maptool.extensionframework.ExtensionFunctionButton;
-import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import de.jadebringer.maptool.extensionframework.Version;
-import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
-import de.jadebringer.maptool.frameworks.base.chatmacros.FrameworksMacro;
-import de.jadebringer.maptool.frameworks.base.functions.DebugFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.ButtonFrameFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.ContentFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.InputFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.LinkFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.MacrosFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.MapFunctions;
-import de.jadebringer.maptool.frameworks.base.functions.OutputToFunction;
-import de.jadebringer.maptool.frameworks.base.functions.PingFunction;
-import de.jadebringer.maptool.frameworks.base.functions.SettingsFunctions;
 import de.jadebringer.maptool.frameworks.tests.functions.TrySecurity;
-import net.rptools.maptool.client.MapTool;
-import net.rptools.parser.Parser;
-import net.rptools.parser.ParserException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BaseFramework extends ExtensionFrameworkBundle {
-	
-	private List<ExtensionFunction> functions = new LinkedList<>();
+
+  private List<ExtensionFunction> functions = new LinkedList<>();
   private List<ExtensionFunctionButton> functionButtons = new LinkedList<>();
-	private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
-	
-	public BaseFramework() {
-	  super(new Version(1,0,0,"jadebringer-test"));
-	  
-	  functions.add(TrySecurity.getInstance());
-	}
-    
-	@Override
-	public List<ExtensionFunction> getFunctions() {
-		return functions;
-	}
-	
-	@Override
-	public List<ExtensionChatMacro> getChatMacros() {
-		return chatMacros;
-	}
+  private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
+
+  public BaseFramework() {
+    super(new Version(1, 0, 0, "jadebringer-test"));
+
+    functions.add(TrySecurity.getInstance());
+  }
+
+  @Override
+  public List<ExtensionFunction> getFunctions() {
+    return functions;
+  }
+
+  @Override
+  public List<ExtensionChatMacro> getChatMacros() {
+    return chatMacros;
+  }
 
   @Override
   public Collection<? extends ExtensionFunctionButton> getFunctionButtons() {
     return functionButtons;
   }
-	
 }

@@ -1,9 +1,9 @@
 /*
- * This software Copyright by the RPTools.net development team, and
+ * This software is copyright by the Jadebringer.de development team, and
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -13,8 +13,6 @@
  * text at <http://www.gnu.org/licenses/agpl.html>.
  */
 package de.jadebringer.maptool.extensionframework;
-
-import de.jadebringer.maptool.extensionframework.Version;
 
 public class Version implements Comparable<Version> {
 

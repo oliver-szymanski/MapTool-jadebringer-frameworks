@@ -15,12 +15,12 @@ rootProject.name = 'MapTool-jadebringer-frameworks'
 //    }
 //}
 
-//includeBuild (maptoolDirectory)// { 
+//includeBuild (maptoolDirectory)// {
 //	dependencySubstitution {
 //        substitute module('rptools:Maptool') with project(':')
 //    }
 //}
-// include will a a sub project (which by definition cannot be build standalone 
+// include will a a sub project (which by definition cannot be build standalone
 //   and has the problem with plugin versions in the subproject
 //include ':MapTool'
 //project(':MapTool').projectDir = new File(settingsDir, maptoolDirectory)

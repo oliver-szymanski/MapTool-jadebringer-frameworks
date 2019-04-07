@@ -12,29 +12,3 @@
  * <http://www.gnu.org/licenses/> and specifically the Affero license
  * text at <http://www.gnu.org/licenses/agpl.html>.
  */
-package de.jadebringer.maptool.extensionframework;
-
-import java.util.Collection;
-
-public abstract class ExtensionFrameworkBundle {
-
-  private Version version;
-
-  public ExtensionFrameworkBundle(Version version) {
-    this.version = version;
-  }
-
-  public Version version() {
-    return version;
-  }
-
-  public String name() {
-    return this.getClass().getName();
-  }
-
-  public abstract Collection<? extends ExtensionFunction> getFunctions();
-
-  public abstract Collection<? extends ExtensionFunctionButton> getFunctionButtons();
-
-  public abstract Collection<? extends ExtensionChatMacro> getChatMacros();
-}

@@ -4,9 +4,10 @@ MapTool-jadebringer-frameworks is an extension for [MapTool](https://www.rptools
 is a full and free Virtual Table Top application. These extensions bring new functionality 
 for MapTool. 
 
-The extensions are mostly about new functions for the MapTool macro language, so that 
-writing macros is more convenient/easier and doing stuff that is not possible with "just" 
-official MapTool (like the button frames).
+The extensions are mostly about new functions for the MapTool macro language. Goal is 
+to make writing macros more convenient/easier and allow doing stuff that is not possible with "just" 
+official MapTool yet (like the button frames). Safety and security goes first, so you 
+will not be able to do "dodgy" stuff inside or outside of MT with the extension.
 
 We will contribute to the official MapTool (in short MT) as well, but not 
 all the features here will directly make it to MT and some maybe never. So if you want 
@@ -30,18 +31,21 @@ More info on [jadebringer.de](http://www.jadebringer.de)
 ## Features
 
 - have a "/call functionName(parameters)" chat macro to call any function via chat
+    - try with "/call showAllFrames" followed by a later "/call hideAllFrames" ;)
 - show chat in fullscreen
 - show initiative in fullscreen
-- show button frames, in window mode and in fullscreen 
+- show new button frames in window mode and in fullscreen 
     - can be dragged, resized, minimized
     - have buttons to call macros with title or icon
     - buttons can be created, deactivated or hidden via macros
     - control the frame/buttons with macros
+    - check all the new "frames_" function in macro editor
 - manipulate token on other maps safely
+    - all functions using tokens can deal with tokens on any map, not just the current
 - inspect and manipulate variables in macros
-    -  via debug_inspect(variableNames) or debug_manipulate(variablesNames) 
+    - via debug_inspect(variableNames) or debug_manipulate(variablesNames) 
     - other debug related functions as debug/trace/warn/error
-- build in outputTo() function
+- build in outputTo(...) function
 - input dialog with yes/no/cancel buttons via inputYesNoCancel(...) 
 - map macros to center map/show whole map area
     - maps_center()
@@ -59,9 +63,9 @@ More info on [jadebringer.de](http://www.jadebringer.de)
     - links_createLink
     - links_execLink   
 - function to quickly call macros locally or on another client/player and define where to send the output
-    - /call macros_executeMacro("test@Lib:JadebringerSettings")
-    - /call macros_executeMacroSendOutput("test@Lib:JadebringerSettings","	Oliver")
-    - /call macros_sendExecuteMacro("userThatWeWantToRunTheMacro","please respond", "click here","test@Lib:JadebringerSettings","userOrChannelThatGetsTheResponse")
+    - macros_executeMacro("test@Lib:JadebringerSettings")
+    - macros_executeMacroSendOutput("test@Lib:JadebringerSettings","	Oliver")
+    - macros_sendExecuteMacro("userThatWeWantToRunTheMacro","please respond", "click here","test@Lib:JadebringerSettings","userOrChannelThatGetsTheResponse")
     - of course works with existing auto execution of macros
 
 Optional: the Java extension framework (more info for Java developers on request)

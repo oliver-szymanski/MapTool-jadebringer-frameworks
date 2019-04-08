@@ -6,6 +6,10 @@ If you are a developer and want to build the framework from source code this is 
 go. It will create the ".jar" file that you need for installing it into MapTool (which 
 is described in the README).
 
+If you are a Java developer you can also add you own functions for MapTool macros easily. 
+A documentation how to do that will follow. Until then feel free to contact the Jadebringer 
+team for more info on that (see contact details in README).
+
 ## How to build?
 
 MapTool-jadebringer-frameworks is based on Gradle build and includes a Gradle Wrapper. 

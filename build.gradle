@@ -33,11 +33,6 @@ mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
 applicationDefaultJvmArgs = ["-Xss4M"]
 
 import org.ajoberstar.grgit.Grgit
-import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.storage.file.WindowCacheConfig
-import org.eclipse.jgit.internal.storage.file.GC
-import org.eclipse.jgit.internal.storage.file.WindowCache
-import org.eclipse.jgit.lib.RepositoryCache
 
 // Custom properties
 ext {
@@ -145,7 +140,8 @@ class BootstrapPlugin implements Plugin<Project> {
                   if (directory.exists()) {
                      println element.name + ': trying to build liberary dependency from ' + element.directory+'/build.gradle'
                      buildFile = element.directory+'/build.gradle'
-                     dir = element.directory
+                     dir = project.file(element.directory)
+                     println "starting sub build from: " + dir + "/build.gradle" 
                      tasks = ['build']
                   } else {
                      println element.name + ': liberary dependency not found: ' + element.directory+'/build.gradle'
@@ -238,7 +234,6 @@ dependencies {
     project.ext.gitDeps.each {
         implementation (name:it.artifactName, ext:it.artifactExtension)
     }
-    //implementation (name:'MapTool', ext:'jar')
 }
 
 jar {

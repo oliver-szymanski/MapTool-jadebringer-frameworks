@@ -141,7 +141,7 @@ class BootstrapPlugin implements Plugin<Project> {
                      println element.name + ': trying to build liberary dependency from ' + element.directory+'/build.gradle'
                      buildFile = element.directory+'/build.gradle'
                      dir = project.file(element.directory)
-                     println "starting sub build from: " + dir + "/build.gradle" 
+                     println "starting sub build from: " + dir + "/build.gradle"
                      tasks = ['build']
                   } else {
                      println element.name + ': liberary dependency not found: ' + element.directory+'/build.gradle'

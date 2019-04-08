@@ -17,7 +17,6 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import java.awt.Rectangle;
-import java.math.BigDecimal;
 import java.util.List;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.ui.zone.ZoneRenderer;
@@ -71,7 +70,7 @@ public class MapFunctions extends ExtensionFunction {
     int centerX = (rectangle.width / 2) + rectangle.x;
     int centerY = (rectangle.height / 2) + rectangle.y;
     MapTool.getFrame().getCurrentZoneRenderer().centerOn(new ZonePoint(centerX, centerY));
-    return BigDecimal.ONE;
+    return "";
   }
 
   public Object extent(Parser parser, String functionName, List<Object> parameters)
@@ -82,7 +81,7 @@ public class MapFunctions extends ExtensionFunction {
         .getCurrentZoneRenderer()
         .enforceView(rectangle.x, rectangle.y, 1.0, rectangle.width, rectangle.height);
     center(parser, functionName, parameters);
-    return BigDecimal.ONE;
+    return "";
   }
 
   public Object getExtent(Parser parser, String functionName, List<Object> parameters)

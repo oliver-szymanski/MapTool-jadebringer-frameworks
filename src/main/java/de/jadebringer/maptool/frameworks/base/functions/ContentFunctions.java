@@ -17,7 +17,6 @@ package de.jadebringer.maptool.frameworks.base.functions;
 import de.jadebringer.maptool.extensionframework.ExtensionFunction;
 import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import de.jadebringer.maptool.extensionframework.FunctionCaller.TokenWrapper;
-import java.math.BigDecimal;
 import java.util.List;
 import net.rptools.maptool.model.MacroButtonProperties;
 import net.rptools.parser.Parser;
@@ -114,6 +113,6 @@ public class ContentFunctions extends ExtensionFunction {
       return FunctionCaller.callFunction("setTableEntry", parser, source, name, content);
     }
 
-    return BigDecimal.ONE;
+    return "";
   }
 }

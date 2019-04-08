@@ -126,7 +126,8 @@ public class ButtonFrameFunctions extends ExtensionFunction {
   private Object isFrameVisible(Parser parser, String functionName, List<Object> parameters)
       throws ParserException {
     String frame = FunctionCaller.getParam(parameters, 0);
-    boolean result = FrameworksFunctions.getInstance().isFrameVisible(frame);
+    String prefix = FunctionCaller.getParam(parameters, 1, "");
+    boolean result = FrameworksFunctions.getInstance().isFrameVisible(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
@@ -135,12 +136,9 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     if (parameters == null) {
       return false;
     }
-    boolean result = true;
-    for (Object parameter : parameters) {
-      if (!FrameworksFunctions.getInstance().showFrame(parameter.toString())) {
-        result = false;
-      }
-    }
+    String frame = FunctionCaller.getParam(parameters, 0);
+    String prefix = FunctionCaller.getParam(parameters, 1, "");
+    boolean result = FrameworksFunctions.getInstance().showFrame(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
@@ -149,12 +147,9 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     if (parameters == null) {
       return false;
     }
-    boolean result = true;
-    for (Object parameter : parameters) {
-      if (!FrameworksFunctions.getInstance().hideFrame(parameter.toString())) {
-        result = false;
-      }
-    }
+    String frame = FunctionCaller.getParam(parameters, 0);
+    String prefix = FunctionCaller.getParam(parameters, 1, "");
+    boolean result = FrameworksFunctions.getInstance().hideFrame(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
@@ -187,7 +182,14 @@ public class ButtonFrameFunctions extends ExtensionFunction {
           @Override
           public void run(Parser parser) throws ParserException {
             StringBuffer macroArgs = new StringBuffer();
-            macroArgs.append(frame).append(".").append(group).append(".").append("name");
+            macroArgs
+                .append(prefix)
+                .append(".")
+                .append(frame)
+                .append(".")
+                .append(group)
+                .append(".")
+                .append(name);
             MacrosFunctions.getInstance()
                 .executeMacro(
                     parser,

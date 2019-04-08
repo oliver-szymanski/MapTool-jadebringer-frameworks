@@ -89,9 +89,9 @@ public class LinkFunctions extends ExtensionFunction {
         throw new ParserException(I18N.getText("macro.function.general.noPerm", functionName));
       }
 
-      Object message = FunctionCaller.getParam(parameters, 0);
-      boolean defer = FunctionCaller.getParam(parameters, 1, false);
-      return execLink((String) message, parser, defer);
+      Object link = FunctionCaller.getParam(parameters, 0);
+      boolean omitSendingOutput = FunctionCaller.getParam(parameters, 1, false);
+      return execLink((String) link, parser, omitSendingOutput);
     } else if (LINKS_CREATE_LINK.equals(functionName)) {
       return createLink(parser, parameters);
     } else if (LINKS_CREATE_ANCHOR.equals(functionName)) {
@@ -187,12 +187,8 @@ public class LinkFunctions extends ExtensionFunction {
               .toString();
     }
 
-    // if (target != null) {
     return FunctionCaller.callFunction(
         "macroLinkText", macro, parser, linkTo, toWho, message, target);
-    // } else {
-    //	return FunctionCaller.callFunction("macroLinkText", macro, parser, linkTo, toWho, message);
-    // }
   }
 
   public Object execLink(String link, Parser parser, boolean defer, boolean omitSendingOutput) {

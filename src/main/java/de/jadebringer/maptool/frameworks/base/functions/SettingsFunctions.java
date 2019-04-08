@@ -19,19 +19,18 @@ import de.jadebringer.maptool.extensionframework.FrameworksFunctions.Run;
 import de.jadebringer.maptool.extensionframework.FunctionCaller;
 import de.jadebringer.maptool.extensionframework.FunctionCaller.TokenWrapper;
 import java.util.List;
-import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.functions.TokenPropertyFunctions;
-import net.rptools.maptool.model.Token;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
 /** @author oliver.szymanski */
 public class SettingsFunctions extends ExtensionFunction {
+  private static final SettingsFunctions instance = new SettingsFunctions();
   public static final String LIB_JADEBRINGER_SETTINGS = "Lib:JadebringerSettings";
-  public static final String LIST_SETTINGS = "listSettings";
-  public static final String DELETE_SETTING = "deleteSetting";
-  public static final String GET_SETTING = "getSetting";
-  public static final String SET_SETTING = "setSetting";
+  public static final String LIST_SETTINGS = "settings_list";
+  public static final String DELETE_SETTING = "settings_delete";
+  public static final String GET_SETTING = "settings_get";
+  public static final String SET_SETTING = "settings_set";
 
   public SettingsFunctions() {
     super(
@@ -41,8 +40,6 @@ public class SettingsFunctions extends ExtensionFunction {
         Alias.create(LIST_SETTINGS, 0, 0));
     setTrustedRequired(true);
   }
-
-  private static final SettingsFunctions instance = new SettingsFunctions();
 
   public static SettingsFunctions getInstance() {
     return instance;
@@ -65,11 +62,11 @@ public class SettingsFunctions extends ExtensionFunction {
     } else if (DELETE_SETTING.equals(functionName)) {
       String key = FunctionCaller.getParam(parameters, 0);
       String tokenName = FunctionCaller.getParam(parameters, 1, LIB_JADEBRINGER_SETTINGS);
-      deleteSetting(parser, key, tokenName);
-      return key + " deleted";
+      return deleteSetting(parser, key, tokenName);
     } else if (LIST_SETTINGS.equals(functionName)) {
       String tokenName = FunctionCaller.getParam(parameters, 0, LIB_JADEBRINGER_SETTINGS);
-      return listSettings(parser, tokenName);
+      String prefix = FunctionCaller.getParam(parameters, 1, "");
+      return listSettings(parser, tokenName, prefix);
     }
 
     return throwNotFoundParserException(functionName);
@@ -87,6 +84,9 @@ public class SettingsFunctions extends ExtensionFunction {
       FunctionCaller.callFunction("setLibProperty", tpFunc, parser, key, value, tokenName);
     } else {
       TokenWrapper token = FunctionCaller.findToken(tokenName, null, true);
+      if (token == null || token.getToken() == null)
+        throw new ParserException("token not found: " + tokenName);
+
       try {
         FunctionCaller.doWithToken(
             parser,
@@ -104,7 +104,7 @@ public class SettingsFunctions extends ExtensionFunction {
     return key + " = " + value;
   }
 
-  public void deleteSetting(Parser parser, String key, String tokenName) throws ParserException {
+  public Object deleteSetting(Parser parser, String key, String tokenName) throws ParserException {
     TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
 
     if (tokenName == null) {
@@ -112,6 +112,9 @@ public class SettingsFunctions extends ExtensionFunction {
     }
 
     TokenWrapper token = FunctionCaller.findToken(tokenName, null, true);
+    if (token == null || token.getToken() == null)
+      throw new ParserException("token not found: " + tokenName);
+
     try {
       FunctionCaller.doWithToken(
           parser,
@@ -124,6 +127,8 @@ public class SettingsFunctions extends ExtensionFunction {
     } catch (Exception e) {
       throw new ParserException(e);
     }
+
+    return key + " deleted";
   }
 
   public Object getSetting(Parser parser, String key, Object defaultValue, String tokenName)
@@ -139,6 +144,9 @@ public class SettingsFunctions extends ExtensionFunction {
       result = FunctionCaller.callFunction("getLibProperty", tpFunc, parser, key, tokenName);
     } else {
       TokenWrapper token = FunctionCaller.findToken(tokenName, null, true);
+      if (token == null || token.getToken() == null)
+        throw new ParserException("token not found: " + tokenName);
+
       try {
         result =
             FunctionCaller.doWithToken(
@@ -161,26 +169,23 @@ public class SettingsFunctions extends ExtensionFunction {
     return result;
   }
 
-  public Object listSettings(Parser parser, String tokenName) throws ParserException {
-    TokenPropertyFunctions tpFunc = TokenPropertyFunctions.getInstance();
-
+  public Object listSettings(Parser parser, String tokenName, String prefix)
+      throws ParserException {
     if (tokenName == null) {
       tokenName = LIB_JADEBRINGER_SETTINGS;
     }
 
-    String names =
-        (String)
-            FunctionCaller.callFunction(
-                "getMatchingLibProperties", tpFunc, parser, ".*", tokenName);
+    TokenWrapper token = FunctionCaller.findToken(tokenName, null, true);
+    if (token == null || token.getToken() == null)
+      throw new ParserException("token not found: " + tokenName);
 
-    Token token = MapTool.getParser().getTokenMacroLib(tokenName);
-    // JSONObject result = new JSONObject();
     StringBuilder sb = new StringBuilder();
-    for (String key : names.split(",")) {
-      // Object value = getSetting(parser, key, null, tokenName);
-      Object value = token.getProperty(key);
-      // result.put(key, value);
-      sb.append(key).append(" = ").append(value).append("<br>");
+    for (String key : token.getToken().getPropertyNamesRaw()) {
+      if (key.startsWith(prefix)) {
+        Object value = token.getToken().getProperty(key);
+        final String unprefixedKey = key.substring(prefix.length());
+        sb.append(unprefixedKey).append(" = ").append(value).append("<br>");
+      }
     }
 
     return sb.toString();

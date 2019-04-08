@@ -52,7 +52,7 @@ public class MacrosFunctions extends ExtensionFunction {
     } else if (MACROS_EXECUTE_MACRO.equals(functionName)) {
       return executeMacro(parser, true, parameters);
     } else if (MACROS_EXECUTE_MACRO_SEND_OUTPUT.equals(functionName)) {
-      return executeMacro(parser, true, parameters);
+      return executeMacro(parser, false, parameters);
     } else if (MACROS_SEND_EXECUTE_MACRO.equals(functionName)) {
       sendExecuteMacro(parser, parameters);
       return "";
@@ -92,15 +92,15 @@ public class MacrosFunctions extends ExtensionFunction {
     LinkFunctions links = LinkFunctions.getInstance();
     Object link = links.createLink(parser, linkTo, who, args, target);
     Object result = links.execLink(link.toString(), parser, omitSendingOutput);
-    if (!omitSendingOutput) {
-      return "";
+    if (omitSendingOutput) {
+      return result;
     }
-    return result;
+    return "";
   }
 
   public void sendExecuteMacro(Parser parser, List<Object> parameters) throws ParserException {
     String sendToWho = FunctionCaller.getParam(parameters, 0);
-    String linkTitle = FunctionCaller.getParam(parameters, 1);
+    String message = FunctionCaller.getParam(parameters, 1);
     String clickableLinkTitle = FunctionCaller.getParam(parameters, 2);
     String linkTo = FunctionCaller.getParam(parameters, 3);
     String who = FunctionCaller.getParam(parameters, 4, "self");
@@ -112,13 +112,13 @@ public class MacrosFunctions extends ExtensionFunction {
     Object anchor =
         links.createAnchor(parser, clickableLinkTitle, link.toString(), null, null, null);
 
-    if (linkTitle == null) {
-      linkTitle = "%link%";
+    if (message == null) {
+      message = "%link%";
     }
-    if (!linkTitle.contains("%link%")) {
-      linkTitle = linkTitle + " %link%";
+    if (!message.contains("%link%")) {
+      message = message + " %link%";
     }
-    linkTitle = linkTitle.replace("%link%", anchor.toString());
-    OutputToFunction.getInstance().outputTo(parser, sendToWho, linkTitle, false, "impersonated");
+    message = message.replace("%link%", anchor.toString());
+    OutputToFunction.getInstance().outputTo(parser, sendToWho, message, false, "impersonated");
   }
 }

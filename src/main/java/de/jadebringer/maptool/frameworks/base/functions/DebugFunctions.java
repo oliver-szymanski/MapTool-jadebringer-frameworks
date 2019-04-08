@@ -25,7 +25,6 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
 import net.rptools.maptool.language.I18N;
@@ -107,45 +106,40 @@ public class DebugFunctions extends ExtensionFunction {
       return manipulate(parser, parameters);
     } else if (DEBUG.equals(functionName)) {
       if (BigDecimal.ONE.equals(isDebug(parser))) {
-        String result = concatenateParametersToString(parameters);
+        String result = formatAsString(parameters);
         MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
     } else if (WARN.equals(functionName)) {
-      String result = concatenateParametersToString(parameters);
+      String result = formatAsString(parameters);
       MapTool.addLocalMessage("WARN:" + result);
       return "";
     } else if (ERROR.equals(functionName)) {
-      String result = concatenateParametersToString(parameters);
+      String result = formatAsString(parameters);
       MapTool.addLocalMessage("ERROR:" + result);
       return "";
     } else if (TRACE.equals(functionName)) {
       if (BigDecimal.ONE.equals(isTrace(parser))) {
-        String result = concatenateParametersToString(parameters);
+        String result = formatAsString(parameters);
         MapTool.addLocalMessage("DEBUG:" + result);
       }
       return "";
     } else if (CC.equals(functionName)) {
-      if (BigDecimal.ONE.equals(isTrace(parser))) {
-        String result = concatenateParametersToString(parameters);
-        MapTool.addLocalMessage("CC reached:" + result);
-      }
       return "";
     }
 
     return throwNotFoundParserException(functionName);
   }
 
-  private String concatenateParametersToString(List<Object> parameters) {
+  private String formatAsString(List<Object> parameters) {
+
     if (parameters == null || parameters.size() == 0) {
       return "";
     }
 
-    StringBuilder sb = new StringBuilder();
-    for (Object parameter : parameters) {
-      sb.append(parameter.toString());
-    }
-    return sb.toString();
+    List<Object> copyParameters = new LinkedList<>(parameters);
+    Object format = copyParameters.remove(0);
+    return String.format(format.toString(), copyParameters);
   }
 
   private Object setTrace(Parser parser, BigDecimal traceEnabled) throws ParserException {
@@ -181,8 +175,7 @@ public class DebugFunctions extends ExtensionFunction {
   }
 
   private Object inspect(Parser parser, List<Object> parameters) throws ParserException {
-    inspector(parser, true, parameters);
-    return "OK";
+    return inspector(parser, true, parameters);
   }
 
   private Object manipulate(Parser parser, List<Object> parameters) throws ParserException {
@@ -248,7 +241,8 @@ public class DebugFunctions extends ExtensionFunction {
         };
 
     if (watch) {
-      SwingUtilities.invokeLater(openInspector);
+      // SwingUtilities.invokeLater(openInspector);
+      openInspector.run();
     } else {
       openInspector.run();
       try {
@@ -272,7 +266,7 @@ public class DebugFunctions extends ExtensionFunction {
       }
     }
 
-    return "OK";
+    return "";
   }
 
   protected static class InspectTable extends PropertyTable {

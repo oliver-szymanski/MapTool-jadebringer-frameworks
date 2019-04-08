@@ -2,7 +2,13 @@
 
 MapTool-jadebringer-frameworks is an extension for [MapTool](https://www.rptools.net/toolbox/maptool/) (by RPTools.net). MapTool 
 is a full and free Virtual Table Top application. These extensions bring new functionality 
-for MapTool. We will contribute to the official MapTool (in short MT) as well, but not 
+for MapTool. 
+
+The extensions are mostly about new functions for the MapTool macro language, so that 
+writing macros is more convenient/easier and doing stuff that is not possible with "just" 
+official MapTool (like the button frames).
+
+We will contribute to the official MapTool (in short MT) as well, but not 
 all the features here will directly make it to MT and some maybe never. So if you want 
 to have them now, get this extension.
 
@@ -10,13 +16,23 @@ to have them now, get this extension.
 
 Jadebringer is a Role Playing System based on the Midwinter Chronicles Fantasy novels.
 More info on [jadebringer.de](http://www.jadebringer.de)
+
+## Screenshots
+
+### Button frames example
 	
-## Features:
+![Button frames](docs/button-frames.png "Button frames")
+
+### Variable inspector/manipulator example
+    
+![Variable inspector/manipulator](docs/variable-inspector.png "Variable inspector/manipulator")
+
+## Features
 
 - have a "/call functionName(parameters)" chat macro to call any function via chat
 - show chat in fullscreen
 - show initiative in fullscreen
-- show button frames, even in fullscreen 
+- show button frames, in window mode and in fullscreen 
     - can be dragged, resized, minimized
     - have buttons to call macros with title or icon
     - buttons can be created, deactivated or hidden via macros
@@ -53,6 +69,18 @@ Optional: the Java extension framework (more info for Java developers on request
 - add call macros and macro functions via Java dynamically
 - security build in, checks for trusted and that no not allowed code is executed
 - additional feature: load Java extensions as java jars via file system or any URL
+
+## How does it work?
+
+It just adds new additions to MapTool. It is not changing any of the MapTool interns, 
+nor (sorry, developer terms now) is it replacing classes/objects and no byte code manipulations. 
+Simply just additions. It's even using aspects of the Java Security manager and Access 
+Control Context to make sure new functions cannot do anything dodgy (like no file access, 
+and mostly nothing else either - just calling MapTool public functionality).
+
+If you just want to use the new functions/additions on your machines it's enough to 
+follow the setup locally. If you are a GM and you write macros using the new functions 
+that need to be run on the players side, the players need to install this as well.
 
 ## Requisites
 

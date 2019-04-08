@@ -60,7 +60,6 @@ public class OutputToFunction extends ExtensionFunction {
       throws ParserException {
     LinkFunctions linkFunction = LinkFunctions.getInstance();
     String callbackFunction = "unpackArgs";
-    // if (prefix != null) callbackFunction = prefix + callbackFunction;
     String link = (String) linkFunction.createLink(parser, callbackFunction, who, message, target);
     FunctionCaller.callFunction(
         "links_execLink", linkFunction, parser, link, FunctionCaller.toBoolean(defer));

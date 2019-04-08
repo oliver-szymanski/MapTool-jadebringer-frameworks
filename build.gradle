@@ -92,7 +92,7 @@ task getDependenciesFromGit () {
     doFirst {
 
         project.ext.gitDeps.each {
-            println it.name + ": looking for dependency in directory " + it.directory
+            println it.name + ": looking for dependency in directory " + file(it.directory).getAbsolutePath()
             if (!file(it.directory).exists()) {
                 println it.name + ": directory not found, trying to get from Git (" + it.gitRef + " from " + it.gitUrl + ")"
                 def grgit
@@ -135,11 +135,11 @@ class BootstrapPlugin implements Plugin<Project> {
         project.ext.gitDeps.each { element ->
             project.task ("buildDependency_$it.name", dependsOn: "getDependenciesFromGit", type: GradleBuild) {
                 doFirst {
-                  println element.name + ": looking for dependency to build from directory " + element.directory
+                  println element.name + ": looking for dependency to build from directory " + project.file(element.directory)
                   def directory = new File(element.directory)
                   if (directory.exists()) {
                      println element.name + ': trying to build liberary dependency from ' + element.directory+'/build.gradle'
-                     buildFile = element.directory+'/build.gradle'
+                     buildFile = project.file(element.directory+'/build.gradle')
                      dir = project.file(element.directory)
                      println "starting sub build from: " + dir + "/build.gradle"
                      tasks = ['build']

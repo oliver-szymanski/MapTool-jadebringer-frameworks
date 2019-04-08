@@ -4,7 +4,7 @@
 
 If you are a developer and want to build the framework from source code this is the way to 
 go. It will create the ".jar" file that you need for installing it into MapTool (which 
-is described in the README).
+is described in the [README](README.md)).
 
 If you are a Java developer you can also add you own functions for MapTool macros easily. 
 A documentation how to do that will follow. Until then feel free to contact the Jadebringer 
@@ -33,5 +33,5 @@ something like
 MapTool-jadebringer-frameworks-1.0.0.jar
 ~~~
 
-That's it. You're good to go (see README for what to do with it).
+That's it. You're good to go (see [README](README.md) for what to do with it).
 

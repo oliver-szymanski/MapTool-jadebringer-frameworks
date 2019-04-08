@@ -15,7 +15,11 @@ to have them now, get this extension.
 
 ### But what's Jadebringer?
 
-Jadebringer is a Role Playing System based on the Midwinter Chronicles Fantasy novels.
+This MapTool Jadebringer frameworks extension is a generic extension with additional 
+functionality that everyone can use.
+
+The name Jadebringer derives from the Role Playing System Jadebringer Midwinter Chronicles
+based on the Midwinter Chronicles Fantasy novels.
 More info on [jadebringer.de](http://www.jadebringer.de)
 
 ## Screenshots
@@ -90,8 +94,8 @@ that need to be run on the players side, the players need to install this as wel
 
 The only thing you need to make this extension available in MapTool is the release artifact.
 E.g. that's _MapTool-jadebringer-frameworks-v0.0.1.jar_
-You can download one from the releases in Github or if you are a developer you can build 
-it from source as described in the BUILD documentation.
+You can download one from the [releases](https://github.com/source-knights/MapTool-jadebringer-frameworks/releases) in Github or if you are a developer you can build 
+it from source as described in the [BUILD](BUILD.MD) documentation.
 
 And cause this is an extension you need to install [MapTool](https://www.rptools.net/toolbox/maptool/) (version 1.5.1 or higher) 
 before. We might  go with a full fork of MT in the future, which means you would only 

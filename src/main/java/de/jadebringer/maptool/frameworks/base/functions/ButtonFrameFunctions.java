@@ -75,48 +75,35 @@ public class ButtonFrameFunctions extends ExtensionFunction {
 
     if (FRAMES_SHOW_FRAME.equals(functionName)) {
       return showFrame(parser, functionName, parameters);
-    }
-    if (FRAMES_HIDE_FRAME.equals(functionName)) {
+    } else if (FRAMES_HIDE_FRAME.equals(functionName)) {
       return hideFrame(parser, functionName, parameters);
     } else if (FRAMES_SHOW_ALL_FRAMES.equals(functionName)) {
       showAllFrames(parser, functionName, parameters);
-      return BigDecimal.ONE;
-    }
-    if (FRAMES_HIDE_ALL_FRAMES.equals(functionName)) {
+      return "";
+    } else if (FRAMES_HIDE_ALL_FRAMES.equals(functionName)) {
       hideAllFrames(parser, functionName, parameters);
-      return BigDecimal.ONE;
-    }
-    if (FRAMES_IS_FRAME_VISIBLE.equals(functionName)) {
+      return "";
+    } else if (FRAMES_IS_FRAME_VISIBLE.equals(functionName)) {
       return isFrameVisible(parser, functionName, parameters);
-    }
-    if (FRAMES_ADD_BUTTON.equals(functionName)) {
+    } else if (FRAMES_ADD_BUTTON.equals(functionName)) {
       return addButton(parser, functionName, parameters);
-    }
-    if (FRAMES_REMOVE_BUTTON.equals(functionName)) {
+    } else if (FRAMES_REMOVE_BUTTON.equals(functionName)) {
       return removeButton(parser, functionName, parameters);
-    }
-    if (FRAMES_SET_BUTTON_TEXT.equals(functionName)) {
+    } else if (FRAMES_SET_BUTTON_TEXT.equals(functionName)) {
       return setButtonText(parser, functionName, parameters);
-    }
-    if (FRAMES_SET_BUTTON_IMAGE.equals(functionName)) {
+    } else if (FRAMES_SET_BUTTON_IMAGE.equals(functionName)) {
       return setButtonImage(parser, functionName, parameters);
-    }
-    if (FRAMES_HIDE_BUTTON.equals(functionName)) {
+    } else if (FRAMES_HIDE_BUTTON.equals(functionName)) {
       return hideButton(parser, functionName, parameters);
-    }
-    if (FRAMES_SHOW_BUTTON.equals(functionName)) {
+    } else if (FRAMES_SHOW_BUTTON.equals(functionName)) {
       return showButton(parser, functionName, parameters);
-    }
-    if (FRAMES_ENABLE_BUTTON.equals(functionName)) {
+    } else if (FRAMES_ENABLE_BUTTON.equals(functionName)) {
       return enableButton(parser, functionName, parameters);
-    }
-    if (FRAMES_DISABLE_BUTTON.equals(functionName)) {
+    } else if (FRAMES_DISABLE_BUTTON.equals(functionName)) {
       return disableButton(parser, functionName, parameters);
-    }
-    if (FRAMES_IS_HIDDEN_BUTTON.equals(functionName)) {
+    } else if (FRAMES_IS_HIDDEN_BUTTON.equals(functionName)) {
       return isHiddenButton(parser, functionName, parameters);
-    }
-    if (FRAMES_IS_ENABLED_BUTTON.equals(functionName)) {
+    } else if (FRAMES_IS_ENABLED_BUTTON.equals(functionName)) {
       return isEnabledButton(parser, functionName, parameters);
     }
 

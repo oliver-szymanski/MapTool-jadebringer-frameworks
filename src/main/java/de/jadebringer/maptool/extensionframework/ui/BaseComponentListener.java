@@ -46,19 +46,22 @@ public class BaseComponentListener implements ComponentListener {
 
       // restore chat to orginal frame
       Container container = originalParentContainer.get(MapTool.getFrame().getCommandPanel());
-      container.add(MapTool.getFrame().getCommandPanel());
+      if (container != null) {
+        container.add(MapTool.getFrame().getCommandPanel());
+        MapTool.getFrame().showCommandPanel();
+        chatFrame.setMinimized(false);
+        chatFrame.close();
+        chatFrame.removeComponentListener(this);
+        MapTool.getFrame().getChatActionLabel().removeComponentListener(this);
+        chatFrame = null;
+      }
+      
       container = originalParentContainer.get(MapTool.getFrame().getInitiativePanel());
-      container.add(MapTool.getFrame().getInitiativePanel());
-
-      MapTool.getFrame().showCommandPanel();
-      chatFrame.setMinimized(false);
-      chatFrame.close();
-      chatFrame.removeComponentListener(this);
-      MapTool.getFrame().getChatActionLabel().removeComponentListener(this);
-      chatFrame = null;
-
-      initiativeFrame.setMinimized(false);
-      initiativeFrame.close();
+      if (container != null) {
+          container.add(MapTool.getFrame().getInitiativePanel());
+          initiativeFrame.setMinimized(false);
+          initiativeFrame.close();
+      }
 
       originalParentContainer.clear();
     } else if (e.getComponent().equals(MapTool.getFrame().getChatActionLabel())) {

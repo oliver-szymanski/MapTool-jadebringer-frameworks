@@ -17,6 +17,9 @@ package de.jadebringer.maptool.extensionframework;
 import de.jadebringer.maptool.extensionframework.ui.BaseComponentListener;
 import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
 import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
+import de.jadebringer.maptool.frameworks.base.events.EventDispatcher;
+
+import java.awt.EventQueue;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -74,7 +77,7 @@ public class FrameworksFunctions implements Function {
   private final int minParameters;
   private final int maxParameters;
   private final boolean deterministic;
-  private boolean windowComponentListening = false;
+  private volatile boolean windowComponentListening = false;
 
   private List<FrameworkClassLoader> frameworksClassLoader = new LinkedList<>();
   private Map<FrameworkClassLoader, String> frameworksClassLoaderToLibs = new HashMap<>();;
@@ -169,6 +172,8 @@ public class FrameworksFunctions implements Function {
     if (macroDefinition != null) {
       MacroManager.registerMacro(callMacro);
     }
+    
+    registerMapToolListener();
   }
 
   private void loadBaseFramework() {
@@ -247,11 +252,25 @@ public class FrameworksFunctions implements Function {
     return instance;
   }
 
-  private synchronized void registerMapToolFrameListener() {
-    if (MapTool.getFrame() != null && !windowComponentListening) {
+  private synchronized void registerMapToolListener() {
+    if (windowComponentListening)
+      return;
+    
+    if (MapTool.getFrame() != null &&
+        MapTool.getFrame().getCommandPanel() != null) {
       MapTool.getFrame().addComponentListener(BaseComponentListener.instance);
+      MapTool.getFrame().getInitiativePanel().addComponentListener(BaseComponentListener.instance);
       MapTool.getFrame().getGlassPane().addComponentListener(BaseComponentListener.instance);
+      MapTool.getEventDispatcher().addListener(EventDispatcher.getInstance());
       windowComponentListening = true;
+    } else {
+      // try to register later
+      EventQueue.invokeLater(
+          new Runnable() {
+            public void run() {
+              registerMapToolListener();
+            }
+          });
     }
   }
 
@@ -270,14 +289,11 @@ public class FrameworksFunctions implements Function {
     }
 
     if (IMPORT_FUNCTIONS_BUNDLE.equals(functionName)) {
-      registerMapToolFrameListener();
       return importFunctionsBundle(parser, false, IMPORT_FUNCTIONS_BUNDLE, parameters);
     } else if (RESET_FRAMEWORKS.equals(functionName)) {
-      registerMapToolFrameListener();
       init();
       return BigDecimal.ONE;
     } else if (INIT_FRAMEWORKS.equals(functionName)) {
-      registerMapToolFrameListener();
       if (parameters.size() == 0) {
         // auto add from extension-frameworks sub directory
         initFrameworksFromExtensionDirectory();

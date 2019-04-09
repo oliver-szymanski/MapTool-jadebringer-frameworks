@@ -9,14 +9,11 @@ to make writing macros more convenient/easier and allow doing stuff that is not 
 official MapTool yet (like the button frames). Safety and security goes first, so you 
 will not be able to do "dodgy" stuff inside or outside of MT with the extension.
 
-We will contribute to the official MapTool (in short MT) as well, but not 
-all the features here will directly make it to MT and some maybe never. So if you want 
-to have them now, get this extension.
+While we will contribute to the official MapTool where possible, not all features in this repo will be merged into the official repo. If you want to have them, get this extension.
 
 ### But what's Jadebringer?
 
-This MapTool Jadebringer frameworks extension is a generic extension with additional 
-functionality that everyone can use.
+This MapTool Jadebringer frameworks extension is a generic extension with additional functionality that everyone can use.
 
 The name Jadebringer derives from the Role Playing System Jadebringer Midwinter Chronicles
 based on the Midwinter Chronicles Fantasy novels.

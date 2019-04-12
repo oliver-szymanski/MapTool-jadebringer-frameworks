@@ -12,3 +12,22 @@
  * <http://www.gnu.org/licenses/> and specifically the Affero license
  * text at <http://www.gnu.org/licenses/agpl.html>.
  */
+package de.jadebringer.maptool.extension;
+
+import java.util.List;
+
+import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
+import net.rptools.maptool.client.MapTool;
+import net.rptools.parser.function.Function;
+
+public class MapToolWrapper {
+
+  public static void main(String[] args) {
+    FrameworksFunctions frameworkFunctions = FrameworksFunctions.getInstance();
+    List<Function> macroFunctions = MapTool.getParser().getMacroFunctions();
+    if (!macroFunctions.contains(frameworkFunctions)) {
+      MapTool.getParser().getMacroFunctions().add(frameworkFunctions);
+    }
+    MapTool.main(args);
+  }
+}

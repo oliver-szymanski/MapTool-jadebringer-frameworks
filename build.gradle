@@ -29,7 +29,7 @@ apply plugin: 'java'
 apply plugin: 'com.diffplug.gradle.spotless'
 apply plugin: BootstrapPlugin
 
-mainClassName = 'de.jadebringer.maptool.frameworks.MapToolWrapper'
+mainClassName = 'de.jadebringer.maptool.extension.MapToolWrapper'
 applicationDefaultJvmArgs = ["-Xss4M"]
 
 import org.ajoberstar.grgit.Grgit

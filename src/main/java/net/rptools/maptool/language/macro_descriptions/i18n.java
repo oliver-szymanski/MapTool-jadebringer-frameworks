@@ -3,7 +3,7 @@
  * licensed under the Affero GPL Version 3 or, at your option, any later
  * version.
  *
- * MapTool-jadebringer-framework Source Code is distributed in the hope that it will be
+ * MapTool-jadebringer-extension Source Code is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *

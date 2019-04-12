@@ -1,10 +1,10 @@
-# MapTool-jadebringer-frameworks
+# MapTool-jadebringer-extension
 
-MapTool-jadebringer-frameworks is an extension for [MapTool](https://www.rptools.net/toolbox/maptool/) (by RPTools.net). MapTool 
-is a full and free Virtual Table Top application. These extensions bring new functionality 
+MapTool-jadebringer-extension is an extension for [MapTool](https://www.rptools.net/toolbox/maptool/) (by RPTools.net). MapTool 
+is a full and free Virtual Table Top application. The extension bring new functionality 
 for MapTool. 
 
-The extensions are mostly about new functions for the MapTool macro language. Goal is 
+The extension is mostly about new functions for the MapTool macro language. Goal is 
 to make writing macros more convenient/easier and allow doing stuff that is not possible with "just" 
 official MapTool yet (like the button frames). Safety and security goes first, so you 
 will not be able to do "dodgy" stuff inside or outside of MT with the extension.
@@ -13,7 +13,7 @@ While we will contribute to the official MapTool where possible, not all feature
 
 ### But what's Jadebringer?
 
-This MapTool Jadebringer frameworks extension is a generic extension with additional functionality that everyone can use.
+This MapTool Jadebringer extension is a generic extension with additional functionality that everyone can use.
 
 The name Jadebringer derives from the Role Playing System Jadebringer Midwinter Chronicles
 based on the Midwinter Chronicles Fantasy novels.
@@ -98,8 +98,8 @@ More info on [jadebringer.de](http://www.jadebringer.de)
     - `macros_sendExecuteMacro("userThatWeWantToRunTheMacro","please respond", "click here","test@Lib:JadebringerSettings","userOrChannelThatGetsTheResponse")`
     - of course works with existing auto execution of macros
 
-Optional: the Java extension framework (more info for Java developers on request)
-- extensions are call macros and macro function, so you can do more via macros and chat
+Optional: the Java extension (more info for Java developers on request)
+- extensions are bundles of call macros and macro function, so you can do more via macros and chat
 - add call macros and macro functions via Java dynamically
 - security build in, checks for trusted and that no not allowed code is executed
 - additional feature: load Java extensions as java jars via file system or any URL
@@ -119,8 +119,8 @@ that need to be run on the players side, the players need to install this as wel
 ## Requisites
 
 The only thing you need to make this extension available in MapTool is the release artifact.
-E.g. that's _MapTool-jadebringer-frameworks-v0.0.4.jar_
-You can download one from the [releases](https://github.com/source-knights/MapTool-jadebringer-frameworks/releases) in Github or if you are a developer you can build 
+E.g. that's _MapTool-jadebringer-extension-v0.0.4.jar_
+You can download one from the [releases](https://github.com/source-knights/MapTool-jadebringer-extension/releases) in Github or if you are a developer you can build 
 it from source as described in the [BUILD](BUILD.MD) documentation.
 
 And cause this is an extension you need to install [MapTool](https://www.rptools.net/toolbox/maptool/) (version 1.5.1 or higher) 
@@ -130,7 +130,7 @@ that yet.
 
 ## Install
 
-You can use the existing installation of MapTool v1.5.1 or higher with this extension framework.
+You can use the existing installation of MapTool v1.5.1 or higher with this extension.
 To have the additional functions just change the MapTool config file which you can find inside the MapTool installation directory, e.g. in
 
 ~~~
@@ -139,28 +139,28 @@ C:\Users\username\AppData\Local\MapTool-1.5.1\app\MapTool.cfg
 
 ~~~
 
-Note: You might want to copy the file just in case that you do not want to use the framework 
+Note: You might want to copy the file just in case that you do not want to use the extension 
 anymore. If that is the case (we hope not) just copy this backup of the original file 
 back and override the change file.
 
-Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-frameworks-v0.0.4.jar"
+Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-extension-v0.0.4.jar"
 
 ~~~
-app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-frameworks-v0.0.4.jar
+app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-extension-v0.0.4.jar
 ~~~
 
 	
 
 And the line with "app.mainclass" to match this:
 ~~~
-app.mainclass=de/jadebringer/maptool/frameworks/LaunchInstructionsWrapper
+app.mainclass=de/jadebringer/maptool/extension/LaunchInstructionsWrapper
 ~~~
 
-Then copy the "MapTool-jadebringer-frameworks-v0.0.4.jar" inside this app directory. Now you can start MapTool as usual.
+Then copy the "MapTool-jadebringer-extension-v0.0.4.jar" inside this app directory. Now you can start MapTool as usual.
 
 ## First steps
 
-To see if the extension framework was correctly setup you can now open MapTool as usual 
+To see if the extension was correctly setup you can now open MapTool as usual 
 and type 
 
 ~~~
@@ -169,9 +169,9 @@ and type
 
 ~~~
 
-in the chat. This should output the used version of the MapTool-extension-frameworks. 
+in the chat. This should output the used version of the MapTool-jadebringer-extension. 
 Don't worry if it does not match the filenames version. This will show an internal version 
-of the jadebringer-base-framework that is the default framework from the extension.
+of the jadebringer-base-extension.
 
 ~~~
 
@@ -179,7 +179,7 @@ of the jadebringer-base-framework that is the default framework from the extensi
 
 ~~~
 
-This will open all the button frames that the jadebringer-base-framework defines by 
+This will open all the button frames that the jadebringer extension defines by 
 default. Have fun clicking on then. These are examples what you can do with button frames 
 using macros yourself.
 

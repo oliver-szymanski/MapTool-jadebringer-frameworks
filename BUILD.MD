@@ -1,8 +1,8 @@
-# Build MapTool-jadebringer-frameworks
+# Build MapTool-jadebringer-extension
 
 ## Why building it?
 
-If you are a developer and want to build the framework from source code this is the way to 
+If you are a developer and want to build the extension from source code this is the way to 
 go. It will create the ".jar" file that you need for installing it into MapTool (which 
 is described in the [README](README.md)).
 
@@ -12,7 +12,7 @@ team for more info on that (see contact details in README).
 
 ## How to build?
 
-MapTool-jadebringer-frameworks is based on Gradle build and includes a Gradle Wrapper. 
+MapTool-jadebringer-extension is based on Gradle build and includes a Gradle Wrapper. 
 So basically all you need it Java SDK 10+. If you got that you can build it. Just check 
 the source out from github as usual and build with gradle.
 
@@ -30,7 +30,7 @@ The generated artifact that you care about is then under build/libs, usually cal
 something like
 
 ~~~
-MapTool-jadebringer-frameworks-1.0.0.jar
+MapTool-jadebringer-extension-1.0.0.jar
 ~~~
 
 That's it. You're good to go (see [README](README.md) for what to do with it).

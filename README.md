@@ -31,53 +31,71 @@ More info on [jadebringer.de](http://www.jadebringer.de)
 
 ## Features
 
-- have a "/call functionName(parameters)" chat macro to call any function via chat
-    - try with "/call showAllFrames" followed by a later "/call hideAllFrames" ;)
-- show chat in fullscreen
-- show initiative in fullscreen
+- have a `/call functionName(parameters)` chat macro to call any function via chat
+    - try with `/call frames_showAllFrames` followed by a later `/call frames_hideAllFrames` ;)
+- shows chat in fullscreen
+- shows initiative in fullscreen
 - show new button frames in window mode and in fullscreen 
     - can be dragged, resized, minimized
     - have buttons to call macros with title or icon
     - buttons can be created, deactivated or hidden via macros
     - control the frame/buttons with macros
-    - check all the new "frames_" function in macro editor
+    - check all the new `frames_` functions in macro editor
+    - Example
+      ~~~
+      [h: frames_addButton("testMacro@Lib:MyToken", "testbutton", "Test Button", "test the button", "simple tests", "testing", "", "", 0, 1)]
+      <!-- show the frame: -->
+      [h: frames_showFrame("testing")]
+      <!-- add an existing asset id for a image in here: -->
+      [h: frames_setButtonImage("testbutton", "simple tests", "testing", "", "asset://900021383d556b3f3946feb487b50550")]
+      <!-- change button text: -->
+      [h: frames_setButtonText("testbutton", "simple tests", "testing", "", "on my command")]
+~~~
 - inspect and manipulate variables in macros
-    - via debug_inspect(variableNames) or debug_manipulate(variablesNames) 
-    - other debug related functions as debug/trace/warn/error
-- build in outputTo(...) function
+    - via `debug_inspect(variableNames)` or `debug_manipulate(variablesNames)`
+    - other debug related functions as `debug/trace/warn/error`
+- build in `outputTo(...)` function
 - new Events in macros
-    - just put a onHandleEvent macro on a lib:token (like the existing onTokenMoved)
-    - that onHandleEvent macro will get called
+    - just put a `onHandleEvent` macro on a lib:token (like the existing onTokenMoved) and 
+    it will get called in case of one of the new events
     - to try out this new feature put this in a new onHandleEvent macro on any lib:token
       ~~~
       [outputTo("self", "Event: "+macro.args)]
       ~~~
-    - Zone events: "Zone Activated" if a map was changed
-    - Initiative events: "Initiative current" changed, "Initiative round" changed, "Initiative 
-      Token added", "Initiative Token removed", "Initiative sorted" 
-    - Token events: "Token moved" (if a token was actually moved, so move was not denied)
-- manipulate token on other maps safely, "Token added", "Token removed"
+    - Zone events: 
+        - `Zone Activated` if a map was changed
+    - Initiative events: 
+        - `Initiative current` changed, 
+        - `Initiative round` changed, 
+        - `Initiative Token added`, 
+        - `Initiative Token removed`, 
+        - `Initiative sorted` 
+    - Token events: 
+        - `Token moved` (if a token was actually moved, so move was not denied),
+        - `Token added`, 
+        - `Token removed`
+- manipulate token on other maps safely
     - all functions using tokens can deal with tokens on any map, not just the current
 - input dialog with yes/no/cancel buttons via inputYesNoCancel(...) 
 - map macros to center map/show whole map area
-    - maps_center()
-    - maps_extent()
-    - maps_getExtent()
+    - `maps_center()`
+    - `maps_extent()`
+    - `maps_getExtent()`
 - convenience functions for load/save content (any content type from token macros/properties/tables)
-    - content_load("mycontentMacro", "tokenMacro", "mytoken")
-    - content_load("mycontent", "tokenProperty", "mytoken")
-    - content_load("1", "table", "mytable")
-    - content_save("mycontent", "tokenMacro", "mytoken", "any content") 
+    - `content_load("mycontentMacro", "tokenMacro", "mytoken")`
+    - `content_load("mycontent", "tokenProperty", "mytoken")`
+    - `content_load("1", "table", "mytable")`
+    - `content_save("mycontent", "tokenMacro", "mytoken", "any content")` 
 - convenience functions for load/save settings in token properties
-    - listSettings, deleteSetting, setSetting, getSetting 
+    - `listSettings`, `deleteSetting`, `setSetting`, `getSetting` 
 - convenience functions to create macro links 
-    - links_createAnchor
-    - links_createLink
-    - links_execLink   
+    - `links_createAnchor`
+    - `links_createLink`
+    - `links_execLink`   
 - function to quickly call macros locally or on another client/player and define where to send the output
-    - macros_executeMacro("test@Lib:JadebringerSettings")
-    - macros_executeMacroSendOutput("test@Lib:JadebringerSettings","	Oliver")
-    - macros_sendExecuteMacro("userThatWeWantToRunTheMacro","please respond", "click here","test@Lib:JadebringerSettings","userOrChannelThatGetsTheResponse")
+    - `macros_executeMacro("test@Lib:JadebringerSettings")`
+    - `macros_executeMacroSendOutput("test@Lib:JadebringerSettings","	Oliver")`
+    - `macros_sendExecuteMacro("userThatWeWantToRunTheMacro","please respond", "click here","test@Lib:JadebringerSettings","userOrChannelThatGetsTheResponse")`
     - of course works with existing auto execution of macros
 
 Optional: the Java extension framework (more info for Java developers on request)
@@ -101,7 +119,7 @@ that need to be run on the players side, the players need to install this as wel
 ## Requisites
 
 The only thing you need to make this extension available in MapTool is the release artifact.
-E.g. that's _MapTool-jadebringer-frameworks-v0.0.2.jar_
+E.g. that's _MapTool-jadebringer-frameworks-v0.0.4.jar_
 You can download one from the [releases](https://github.com/source-knights/MapTool-jadebringer-frameworks/releases) in Github or if you are a developer you can build 
 it from source as described in the [BUILD](BUILD.MD) documentation.
 
@@ -125,10 +143,10 @@ Note: You might want to copy the file just in case that you do not want to use t
 anymore. If that is the case (we hope not) just copy this backup of the original file 
 back and override the change file.
 
-Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-frameworks-v0.0.2.jar"
+Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-frameworks-v0.0.4.jar"
 
 ~~~
-app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-frameworks-v0.0.2.jar
+app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-frameworks-v0.0.4.jar
 ~~~
 
 	
@@ -138,7 +156,7 @@ And the line with "app.mainclass" to match this:
 app.mainclass=de/jadebringer/maptool/frameworks/LaunchInstructionsWrapper
 ~~~
 
-Then copy the "MapTool-jadebringer-frameworks-v0.0.2.jar" inside this app directory. Now you can start MapTool as usual.
+Then copy the "MapTool-jadebringer-frameworks-v0.0.4.jar" inside this app directory. Now you can start MapTool as usual.
 
 ## First steps
 

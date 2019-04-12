@@ -14,8 +14,8 @@
  */
 package de.jadebringer.maptool.extension.tests;
 
+import de.jadebringer.maptool.extension.hook.ExtensionBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
-import de.jadebringer.maptool.extension.hook.ExtensionFrameworkBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.Version;
@@ -24,13 +24,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BaseFramework extends ExtensionFrameworkBundle {
+public class TestExtension extends ExtensionBundle {
 
   private List<ExtensionFunction> functions = new LinkedList<>();
   private List<ExtensionFunctionButton> functionButtons = new LinkedList<>();
   private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
 
-  public BaseFramework() {
+  public TestExtension() {
     super(new Version(1, 0, 0, "jadebringer-test"));
 
     functions.add(TrySecurity.getInstance());

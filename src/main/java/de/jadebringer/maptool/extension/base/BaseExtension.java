@@ -15,7 +15,6 @@
 package de.jadebringer.maptool.extension.base;
 
 import de.jadebringer.maptool.extension.base.chatmacros.CallMacro;
-import de.jadebringer.maptool.extension.base.chatmacros.FrameworksMacro;
 import de.jadebringer.maptool.extension.base.functions.ButtonFrameFunctions;
 import de.jadebringer.maptool.extension.base.functions.ContentFunctions;
 import de.jadebringer.maptool.extension.base.functions.DebugFunctions;
@@ -26,8 +25,8 @@ import de.jadebringer.maptool.extension.base.functions.MapFunctions;
 import de.jadebringer.maptool.extension.base.functions.OutputToFunction;
 import de.jadebringer.maptool.extension.base.functions.PingFunction;
 import de.jadebringer.maptool.extension.base.functions.SettingsFunctions;
+import de.jadebringer.maptool.extension.hook.ExtensionBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
-import de.jadebringer.maptool.extension.hook.ExtensionFrameworkBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
@@ -39,13 +38,13 @@ import net.rptools.maptool.client.MapTool;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
-public class BaseFramework extends ExtensionFrameworkBundle {
+public class BaseExtension extends ExtensionBundle {
 
   private List<ExtensionFunction> functions = new LinkedList<>();
   private List<ExtensionFunctionButton> functionButtons = new LinkedList<>();
   private List<ExtensionChatMacro> chatMacros = new LinkedList<>();
 
-  public BaseFramework() {
+  public BaseExtension() {
     super(new Version(1, 0, 0, "jadebringer-base"));
 
     PingFunction ping = PingFunction.getInstance(this);
@@ -61,7 +60,6 @@ public class BaseFramework extends ExtensionFrameworkBundle {
     functions.add(ContentFunctions.getInstance());
     functions.add(MapFunctions.getInstance());
 
-    chatMacros.add(new FrameworksMacro());
     chatMacros.add(new CallMacro());
 
     functionButtons.add(

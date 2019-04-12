@@ -27,13 +27,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-class FrameworkClassLoader extends URLClassLoader {
+class ExtensionClassLoader extends URLClassLoader {
 
   private final List<CodeSource> origins = new LinkedList<>();
   private final PermissionCollection perms = new Permissions();
   private final PermissionCollection allPermissions = new Permissions();
 
-  public FrameworkClassLoader(URL[] urls, ClassLoader parent) {
+  public ExtensionClassLoader(URL[] urls, ClassLoader parent) {
     super(urls, parent);
     allPermissions.add(new AllPermission());
 

@@ -14,7 +14,7 @@
  */
 package de.jadebringer.maptool.extension.base.functions;
 
-import de.jadebringer.maptool.extension.hook.ExtensionFrameworkBundle;
+import de.jadebringer.maptool.extension.hook.ExtensionBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,16 +26,16 @@ public class PingFunction extends ExtensionFunction {
 
   public static final String PING = "ping";
 
-  private ExtensionFrameworkBundle framework;
+  private ExtensionBundle extension;
 
-  protected PingFunction(ExtensionFrameworkBundle framework) {
+  protected PingFunction(ExtensionBundle extension) {
     super(Alias.create(PING));
     setTrustedRequired(false);
-    this.framework = framework;
+    this.extension = extension;
   }
 
-  public static PingFunction getInstance(ExtensionFrameworkBundle framework) {
-    return new PingFunction(framework);
+  public static PingFunction getInstance(ExtensionBundle extension) {
+    return new PingFunction(extension);
   }
 
   @Override
@@ -54,12 +54,12 @@ public class PingFunction extends ExtensionFunction {
         }
       }
 
-      if (framework != null) {
+      if (extension != null) {
         result
             .append(" (")
-            .append(framework.name())
+            .append(extension.name())
             .append("/")
-            .append(framework.version())
+            .append(extension.version())
             .append(")");
       }
       return result.toString();

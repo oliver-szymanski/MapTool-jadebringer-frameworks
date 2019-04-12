@@ -14,7 +14,7 @@
  */
 package de.jadebringer.maptool.extension.hook;
 
-import de.jadebringer.maptool.extension.hook.FrameworksFunctions.Run;
+import de.jadebringer.maptool.extension.hook.ExtensionFunctions.Run;
 import java.math.BigDecimal;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -173,7 +173,7 @@ public class FunctionCaller {
             public Object run() throws Exception {
               // if this is a function straight from the parser
               // call it with priviledges.
-              // if its an extension behind it, that will be checked in FrameworkFunctions
+              // if its an extension behind it, that will be checked in ExtensionFunctions
               // and access will be reduced.
               return f.evaluate(parser, functionName, Arrays.asList(parameters));
             }

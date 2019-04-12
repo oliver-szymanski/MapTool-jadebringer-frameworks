@@ -15,7 +15,7 @@
 package de.jadebringer.maptool.extension.base.functions;
 
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
-import de.jadebringer.maptool.extension.hook.FrameworksFunctions.Run;
+import de.jadebringer.maptool.extension.hook.ExtensionFunctions.Run;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.FunctionCaller.TokenWrapper;
 import java.util.List;

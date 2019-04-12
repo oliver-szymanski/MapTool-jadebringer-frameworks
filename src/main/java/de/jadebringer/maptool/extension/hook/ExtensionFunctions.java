@@ -14,7 +14,7 @@
  */
 package de.jadebringer.maptool.extension.hook;
 
-import de.jadebringer.maptool.extension.base.BaseFramework;
+import de.jadebringer.maptool.extension.base.BaseExtension;
 import de.jadebringer.maptool.extension.base.chatmacros.CallMacro;
 import de.jadebringer.maptool.extension.hook.EventDispatcher.Event;
 import de.jadebringer.maptool.extension.hook.EventDispatcher.EventHandler;
@@ -57,19 +57,15 @@ import net.rptools.parser.function.ParameterException;
 import net.sf.json.JSONObject;
 
 /** @author oliver.szymanski */
-public class FrameworksFunctions implements Function, EventHandler {
-  private static final FrameworksFunctions instance = new FrameworksFunctions();
+public class ExtensionFunctions implements Function, EventHandler {
+  private static final ExtensionFunctions instance = new ExtensionFunctions();
   private static final String IMPORT_FUNCTIONS_BUNDLE = "importFunctionsBundle";
-  private static final String INIT_FRAMEWORKS = "initFrameworks";
-  private static final String RESET_FRAMEWORKS = "resetFrameworks";
+  private static final String INIT_EXTENSION = "initExtensions";
+  private static final String RESET_EXTENSION = "resetExtensions";
   private static final String UNPACK_ARGS_FUNCTION_NAME = "unpackArgs";
   private static final String TOGGLE_CHAT = "toggleChat";
   private final String[] FUNCTION_NAMES = {
-    IMPORT_FUNCTIONS_BUNDLE,
-    INIT_FRAMEWORKS,
-    RESET_FRAMEWORKS,
-    UNPACK_ARGS_FUNCTION_NAME,
-    TOGGLE_CHAT
+    IMPORT_FUNCTIONS_BUNDLE, INIT_EXTENSION, RESET_EXTENSION, UNPACK_ARGS_FUNCTION_NAME, TOGGLE_CHAT
   };
 
   private static final AccessControlContext accessControlContextForExtensionFunctions;
@@ -80,13 +76,13 @@ public class FrameworksFunctions implements Function, EventHandler {
   private final boolean deterministic;
   private volatile boolean windowComponentListening = false;
 
-  private List<FrameworkClassLoader> frameworksClassLoader = new LinkedList<>();
-  private Map<FrameworkClassLoader, String> frameworksClassLoaderToLibs = new HashMap<>();;
+  private List<ExtensionClassLoader> extensionsClassLoader = new LinkedList<>();
+  private Map<ExtensionClassLoader, String> extensionsClassLoaderToLibs = new HashMap<>();;
 
-  private final List<ExtensionFunction> frameworkFunctions = new LinkedList<>();
-  private final List<ExtensionChatMacro> frameworkChatMacros = new LinkedList<>();
-  private final Map<String, ExtensionFunction> frameworkFunctionsAliasMap = new HashMap<>();
-  private final Map<String, String> frameworkAliasPrefixMap = new HashMap<>();
+  private final List<ExtensionFunction> extensionFunctions = new LinkedList<>();
+  private final List<ExtensionChatMacro> extensionChatMacros = new LinkedList<>();
+  private final Map<String, ExtensionFunction> extensionFunctionsAliasMap = new HashMap<>();
+  private final Map<String, String> extensionAliasPrefixMap = new HashMap<>();
   private Map<String, ButtonFrame> buttonFrames = new HashMap<>();;
   private String[] aliases;
 
@@ -108,11 +104,11 @@ public class FrameworksFunctions implements Function, EventHandler {
               new ProtectionDomain(
                   MapTool.class.getProtectionDomain().getCodeSource(), allPermissions),
               new ProtectionDomain(
-                  FrameworksFunctions.class.getProtectionDomain().getCodeSource(), allPermissions)
+                  ExtensionFunctions.class.getProtectionDomain().getCodeSource(), allPermissions)
             });
   }
 
-  private FrameworksFunctions() {
+  private ExtensionFunctions() {
     this.minParameters = 2;
     this.maxParameters = 2;
     this.deterministic = true;
@@ -135,16 +131,16 @@ public class FrameworksFunctions implements Function, EventHandler {
     return files;
   }
 
-  protected String[] getFrameworksFunctionNames() {
+  protected String[] getExtensionFunctionsNames() {
     return FUNCTION_NAMES;
   }
 
   public synchronized void init() {
-    frameworkFunctions.clear();
-    frameworkFunctionsAliasMap.clear();
-    frameworkAliasPrefixMap.clear();
+    extensionFunctions.clear();
+    extensionFunctionsAliasMap.clear();
+    extensionAliasPrefixMap.clear();
 
-    for (@SuppressWarnings("unused") ExtensionChatMacro chatMacro : frameworkChatMacros) {
+    for (@SuppressWarnings("unused") ExtensionChatMacro chatMacro : extensionChatMacros) {
       // currently MT does not support to remove a macro
     }
 
@@ -164,10 +160,10 @@ public class FrameworksFunctions implements Function, EventHandler {
       System.setSecurityManager(new SecurityManagerPackageAccess());
     }
 
-    frameworksClassLoader.clear();
-    frameworksClassLoaderToLibs.clear();
+    extensionsClassLoader.clear();
+    extensionsClassLoaderToLibs.clear();
 
-    // init call macro, as the loadBaseFramework during getAliases is to late for that
+    // init call macro, as the loadBaseExtension during getAliases is to late for that
     ExtensionChatMacro callMacro = new CallMacro();
     MacroDefinition macroDefinition = callMacro.getClass().getAnnotation(MacroDefinition.class);
     if (macroDefinition != null) {
@@ -177,79 +173,79 @@ public class FrameworksFunctions implements Function, EventHandler {
     registerMapToolListener();
   }
 
-  private void loadBaseFramework() {
+  private void loadBaseExtension() {
     try {
       Parser parser = new Parser();
       this.importFunctionsBundle(
           parser,
           true,
           "importFunctionsBundle",
-          FunctionCaller.toObjectList("", BaseFramework.class.getName()));
+          FunctionCaller.toObjectList("", BaseExtension.class.getName()));
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private synchronized void initFrameworksFromExtensionDirectory() {
-    // try to get frameworks jar libs from default extension-frameworks folder
-    File frameworksDirectory = new File("./extension-frameworks");
+  private synchronized void initExtensionsFromExtensionDirectory() {
+    // try to get extensions jar libs from default extension-extensions folder
+    File extensionsDirectory = new File("./extension-extensions");
 
-    if (frameworksDirectory.exists()
-        && frameworksDirectory.canRead()
-        && frameworksDirectory.isDirectory()) {
-      List<File> possibleFrameworkLibs = getPossibleExtensions(frameworksDirectory);
+    if (extensionsDirectory.exists()
+        && extensionsDirectory.canRead()
+        && extensionsDirectory.isDirectory()) {
+      List<File> possibleExtensionLibs = getPossibleExtensions(extensionsDirectory);
 
-      for (File frameworkLib : possibleFrameworkLibs) {
+      for (File extensionLib : possibleExtensionLibs) {
         MapTool.addLocalMessage(
-            "found possible extension framework: " + frameworkLib.getAbsolutePath());
+            "found possible extension extension: " + extensionLib.getAbsolutePath());
       }
 
-      for (File frameworkLib : possibleFrameworkLibs) {
-        initFramework(frameworkLib);
+      for (File extensionLib : possibleExtensionLibs) {
+        initExtension(extensionLib);
       }
     } else {
       MapTool.addLocalMessage(
-          "no extension-frameworks directory found: " + frameworksDirectory.getAbsolutePath());
+          "no extension-extensions directory found: " + extensionsDirectory.getAbsolutePath());
     }
   }
 
-  private void initFramework(File frameworkLib) {
+  private void initExtension(File extensionLib) {
     try {
-      initFramework(frameworkLib.toURI().toURL());
+      initExtension(extensionLib.toURI().toURL());
     } catch (MalformedURLException e) {
-      MapTool.addLocalMessage("failed init extension framework: " + frameworkLib.getAbsolutePath());
+      MapTool.addLocalMessage("failed init extension extension: " + extensionLib.getAbsolutePath());
       throw new RuntimeException(e);
     }
   }
 
-  private synchronized void initFramework(String frameworkLibURL) {
+  private synchronized void initExtension(String extensionLibURL) {
     try {
-      initFramework(new URL(frameworkLibURL));
+      initExtension(new URL(extensionLibURL));
     } catch (MalformedURLException e) {
-      MapTool.addLocalMessage("failed init extension framework: " + frameworkLibURL);
+      MapTool.addLocalMessage("failed init extension extension: " + extensionLibURL);
       throw new RuntimeException(e);
     }
   }
 
-  private void initFramework(URL frameworkLibURL) {
+  private void initExtension(URL extensionLibURL) {
     if (!MapTool.confirm(
-        "Really want to load {0}?\n\nIt's a security risk to load extension frameworks.\nMake sure you got the file from a trusted source.",
-        frameworkLibURL.toString())) {
+        "Really want to load {0}?\n\nIt's a security risk to load extension extensions.\nMake sure you got the file from a trusted source.",
+        extensionLibURL.toString())) {
       return;
     }
-    MapTool.addLocalMessage("init extension framework: " + frameworkLibURL.toString());
+    MapTool.addLocalMessage("init extension extension: " + extensionLibURL.toString());
 
-    FrameworkClassLoader frameworkClassLoader =
-        new FrameworkClassLoader(new URL[] {}, this.getClass().getClassLoader());
-    frameworkClassLoader.addURL(frameworkLibURL);
+    ExtensionClassLoader extensionClassLoader =
+        new ExtensionClassLoader(new URL[] {}, this.getClass().getClassLoader());
+    extensionClassLoader.addURL(extensionLibURL);
 
     // add classloader to front of the list so that a later added one
     // can override function/macro definitions
-    frameworksClassLoader.add(0, frameworkClassLoader);
-    frameworksClassLoaderToLibs.put(frameworkClassLoader, frameworkLibURL.getFile());
+    extensionsClassLoader.add(0, extensionClassLoader);
+    extensionsClassLoaderToLibs.put(extensionClassLoader, extensionLibURL.getFile());
   }
 
-  public static FrameworksFunctions getInstance() {
+  public static ExtensionFunctions getInstance() {
     return instance;
   }
 
@@ -292,17 +288,17 @@ public class FrameworksFunctions implements Function, EventHandler {
 
     if (IMPORT_FUNCTIONS_BUNDLE.equals(functionName)) {
       return importFunctionsBundle(parser, false, IMPORT_FUNCTIONS_BUNDLE, parameters);
-    } else if (RESET_FRAMEWORKS.equals(functionName)) {
+    } else if (RESET_EXTENSION.equals(functionName)) {
       init();
       return BigDecimal.ONE;
-    } else if (INIT_FRAMEWORKS.equals(functionName)) {
+    } else if (INIT_EXTENSION.equals(functionName)) {
       if (parameters.size() == 0) {
-        // auto add from extension-frameworks sub directory
-        initFrameworksFromExtensionDirectory();
+        // auto add from extension-extensions sub directory
+        initExtensionsFromExtensionDirectory();
       } else {
         for (Object parameter : parameters) {
           // get from a file or http
-          initFramework(parameter.toString());
+          initExtension(parameter.toString());
         }
       }
       return BigDecimal.ONE;
@@ -331,7 +327,7 @@ public class FrameworksFunctions implements Function, EventHandler {
     Set<String> newButtonFrames = new HashSet<String>();
 
     String prefix = FunctionCaller.getParam(parameters, 0);
-    String frameworkFunctionBundle = FunctionCaller.getParam(parameters, 1);
+    String extensionFunctionBundle = FunctionCaller.getParam(parameters, 1);
 
     if (prefix != null && prefix.length() > 0) {
       prefix = prefix + "_";
@@ -339,22 +335,22 @@ public class FrameworksFunctions implements Function, EventHandler {
 
     try {
 
-      ExtensionFrameworkBundle framework = null;
+      ExtensionBundle extension = null;
 
       // check all extension lib classloader in order
-      for (FrameworkClassLoader frameworkClassLoader : frameworksClassLoader) {
+      for (ExtensionClassLoader extensionClassLoader : extensionsClassLoader) {
         try {
-          framework =
-              (ExtensionFrameworkBundle)
-                  Class.forName(frameworkFunctionBundle.toString(), true, frameworkClassLoader)
+          extension =
+              (ExtensionBundle)
+                  Class.forName(extensionFunctionBundle.toString(), true, extensionClassLoader)
                       .getDeclaredConstructor()
                       .newInstance();
 
           MapTool.addLocalMessage(
               "imported bundle: '"
-                  + frameworkFunctionBundle.toString()
+                  + extensionFunctionBundle.toString()
                   + "' from '"
-                  + frameworksClassLoaderToLibs.get(frameworkClassLoader)
+                  + extensionsClassLoaderToLibs.get(extensionClassLoader)
                   + "'");
         } catch (Exception e) {
           // safe to ignore
@@ -362,12 +358,12 @@ public class FrameworksFunctions implements Function, EventHandler {
       }
 
       // try current classloader if nothing yet found
-      if (framework == null) {
+      if (extension == null) {
         try {
-          framework =
-              (ExtensionFrameworkBundle)
+          extension =
+              (ExtensionBundle)
                   Class.forName(
-                          frameworkFunctionBundle.toString(),
+                          extensionFunctionBundle.toString(),
                           true,
                           this.getClass().getClassLoader())
                       .getDeclaredConstructor()
@@ -375,7 +371,7 @@ public class FrameworksFunctions implements Function, EventHandler {
           if (!silent && MapTool.getPlayer() != null) {
             MapTool.addLocalMessage(
                 "imported bundle: '"
-                    + frameworkFunctionBundle.toString()
+                    + extensionFunctionBundle.toString()
                     + "' from base libraries.");
           }
         } catch (Exception e) {
@@ -384,33 +380,33 @@ public class FrameworksFunctions implements Function, EventHandler {
       }
 
       // check if bundle was found
-      if (framework == null && MapTool.getPlayer() != null) {
+      if (extension == null && MapTool.getPlayer() != null) {
         MapTool.addLocalMessage(
-            "bundle not found in any lib: " + frameworkFunctionBundle.toString());
+            "bundle not found in any lib: " + extensionFunctionBundle.toString());
         return BigDecimal.ZERO;
       }
 
-      Collection<? extends ExtensionFunction> functions = framework.getFunctions();
+      Collection<? extends ExtensionFunction> functions = extension.getFunctions();
       Collection<? extends ExtensionFunctionButton> functionButtons =
-          framework.getFunctionButtons();
-      Collection<? extends ExtensionChatMacro> chatMacros = framework.getChatMacros();
+          extension.getFunctionButtons();
+      Collection<? extends ExtensionChatMacro> chatMacros = extension.getChatMacros();
 
       // are we running in trusted context
       boolean trusted = MapTool.getParser().isMacroPathTrusted() || MapTool.getPlayer().isGM();
 
       // init extension functions
       for (ExtensionFunction function : functions) {
-        if (frameworkFunctions.contains(function)) {
+        if (extensionFunctions.contains(function)) {
           // if overridden remove and add again
-          frameworkFunctions.remove(function);
+          extensionFunctions.remove(function);
         }
-        frameworkFunctions.add(function);
+        extensionFunctions.add(function);
         function.setPrefix(prefix);
 
         for (String alias : function.getAliases()) {
           String aliasWithPrefix = prefix + alias;
-          frameworkAliasPrefixMap.put(aliasWithPrefix, alias);
-          frameworkFunctionsAliasMap.put(aliasWithPrefix, function);
+          extensionAliasPrefixMap.put(aliasWithPrefix, alias);
+          extensionFunctionsAliasMap.put(aliasWithPrefix, function);
           newFunctionNames.add(aliasWithPrefix);
         }
       }
@@ -425,7 +421,7 @@ public class FrameworksFunctions implements Function, EventHandler {
         if (macroDefinition == null) continue;
         MacroManager.registerMacro(chatMacro);
         newChatMacros.add(macroDefinition.name());
-        frameworkChatMacros.add(chatMacro);
+        extensionChatMacros.add(chatMacro);
       }
 
       // init extension function buttons
@@ -441,7 +437,7 @@ public class FrameworksFunctions implements Function, EventHandler {
       if (MapTool.getPlayer() != null) {
         MapTool.addLocalMessage(
             "could not load bundle (maybe it's libary was not imported): "
-                + frameworkFunctionBundle.toString()
+                + extensionFunctionBundle.toString()
                 + "("
                 + e.toString()
                 + ")");
@@ -462,11 +458,11 @@ public class FrameworksFunctions implements Function, EventHandler {
     // this check prevents a null pointer exception which would happen sending the messages
     if (!silent && MapTool.getPlayer() != null) {
       MapTool.addLocalMessage(
-          "bundle " + frameworkFunctionBundle + " defined chat macros: " + macros);
+          "bundle " + extensionFunctionBundle + " defined chat macros: " + macros);
       MapTool.addLocalMessage(
-          "bundle " + frameworkFunctionBundle + " defined button frames macros: " + buttonFrames);
+          "bundle " + extensionFunctionBundle + " defined button frames macros: " + buttonFrames);
       MapTool.addLocalMessage(
-          "bundle " + frameworkFunctionBundle + " defined functions: " + functions);
+          "bundle " + extensionFunctionBundle + " defined functions: " + functions);
     }
 
     return BigDecimal.ONE;
@@ -519,8 +515,8 @@ public class FrameworksFunctions implements Function, EventHandler {
 
   private Object executeFunction(Parser parser, String functionName, List<Object> parameters)
       throws ParserException {
-    String aliasWithoutPrefix = frameworkAliasPrefixMap.get(functionName);
-    ExtensionFunction function = frameworkFunctionsAliasMap.get(functionName);
+    String aliasWithoutPrefix = extensionAliasPrefixMap.get(functionName);
+    ExtensionFunction function = extensionFunctionsAliasMap.get(functionName);
 
     if (function != null) {
       return executeExtensionFunctionWithAccessControl(
@@ -685,18 +681,18 @@ public class FrameworksFunctions implements Function, EventHandler {
   }
 
   public String[] getAliases() {
-    if (this.frameworkFunctions == null || this.frameworkFunctions.isEmpty()) {
-      loadBaseFramework();
+    if (this.extensionFunctions == null || this.extensionFunctions.isEmpty()) {
+      loadBaseExtension();
     }
 
     if (aliases == null) {
       // cache current alias list
-      String[] extensionAliases = frameworkFunctionsAliasMap.keySet().toArray(new String[] {});
-      String[] frameworkAliases = getFrameworksFunctionNames();
-      String[] allAliases = new String[extensionAliases.length + frameworkAliases.length];
-      System.arraycopy(extensionAliases, 0, allAliases, 0, extensionAliases.length);
+      String[] extensionAliases = extensionFunctionsAliasMap.keySet().toArray(new String[] {});
+      String[] buildInExtensionAliases = getExtensionFunctionsNames();
+      String[] allAliases = new String[buildInExtensionAliases.length + extensionAliases.length];
+      System.arraycopy(buildInExtensionAliases, 0, allAliases, 0, buildInExtensionAliases.length);
       System.arraycopy(
-          frameworkAliases, 0, allAliases, extensionAliases.length, frameworkAliases.length);
+          extensionAliases, 0, allAliases, buildInExtensionAliases.length, extensionAliases.length);
       this.aliases = allAliases;
     }
 

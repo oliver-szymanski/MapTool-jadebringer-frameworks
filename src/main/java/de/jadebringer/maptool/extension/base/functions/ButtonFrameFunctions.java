@@ -16,7 +16,7 @@ package de.jadebringer.maptool.extension.base.functions;
 
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
-import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
+import de.jadebringer.maptool.extension.hook.ExtensionFunctions;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.ui.ButtonFrame;
 import java.math.BigDecimal;
@@ -114,7 +114,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       throws ParserException {
     String frame = FunctionCaller.getParam(parameters, 0);
     String prefix = FunctionCaller.getParam(parameters, 1, "");
-    boolean result = FrameworksFunctions.getInstance().isFrameVisible(prefix + frame);
+    boolean result = ExtensionFunctions.getInstance().isFrameVisible(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
@@ -125,7 +125,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     }
     String frame = FunctionCaller.getParam(parameters, 0);
     String prefix = FunctionCaller.getParam(parameters, 1, "");
-    boolean result = FrameworksFunctions.getInstance().showFrame(prefix + frame);
+    boolean result = ExtensionFunctions.getInstance().showFrame(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
@@ -136,18 +136,18 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     }
     String frame = FunctionCaller.getParam(parameters, 0);
     String prefix = FunctionCaller.getParam(parameters, 1, "");
-    boolean result = FrameworksFunctions.getInstance().hideFrame(prefix + frame);
+    boolean result = ExtensionFunctions.getInstance().hideFrame(prefix + frame);
     return (result) ? BigDecimal.ONE : BigDecimal.ZERO;
   }
 
   private void showAllFrames(Parser parser, String functionName, List<Object> parameters)
       throws ParserException {
-    FrameworksFunctions.getInstance().showAllFrames();
+    ExtensionFunctions.getInstance().showAllFrames();
   }
 
   private void hideAllFrames(Parser parser, String functionName, List<Object> parameters)
       throws ParserException {
-    FrameworksFunctions.getInstance().hideAllFrames();
+    ExtensionFunctions.getInstance().hideAllFrames();
   }
 
   public Object addButton(Parser parser, String functionName, List<Object> parameters)
@@ -186,7 +186,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
           }
         };
 
-    FrameworksFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton, prefix);
+    ExtensionFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton, prefix);
 
     return BigDecimal.ONE;
   }
@@ -198,11 +198,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -217,11 +217,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -236,11 +236,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -255,11 +255,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -274,11 +274,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -293,11 +293,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -311,11 +311,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -330,12 +330,12 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String prefix = FunctionCaller.getParam(parameters, 3);
     String text = FunctionCaller.getParam(parameters, 4);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
     extensionFunctionButton.setText(text);
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }
@@ -351,12 +351,12 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String prefix = FunctionCaller.getParam(parameters, 3);
     String imageFile = FunctionCaller.getParam(parameters, 4);
     ExtensionFunctionButton extensionFunctionButton =
-        FrameworksFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
+        ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
       return BigDecimal.ZERO;
     }
     extensionFunctionButton.setImageFile(imageFile);
-    ButtonFrame buttonFrame = FrameworksFunctions.getInstance().getButtonFrame(frame, prefix);
+    ButtonFrame buttonFrame = ExtensionFunctions.getInstance().getButtonFrame(frame, prefix);
     if (buttonFrame == null) {
       return BigDecimal.ZERO;
     }

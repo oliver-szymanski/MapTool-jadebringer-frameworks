@@ -16,11 +16,11 @@ package de.jadebringer.maptool.extension.hook;
 
 import java.util.Collection;
 
-public abstract class ExtensionFrameworkBundle {
+public abstract class ExtensionBundle {
 
   private Version version;
 
-  public ExtensionFrameworkBundle(Version version) {
+  public ExtensionBundle(Version version) {
     this.version = version;
   }
 

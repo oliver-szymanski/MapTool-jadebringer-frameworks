@@ -3,7 +3,7 @@
  *
  * This generated file contains a sample Java Library project to get you started.
  * For more details take a look at the Java Libraries chapter in the Gradle
- * User Manual available at https://docs.gradle.org/5.2.1/userguide/java_library_plugin.html
+ * User Manual available at https://docs.gradle.org/5.3/userguide/java_library_plugin.html
  */
 buildscript {
     dependencies {
@@ -133,7 +133,7 @@ class BootstrapPlugin implements Plugin<Project> {
       }
 
         project.ext.gitDeps.each { element ->
-            project.task ("buildDependency_$it.name", dependsOn: "getDependenciesFromGit", type: GradleBuild) {
+            project.task ("buildDependency_$element.name", dependsOn: "getDependenciesFromGit", type: GradleBuild) {
                 doFirst {
                   println element.name + ": looking for dependency to build from directory " + project.file(element.directory).getAbsolutePath()
                   def directory = project.file(element.directory)

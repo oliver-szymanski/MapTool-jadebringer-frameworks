@@ -225,7 +225,7 @@ public class TranslucentFrame {
     Integer x =
         PreferenceManager.loadPreference(
             actualFrame.getLocation().x,
-            "FrameworkFunctions",
+            "ExtensionFunctions",
             "ButtonFrame",
             prefixedFrameId,
             group,
@@ -233,7 +233,7 @@ public class TranslucentFrame {
     Integer y =
         PreferenceManager.loadPreference(
             actualFrame.getLocation().y,
-            "FrameworkFunctions",
+            "ExtensionFunctions",
             "ButtonFrame",
             prefixedFrameId,
             group,
@@ -241,7 +241,7 @@ public class TranslucentFrame {
     Integer width =
         PreferenceManager.loadPreference(
             actualFrame.getWidth(),
-            "FrameworkFunctions",
+            "ExtensionFunctions",
             "ButtonFrame",
             prefixedFrameId,
             group,
@@ -249,7 +249,7 @@ public class TranslucentFrame {
     Integer height =
         PreferenceManager.loadPreference(
             actualFrame.getHeight(),
-            "FrameworkFunctions",
+            "ExtensionFunctions",
             "ButtonFrame",
             prefixedFrameId,
             group,
@@ -257,7 +257,7 @@ public class TranslucentFrame {
     boolean minimized =
         PreferenceManager.loadPreference(
             this.minimized,
-            "FrameworkFunctions",
+            "ExtensionFunctions",
             "ButtonFrame",
             prefixedFrameId,
             group,
@@ -302,14 +302,14 @@ public class TranslucentFrame {
   private void savePreferences() {
     PreferenceManager.savePreference(
         actualFrame.getLocation().x,
-        "FrameworkFunctions",
+        "ExtensionFunctions",
         "ButtonFrame",
         prefixedFrameId,
         group,
         "x");
     PreferenceManager.savePreference(
         actualFrame.getLocation().y,
-        "FrameworkFunctions",
+        "ExtensionFunctions",
         "ButtonFrame",
         prefixedFrameId,
         group,
@@ -317,21 +317,21 @@ public class TranslucentFrame {
     if (!minimized) {
       PreferenceManager.savePreference(
           actualFrame.getWidth(),
-          "FrameworkFunctions",
+          "ExtensionFunctions",
           "ButtonFrame",
           prefixedFrameId,
           group,
           "width");
       PreferenceManager.savePreference(
           actualFrame.getHeight(),
-          "FrameworkFunctions",
+          "ExtensionFunctions",
           "ButtonFrame",
           prefixedFrameId,
           group,
           "height");
     }
     PreferenceManager.savePreference(
-        minimized, "FrameworkFunctions", "ButtonFrame", prefixedFrameId, group, "minimized");
+        minimized, "ExtensionFunctions", "ButtonFrame", prefixedFrameId, group, "minimized");
   }
 
   public void hide() {
@@ -359,7 +359,7 @@ public class TranslucentFrame {
       // only pack the frame if it size does not come from saved preferences
       if (null
           == PreferenceManager.loadPreference(
-              (String) null, "FrameworkFunctions", "ButtonFrame", frameName, group, "x")) {
+              (String) null, "ExtensionFunctions", "ButtonFrame", frameName, group, "x")) {
         actualFrame.pack();
       }
 

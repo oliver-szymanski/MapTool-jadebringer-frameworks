@@ -37,7 +37,7 @@ public abstract class ExtensionChatMacro implements Macro {
       return;
     }
 
-    FrameworksFunctions.executeExtensionChatMacroWithAccessControl(
+    ExtensionFunctions.executeExtensionChatMacroWithAccessControl(
         this, context, macro, executionContext);
   }
 

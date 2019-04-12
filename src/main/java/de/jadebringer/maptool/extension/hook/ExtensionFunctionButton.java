@@ -76,7 +76,7 @@ public abstract class ExtensionFunctionButton {
     MapTool.getParser().enterContext(executionContext);
 
     try {
-      FrameworksFunctions.executeExtensionFunctionButtonWithAccessControl(this);
+      ExtensionFunctions.executeExtensionFunctionButtonWithAccessControl(this);
     } catch (Exception e) {
       MapTool.showError(null, e);
     } finally {

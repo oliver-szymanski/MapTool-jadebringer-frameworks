@@ -14,10 +14,11 @@
  */
 package de.jadebringer.maptool.extensionframework;
 
+import de.jadebringer.maptool.extensionframework.EventDispatcher.Event;
+import de.jadebringer.maptool.extensionframework.EventDispatcher.EventHandler;
 import de.jadebringer.maptool.extensionframework.ui.BaseComponentListener;
 import de.jadebringer.maptool.extensionframework.ui.ButtonFrame;
 import de.jadebringer.maptool.frameworks.base.chatmacros.CallMacro;
-import de.jadebringer.maptool.frameworks.base.events.EventDispatcher;
 
 import java.awt.EventQueue;
 import java.io.File;
@@ -56,7 +57,7 @@ import net.rptools.parser.function.ParameterException;
 import net.sf.json.JSONObject;
 
 /** @author oliver.szymanski */
-public class FrameworksFunctions implements Function {
+public class FrameworksFunctions implements Function, EventHandler {
   private static final FrameworksFunctions instance = new FrameworksFunctions();
   private static final String IMPORT_FUNCTIONS_BUNDLE = "importFunctionsBundle";
   private static final String INIT_FRAMEWORKS = "initFrameworks";
@@ -257,12 +258,14 @@ public class FrameworksFunctions implements Function {
       return;
     
     if (MapTool.getFrame() != null &&
-        MapTool.getFrame().getCommandPanel() != null) {
+        MapTool.getFrame().getCommandPanel() != null &&
+        MapTool.getEventDispatcher() != null) {
+      windowComponentListening = true;
       MapTool.getFrame().addComponentListener(BaseComponentListener.instance);
       MapTool.getFrame().getInitiativePanel().addComponentListener(BaseComponentListener.instance);
       MapTool.getFrame().getGlassPane().addComponentListener(BaseComponentListener.instance);
-      MapTool.getEventDispatcher().addListener(EventDispatcher.getInstance());
-      windowComponentListening = true;
+      EventDispatcher.getInstance().init();
+      EventDispatcher.getInstance().addEventHandler(this);
     } else {
       // try to register later
       EventQueue.invokeLater(
@@ -762,5 +765,20 @@ public class FrameworksFunctions implements Function {
 
   public static interface Run<T> {
     T run() throws Exception;
+  }
+
+  @Override
+  public void handleEvent(Event event) {
+    if (EventDispatcher.EventType.CampaignEvent.name().equals(event.getEventType()) && 
+        (EventDispatcher.EventSubType.CampaignLoaded.name().equals(event.getEventSubType())
+            || EventDispatcher.EventSubType.CampaignNew.name().equals(event.getEventSubType())
+        )) {
+      this.init();
+    }
+  }
+
+  @Override
+  public boolean handleVetoableEvent(Event event) {
+    return true;
   }
 }

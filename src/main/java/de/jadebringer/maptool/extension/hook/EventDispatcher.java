@@ -69,6 +69,7 @@ public class EventDispatcher
 
   public static enum EventSubType {
     ApplicationStarting,
+    CampaignStopping,
     CampaignLoaded,
     CampaignNew,
     InitiativeCurrentChanged,
@@ -120,25 +121,33 @@ public class EventDispatcher
         return false;
       }
     }
-
+    
     logEvent(event);
-    if (macroCallback) callCallbackMacro(event);
+    if (macroCallback) {
+      EventQueue.invokeLater(
+          new Runnable() {
+            public void run() {
+              if (macroCallback) callCallbackMacro(event);
+            }
+          });
+    }
     return true;
   }
 
   protected void raiseEvent(Event event, boolean macroCallback) {
-    // try to register later
-    EventQueue.invokeLater(
-        new Runnable() {
-          public void run() {
-            for (EventHandler eventHandler : eventHandlers) {
-              eventHandler.handleEvent(event);
+    for (EventHandler eventHandler : eventHandlers) {
+      eventHandler.handleEvent(event);
+    }
+    logEvent(event);
+    
+    if (macroCallback) {
+      EventQueue.invokeLater(
+          new Runnable() {
+            public void run() {
+              if (macroCallback) callCallbackMacro(event);
             }
-
-            logEvent(event);
-            if (macroCallback) callCallbackMacro(event);
-          }
-        });
+          });
+    }
   }
 
   static ZoneRenderer getCurrentZoneRenderer() {
@@ -564,6 +573,16 @@ public class EventDispatcher
         initializingCampaignState = 0;
       } else if (initializingCampaignState == 1) {
         System.out.println("closing campaign 1");
+        Event event =
+            Event.create()
+                .type(EventType.CampaignEvent.name())
+                .subType(EventSubType.CampaignStopping.name())
+                .source(null)
+                .target(null)
+                .oldValue(null)
+                .value(null)
+                .additionalInfo(null);
+        raiseEvent(event, false);
         initializingCampaignState = 0;
       }
     } else {
@@ -573,6 +592,16 @@ public class EventDispatcher
         initializingCampaignState = 0;
       } else if (initializingCampaignState == 1) {
         System.out.println("closing campaign 2");
+        Event event =
+            Event.create()
+                .type(EventType.CampaignEvent.name())
+                .subType(EventSubType.CampaignStopping.name())
+                .source(null)
+                .target(null)
+                .oldValue(null)
+                .value(null)
+                .additionalInfo(null);
+        raiseEvent(event, false);
         initializingCampaignState = 2;
       } else {
         System.out.println("initializing campaign");

@@ -14,7 +14,6 @@
  */
 package de.jadebringer.maptool.extension.hook.ui;
 
-import de.jadebringer.maptool.extension.hook.ExtensionFunctions;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ComponentEvent;
@@ -39,9 +38,7 @@ public class BaseComponentListener implements ComponentListener {
 
   @Override
   public void componentShown(ComponentEvent e) {
-    if (e.getComponent().equals(MapTool.getFrame().getGlassPane())) {
-      ExtensionFunctions.getInstance().init();
-    } else if (e.getComponent().equals(MapTool.getFrame())) {
+    if (e.getComponent().equals(MapTool.getFrame())) {
       // happens when fullscreen is closed
 
       // restore chat to orginal frame

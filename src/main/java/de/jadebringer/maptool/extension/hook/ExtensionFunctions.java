@@ -329,10 +329,6 @@ public class ExtensionFunctions implements Function, EventHandler {
     String prefix = FunctionCaller.getParam(parameters, 0);
     String extensionFunctionBundle = FunctionCaller.getParam(parameters, 1);
 
-    if (prefix != null && prefix.length() > 0) {
-      prefix = prefix + "_";
-    }
-
     try {
 
       ExtensionBundle extension = null;
@@ -401,10 +397,15 @@ public class ExtensionFunctions implements Function, EventHandler {
           extensionFunctions.remove(function);
         }
         extensionFunctions.add(function);
-        function.setPrefix(prefix);
+        
+        String localPrefix = "";
+        if (prefix != null && prefix.length() > 0) {
+          localPrefix = prefix + "_";
+          function.setPrefix(localPrefix);
+        }
 
         for (String alias : function.getAliases()) {
-          String aliasWithPrefix = prefix + alias;
+          String aliasWithPrefix = localPrefix + alias;
           extensionAliasPrefixMap.put(aliasWithPrefix, alias);
           extensionFunctionsAliasMap.put(aliasWithPrefix, function);
           newFunctionNames.add(aliasWithPrefix);
@@ -765,8 +766,8 @@ public class ExtensionFunctions implements Function, EventHandler {
   @Override
   public void handleEvent(Event event) {
     if (EventDispatcher.EventType.CampaignEvent.name().equals(event.getEventType())
-        && (EventDispatcher.EventSubType.CampaignLoaded.name().equals(event.getEventSubType())
-            || EventDispatcher.EventSubType.CampaignNew.name().equals(event.getEventSubType()))) {
+        && (EventDispatcher.EventSubType.CampaignStopping.name().equals(event.getEventSubType())
+        )) {
       this.init();
     }
   }

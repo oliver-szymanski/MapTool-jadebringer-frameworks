@@ -557,6 +557,8 @@ class DelegateZoneRenderer extends ZoneRenderer {
   }
 
   public void invalidate() {
+    if (wrapped == null)
+      return;
     wrapped.invalidate();
   }
 

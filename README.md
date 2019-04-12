@@ -41,12 +41,23 @@ More info on [jadebringer.de](http://www.jadebringer.de)
     - buttons can be created, deactivated or hidden via macros
     - control the frame/buttons with macros
     - check all the new "frames_" function in macro editor
-- manipulate token on other maps safely
-    - all functions using tokens can deal with tokens on any map, not just the current
 - inspect and manipulate variables in macros
     - via debug_inspect(variableNames) or debug_manipulate(variablesNames) 
     - other debug related functions as debug/trace/warn/error
 - build in outputTo(...) function
+- new Events in macros
+    - just put a onHandleEvent macro on a lib:token (like the existing onTokenMoved)
+    - that onHandleEvent macro will get called
+    - to try out this new feature put this in a new onHandleEvent macro on any lib:token
+      ~~~
+      [outputTo("self", "Event: "+macro.args)]
+      ~~~
+    - Zone events: "Zone Activated" if a map was changed
+    - Initiative events: "Initiative current" changed, "Initiative round" changed, "Initiative 
+      Token added", "Initiative Token removed", "Initiative sorted" 
+    - Token events: "Token moved" (if a token was actually moved, so move was not denied)
+- manipulate token on other maps safely, "Token added", "Token removed"
+    - all functions using tokens can deal with tokens on any map, not just the current
 - input dialog with yes/no/cancel buttons via inputYesNoCancel(...) 
 - map macros to center map/show whole map area
     - maps_center()

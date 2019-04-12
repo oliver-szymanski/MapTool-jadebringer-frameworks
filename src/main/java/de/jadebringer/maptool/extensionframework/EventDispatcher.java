@@ -63,7 +63,9 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
     InitiativeTokenAdded,
     InitiativeTokenRemoved,
     InitiativeSorted,
-    TokenMoved
+    TokenMoved,
+    TokenAdded,
+    TokenRemoved
   }
   private static final EventDispatcher instance = new EventDispatcher();
   private static final String ON_HANDLE_EVENT_CALLBACK = "onHandleEvent";
@@ -288,7 +290,7 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
               raiseEvent(outEvent, true);
             }
           } else {
-            // token was removed from intiative lsit
+            // token was removed from intiative list
             outEvent.oldValue(((TokenInitiative)eventOldValue).getToken().getId().toString());
             outEvent.value(null);
             raiseEvent(outEvent, true);
@@ -313,16 +315,15 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
         // get last path in grid/non grid (depends on if the map is in grid)
         List<Map<String, Integer>> pathPoints = getLastPathList(token.getLastPath(), false);
         JSONArray pathArr = pathPointsToJSONArray(pathPoints);
-        String pathCoordinates = pathArr.toString();
         
         Event outEvent = Event.create()
             .type(EventType.TokenEvent.name())
             .subType(EventSubType.TokenMoved.name())
-            .source(token.getId().toString())
-            .target(getCurrentZoneRenderer().getZone().getName())
+            .source(getCurrentZoneRenderer().getZone().getName())
+            .target(token.getId().toString())
             .oldValue(pathArr.get(0))
             .value(pathArr.get(pathArr.size()-1))
-            .additionalInfo(pathCoordinates);
+            .additionalInfo(pathArr);
         raiseEvent(outEvent, true);
       }
     }
@@ -367,6 +368,34 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
       // new zone list, register this to it 
       registerThisToInitiativeList();
       // this event does not have any details, so don't use it to raise anything
+    } else if (Zone.Event.TOKEN_ADDED.equals(event.getEvent())) {
+      eventSource = ((Zone)event.getModel()).getName();
+      eventTarget = ((Token)event.getArg()).getId().toString();
+      eventOldValue = null;
+      eventValue = ((Token)event.getArg()).getId().toString();
+      Event outEvent = Event.create()
+          .type(EventType.TokenEvent.name())
+          .subType(EventSubType.TokenAdded.name())
+          .source(eventSource)
+          .target(eventTarget)
+          .oldValue(eventOldValue)
+          .value(eventValue)
+          .additionalInfo(null);   
+      raiseEvent(outEvent, true);
+    } else if (Zone.Event.TOKEN_REMOVED.equals(event.getEvent())) {
+      eventSource = ((Zone)event.getModel()).getName();
+      eventTarget = ((Token)event.getArg()).getId().toString();
+      eventOldValue = ((Token)event.getArg()).getId().toString();
+      eventValue = null;
+      Event outEvent = Event.create()
+          .type(EventType.TokenEvent.name())
+          .subType(EventSubType.TokenRemoved.name())
+          .source(eventSource)
+          .target(eventTarget)
+          .oldValue(eventOldValue)
+          .value(eventValue)
+          .additionalInfo(null);   
+      raiseEvent(outEvent, true);
     } else {
       // log unhandled event
       // BEFORE x,y,lastPath changed on token, then even originPoint is changed
@@ -544,14 +573,14 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
     private Object eventTarget;
     private Object eventOldValue;
     private Object eventValue;
-    private String additionalInfo;
+    private Object additionalInfo;
     
     public static Event create() {
       return new Event();
     }
     
     public static Event create(String eventType, String eventSubType, Object eventSource, Object eventTarget, Object eventOldValue,
-        Object eventValue, String additionalInfo) {
+        Object eventValue, Object additionalInfo) {
       return new Event(eventType, eventSubType, eventSource, eventTarget, eventOldValue, eventValue, additionalInfo);
     }
     
@@ -559,7 +588,7 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
     }
 
     public Event(String eventType, String eventSubType, Object eventSource, Object eventTarget, Object eventOldValue,
-        Object eventValue, String additionalInfo) {
+        Object eventValue, Object additionalInfo) {
       super();
       this.eventType = eventType;
       this.eventSubType = eventSubType;
@@ -594,7 +623,7 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
       return eventValue;
     }
 
-    public String getAdditionalInfo() {
+    public Object getAdditionalInfo() {
       return additionalInfo;
     }
 
@@ -628,7 +657,7 @@ public class EventDispatcher implements AppEventListener, PropertyChangeListener
       return this;
     }
 
-    Event additionalInfo(String additionalInfo) {
+    Event additionalInfo(Object additionalInfo) {
       this.additionalInfo = additionalInfo;
       return this;
     }

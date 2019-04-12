@@ -20,7 +20,6 @@ import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.Version;
 import de.jadebringer.maptool.extension.tests.functions.TrySecurity;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

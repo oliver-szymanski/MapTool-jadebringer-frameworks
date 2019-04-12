@@ -14,6 +14,8 @@
  */
 package de.jadebringer.maptool.extension.base.functions;
 
+import de.jadebringer.maptool.extension.hook.ExtensionFunction;
+import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.io.UnsupportedEncodingException;
@@ -24,9 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import de.jadebringer.maptool.extension.hook.ExtensionFunction;
-import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import net.rptools.lib.MD5Key;
 import net.rptools.maptool.client.AppPreferences;
 import net.rptools.maptool.client.MapTool;

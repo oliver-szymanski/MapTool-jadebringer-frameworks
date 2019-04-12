@@ -15,12 +15,10 @@
 package de.jadebringer.maptool.extension.base.functions;
 
 import com.jidesoft.grid.PropertyTable;
-
 import de.jadebringer.maptool.extension.base.ui.PropertiesTableModel;
 import de.jadebringer.maptool.extension.base.ui.WordWrapCellRenderer;
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
-
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;

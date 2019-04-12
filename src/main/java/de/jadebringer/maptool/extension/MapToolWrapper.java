@@ -14,9 +14,8 @@
  */
 package de.jadebringer.maptool.extension;
 
-import java.util.List;
-
 import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
+import java.util.List;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.parser.function.Function;
 

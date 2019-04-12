@@ -14,10 +14,9 @@
  */
 package de.jadebringer.maptool.extension.base.chatmacros;
 
+import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-
-import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolLineParser;
 import net.rptools.maptool.client.MapToolMacroContext;

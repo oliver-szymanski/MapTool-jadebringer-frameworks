@@ -14,14 +14,13 @@
  */
 package de.jadebringer.maptool.extension.base.functions;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.ui.ButtonFrame;
+import java.math.BigDecimal;
+import java.util.List;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

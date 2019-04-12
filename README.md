@@ -29,13 +29,19 @@ More info on [jadebringer.de](http://www.jadebringer.de)
     
 ![Variable inspector/manipulator](docs/variable-inspector.png "Variable inspector/manipulator")
 
-## Features
+## Features for everyone
+
+- shows chat in fullscreen
+- shows initiative in fullscreen
+- center map with `/call maps_center`
+- show the whole map with `/call maps_extent`
+- have some build in buttons (e.g. for center map) by calling `/call frames_showAllFrames`
+
+## Features especially for macro developers
 
 - have a `/call functionName(parameters)` chat macro to call any function via chat
     - try with `/call frames_showAllFrames` followed by a later `/call frames_hideAllFrames` ;)
-- shows chat in fullscreen
-- shows initiative in fullscreen
-- show new button frames in window mode and in fullscreen 
+- use new button frames in window mode and in fullscreen 
     - can be dragged, resized, minimized
     - have buttons to call macros with title or icon
     - buttons can be created, deactivated or hidden via macros
@@ -43,6 +49,7 @@ More info on [jadebringer.de](http://www.jadebringer.de)
     - check all the new `frames_` functions in macro editor
     - Example
       ~~~
+      <!-- create a button: -->
       [h: frames_addButton("testMacro@Lib:MyToken", "testbutton", "Test Button", "test the button", "simple tests", "testing", "", "", 0, 1)]
       <!-- show the frame: -->
       [h: frames_showFrame("testing")]
@@ -50,11 +57,11 @@ More info on [jadebringer.de](http://www.jadebringer.de)
       [h: frames_setButtonImage("testbutton", "simple tests", "testing", "", "asset://900021383d556b3f3946feb487b50550")]
       <!-- change button text: -->
       [h: frames_setButtonText("testbutton", "simple tests", "testing", "", "on my command")]
-~~~
+      ~~~
 - inspect and manipulate variables in macros
     - via `debug_inspect(variableNames)` or `debug_manipulate(variablesNames)`
     - other debug related functions as `debug/trace/warn/error`
-- build in `outputTo(...)` function
+- build in `outputTo(to, text)` function
 - new Events in macros
     - just put a `onHandleEvent` macro on a lib:token (like the existing onTokenMoved) and 
     it will get called in case of one of the new events

@@ -32,7 +32,6 @@ import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.Version;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

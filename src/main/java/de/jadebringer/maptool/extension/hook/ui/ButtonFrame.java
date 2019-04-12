@@ -14,13 +14,12 @@
  */
 package de.jadebringer.maptool.extension.hook.ui;
 
+import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.SwingUtilities;
-
-import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 
 public class ButtonFrame {
   private List<ExtensionFunctionButton> functionButtons = new LinkedList<>();

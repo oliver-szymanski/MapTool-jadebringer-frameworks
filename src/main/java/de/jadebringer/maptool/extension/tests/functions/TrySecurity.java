@@ -14,11 +14,10 @@
  */
 package de.jadebringer.maptool.extension.tests.functions;
 
+import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
-import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 

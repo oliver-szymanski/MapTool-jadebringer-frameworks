@@ -20,7 +20,6 @@ import de.jadebringer.maptool.extension.hook.EventDispatcher.Event;
 import de.jadebringer.maptool.extension.hook.EventDispatcher.EventHandler;
 import de.jadebringer.maptool.extension.hook.ui.BaseComponentListener;
 import de.jadebringer.maptool.extension.hook.ui.ButtonFrame;
-
 import java.awt.EventQueue;
 import java.io.File;
 import java.math.BigDecimal;

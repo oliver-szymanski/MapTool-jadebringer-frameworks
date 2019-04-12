@@ -14,11 +14,10 @@
  */
 package de.jadebringer.maptool.extension.base.chatmacros;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
 import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
+import java.util.LinkedList;
+import java.util.List;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolMacroContext;
 import net.rptools.maptool.client.macro.MacroContext;

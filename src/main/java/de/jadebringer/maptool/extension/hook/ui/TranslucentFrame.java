@@ -14,6 +14,7 @@
  */
 package de.jadebringer.maptool.extension.hook.ui;
 
+import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,8 +45,6 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-
-import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import net.rptools.lib.MD5Key;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.util.ImageManager;

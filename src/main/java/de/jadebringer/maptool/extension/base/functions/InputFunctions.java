@@ -17,7 +17,6 @@ package de.jadebringer.maptool.extension.base.functions;
 import de.jadebringer.maptool.extension.base.functions.InputFunctions.InputType.OptionException;
 import de.jadebringer.maptool.extension.hook.FunctionToExtensionFunctionBridge;
 import de.muntjak.tinylookandfeel.TinyComboBoxButton;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

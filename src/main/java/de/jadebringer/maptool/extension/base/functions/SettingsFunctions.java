@@ -14,12 +14,11 @@
  */
 package de.jadebringer.maptool.extension.base.functions;
 
-import java.util.List;
-
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
-import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.FrameworksFunctions.Run;
+import de.jadebringer.maptool.extension.hook.FunctionCaller;
 import de.jadebringer.maptool.extension.hook.FunctionCaller.TokenWrapper;
+import java.util.List;
 import net.rptools.maptool.client.functions.TokenPropertyFunctions;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;

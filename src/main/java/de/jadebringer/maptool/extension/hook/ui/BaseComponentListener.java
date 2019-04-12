@@ -14,14 +14,13 @@
  */
 package de.jadebringer.maptool.extension.hook.ui;
 
+import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.jadebringer.maptool.extension.hook.FrameworksFunctions;
 import net.rptools.maptool.client.MapTool;
 
 public class BaseComponentListener implements ComponentListener {

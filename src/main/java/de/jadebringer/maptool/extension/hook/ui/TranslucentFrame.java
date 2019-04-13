@@ -125,7 +125,7 @@ public class TranslucentFrame {
     actualFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     actualFrame.setUndecorated(true);
     actualFrame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
-    actualFrame.setOpacity(0.65f);
+    actualFrame.setOpacity(0.80f);
     actualFrame.setAlwaysOnTop(true);
     JLabel label = new JLabel(prefixedFrameName);
     label.setFont(label.getFont().deriveFont(14f));

@@ -25,6 +25,7 @@ import de.jadebringer.maptool.extension.base.functions.MapFunctions;
 import de.jadebringer.maptool.extension.base.functions.OutputToFunction;
 import de.jadebringer.maptool.extension.base.functions.PingFunction;
 import de.jadebringer.maptool.extension.base.functions.SettingsFunctions;
+import de.jadebringer.maptool.extension.base.functions.TokenFunctions;
 import de.jadebringer.maptool.extension.hook.ExtensionBundle;
 import de.jadebringer.maptool.extension.hook.ExtensionChatMacro;
 import de.jadebringer.maptool.extension.hook.ExtensionFunction;
@@ -59,6 +60,7 @@ public class BaseExtension extends ExtensionBundle {
     functions.add(ButtonFrameFunctions.getInstance());
     functions.add(ContentFunctions.getInstance());
     functions.add(MapFunctions.getInstance());
+    functions.add(TokenFunctions.getInstance());
 
     chatMacros.add(new CallMacro());
 

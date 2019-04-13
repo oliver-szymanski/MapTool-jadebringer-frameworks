@@ -15,11 +15,13 @@
 package de.jadebringer.maptool.extension.hook;
 
 import de.jadebringer.maptool.extension.hook.ExtensionFunctions.Run;
+
 import java.math.BigDecimal;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolVariableResolver;
@@ -29,6 +31,10 @@ import net.rptools.maptool.model.Zone;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 import net.rptools.parser.function.Function;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
+import net.sf.json.util.PropertyFilter;
 
 public class FunctionCaller {
 
@@ -318,12 +324,63 @@ public class FunctionCaller {
 
     return null;
   }
+  
+  public static List<TokenWrapper>  findTokens(String nameRegEx, String zoneRegEx, boolean libOnly) throws ParserException {
+
+    List<TokenWrapper> foundTokenList = new LinkedList<>();
+
+    List<ZoneRenderer> zrenderers = MapTool.getFrame().getZoneRenderers();
+    for (ZoneRenderer zr : zrenderers) {
+      
+      if (zoneRegEx == null || zoneRegEx.length() == 0 || zr.getZone().getName().matches(zoneRegEx)) {
+        Zone zone = zr.getZone();
+        List<Token> tokenList =
+            zone
+                .getTokensFiltered(
+                    new Zone.Filter() {
+                      public boolean matchToken(Token t) {
+                        if (libOnly && !t.getName().matches("(?i)^lib:.*")) { return false; }
+                        
+                        if (nameRegEx == null || nameRegEx.length()==0 || t.getName().matches(nameRegEx)) {
+                          return true;
+                        }
+                        
+                        return false;
+                      }
+                    });
+
+        // return only visible tokens
+        for (Token token : tokenList) {
+          if (MapTool.getPlayer().isGM() || MapTool.getParser().isMacroTrusted() || token.isVisible()) {
+            foundTokenList.add(new TokenWrapper(token, zone));
+          }
+        }
+      }
+    }
+    return foundTokenList;
+  }
+  
+  public static JSONObject toJsonObject(Object obj) {
+    JsonConfig config = new JsonConfig();
+    // ignore cycle objects
+    config.setCycleDetectionStrategy(CycleDetectionStrategy.NOPROP);
+    // filter null elements
+    PropertyFilter pf =
+        new PropertyFilter() {
+          public boolean apply(Object source, String name, Object value) {
+            return value == null;
+          }
+        };
+    config.setJsonPropertyFilter(pf);
+    JSONObject json = JSONObject.fromObject(obj);
+    return json;
+  }
 
   public static class TokenWrapper {
     private Token token;
     private Zone zone;
 
-    private TokenWrapper(Token token, Zone zone) {
+    public TokenWrapper(Token token, Zone zone) {
       this.token = token;
       this.zone = zone;
     }
@@ -334,6 +391,20 @@ public class FunctionCaller {
 
     public Zone getZone() {
       return zone;
+    }
+    
+    public JSONObject toJsonObject() {
+      JSONObject json = new JSONObject();
+      json.put("tokenName", token.getName());
+      json.put("tokenGMName", token.getGMName());
+      json.put("tokenID", token.getId());
+      json.put("zoneName", zone.getName());
+      json.put("zoneID", zone.getId().toString());
+      return json;
+    }
+    
+    public JSONObject toJsonObjectFull() {
+      return FunctionCaller.toJsonObject(token);
     }
   }
 }

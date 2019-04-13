@@ -18,9 +18,17 @@ import de.jadebringer.maptool.extension.hook.ExtensionFunction;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctionButton;
 import de.jadebringer.maptool.extension.hook.ExtensionFunctions;
 import de.jadebringer.maptool.extension.hook.FunctionCaller;
+import de.jadebringer.maptool.extension.hook.FunctionCaller.TokenWrapper;
 import de.jadebringer.maptool.extension.hook.ui.ButtonFrame;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.rptools.maptool.client.MapTool;
+import net.rptools.maptool.model.MacroButtonProperties;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
@@ -42,6 +50,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
   public static final String FRAMES_HIDE_FRAME = "frames_hideFrame";
   public static final String FRAMES_HIDE_ALL_FRAMES = "frames_hideAllFrames";
   public static final String FRAMES_SHOW_ALL_FRAMES = "frames_showAllFrames";
+  public static final String FRAMES_AUTO_CREATE_FRAMES = "frames_autoCreateFrames";
 
   protected ButtonFrameFunctions() {
     super(
@@ -59,7 +68,8 @@ public class ButtonFrameFunctions extends ExtensionFunction {
         Alias.create(FRAMES_ENABLE_BUTTON, 4, 4),
         Alias.create(FRAMES_DISABLE_BUTTON, 4, 4),
         Alias.create(FRAMES_IS_HIDDEN_BUTTON, 4, 4),
-        Alias.create(FRAMES_IS_ENABLED_BUTTON, 4, 4));
+        Alias.create(FRAMES_IS_ENABLED_BUTTON, 4, 4),
+        Alias.create(FRAMES_AUTO_CREATE_FRAMES, 0, 0));
     setTrustedRequired(false);
   }
 
@@ -105,6 +115,8 @@ public class ButtonFrameFunctions extends ExtensionFunction {
       return isHiddenButton(parser, functionName, parameters);
     } else if (FRAMES_IS_ENABLED_BUTTON.equals(functionName)) {
       return isEnabledButton(parser, functionName, parameters);
+    } else if (FRAMES_AUTO_CREATE_FRAMES.equals(functionName)) {
+      return autoCreateFrames(parser, functionName, parameters);
     }
 
     return throwNotFoundParserException(functionName);
@@ -150,7 +162,7 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     ExtensionFunctions.getInstance().hideAllFrames();
   }
 
-  public Object addButton(Parser parser, String functionName, List<Object> parameters)
+  public ExtensionFunctionButton createButton(Parser parser, String functionName, List<Object> parameters)
       throws ParserException {
     String macroName = FunctionCaller.getParam(parameters, 0);
     String name = FunctionCaller.getParam(parameters, 1);
@@ -186,9 +198,24 @@ public class ButtonFrameFunctions extends ExtensionFunction {
           }
         };
 
-    ExtensionFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton, prefix);
+    return extensionFunctionButton;
+  }
+  
+  public Object addButton(ExtensionFunctionButton extensionFunctionButton, String prefix)
+      throws ParserException {
 
+    // remove any pre existing button with these details
+    removeButton(extensionFunctionButton.getName(), extensionFunctionButton.getGroup(), extensionFunctionButton.getFrame(), prefix);
+    
+    ExtensionFunctions.getInstance().addExtensionFunctionButton(extensionFunctionButton, prefix);
     return BigDecimal.ONE;
+  }
+
+  public Object addButton(Parser parser, String functionName, List<Object> parameters)
+      throws ParserException {
+    String prefix = FunctionCaller.getParam(parameters, 6);
+    ExtensionFunctionButton extensionFunctionButton = createButton(parser, functionName, parameters);
+    return addButton(extensionFunctionButton, prefix);
   }
 
   public Object showButton(Parser parser, String functionName, List<Object> parameters)
@@ -235,6 +262,11 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     String group = FunctionCaller.getParam(parameters, 1);
     String frame = FunctionCaller.getParam(parameters, 2);
     String prefix = FunctionCaller.getParam(parameters, 3);
+    return removeButton(name, group, frame, prefix);
+  }
+  
+  public Object removeButton(String name, String group, String frame, String prefix)
+      throws ParserException {
     ExtensionFunctionButton extensionFunctionButton =
         ExtensionFunctions.getInstance().getExtensionFunctionButton(name, group, frame, prefix);
     if (extensionFunctionButton == null) {
@@ -363,4 +395,65 @@ public class ButtonFrameFunctions extends ExtensionFunction {
     buttonFrame.update(extensionFunctionButton);
     return BigDecimal.ONE;
   }
+  
+  public Object autoCreateFrames(Parser parser, String functionName, List<Object> parameters)
+      throws ParserException {
+    String nameRegEx = FunctionCaller.getParam(parameters, 0, "");
+    String zoneRegEx = FunctionCaller.getParam(parameters, 1, "");
+    String frameName = FunctionCaller.getParam(parameters, 2, "Commands");
+    boolean libOnly = true;
+    String prefix = "";
+
+    String userType = MapTool.getPlayer().isGM() ? "GM" : "Player";
+    Pattern commandMetaDataPattern = Pattern.compile("^\\[h:\\s*'(("+userType+")|(ALL))-macro,?([^,']*),?([^,']*),?([^,']*)'\\]");
+
+    List<TokenWrapper> tokens = FunctionCaller.findTokens(nameRegEx, zoneRegEx, libOnly);
+    List<ExtensionFunctionButton> extensionFunctionButtons = new LinkedList<>();
+
+    for (TokenWrapper token : tokens) {
+      List<MacroButtonProperties> macros = token.getToken().getMacroList(false);
+      for(MacroButtonProperties macro : macros) {
+        String command = macro.getCommand();
+        if (command != null) {
+          Matcher matcher = commandMetaDataPattern.matcher(command);
+          if (matcher.find()) {
+            // this is a command that has a line like
+            // [h:'GM-macro,buttonName,groupName']
+            String macroName = macro.getLabel() + "@" + token.getToken().getName();
+            
+            String name = matcher.group(4);
+            String group = matcher.group(5);
+            String tooltip = matcher.group(6);
+            if (name == null || name.length()==0) {
+              name = macro.getLabel();
+            }
+            if (group == null || group.length()==0) {
+              group = macro.getGroup();
+            }
+            if (tooltip == null || tooltip.length()==0) {
+              tooltip = macro.getToolTip();
+            }
+            
+            String text = name;
+            String frame = frameName;
+            String imageFile = "";
+            boolean frameAndImage = false;
+            boolean trustedRequired = false;
+            if (group == null || group.length()==0) { group = "Common"; }
+            ExtensionFunctionButton extensionFunctionButton =
+              createButton(parser, functionName, FunctionCaller.toObjectList(macroName, name, text, tooltip, group, frame, prefix, imageFile, frameAndImage, trustedRequired));
+            extensionFunctionButtons.add(extensionFunctionButton);
+          }
+        }
+      }
+    }
+    
+    Collections.sort(extensionFunctionButtons);
+    for(ExtensionFunctionButton extensionFunctionButton : extensionFunctionButtons) {
+      addButton(extensionFunctionButton, prefix);
+    }
+    
+    return "";
+  }  
+    
 }

@@ -58,6 +58,13 @@ More info on [jadebringer.de](http://www.jadebringer.de)
       <!-- change button text: -->
       [h: frames_setButtonText("testbutton", "simple tests", "testing", "", "on my command")]
       ~~~
+    - Button frames for existing macros can be automatically created. Just call:
+      ~~~
+      frames_autoCreateFrames(nameRegEx, zoneRegEx [, frameName])
+      ~~~
+      This scans macros if they have a line like `[h:'GM-macro,NAME,GROUP,TOOLTIP']`
+        or `[h:'ALL-macro,NAME,GROUP,TOOLTIP']` as 1st line. If yes it will auto create 
+          frames. Afterwards show the frame with `frames_showFrame("frameName")`.
 - inspect and manipulate variables in macros
     - via `debug_inspect(variableNames)` or `debug_manipulate(variablesNames)`
     - other debug related functions as `debug/trace/warn/error`

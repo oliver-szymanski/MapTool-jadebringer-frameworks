@@ -14,13 +14,15 @@
  */
 package de.jadebringer.maptool.extension.hook;
 
+import java.util.Comparator;
+
 import net.rptools.maptool.client.MapTool;
 import net.rptools.maptool.client.MapToolLineParser;
 import net.rptools.maptool.client.MapToolMacroContext;
 import net.rptools.parser.Parser;
 import net.rptools.parser.ParserException;
 
-public abstract class ExtensionFunctionButton {
+public abstract class ExtensionFunctionButton implements Comparable<ExtensionFunctionButton> {
 
   private String name;
   private String text;
@@ -94,7 +96,7 @@ public abstract class ExtensionFunctionButton {
 
   public String getPrefixedFrame() {
     if (this.prefix != null && prefix.length() > 0) {
-      return prefix.substring(0, prefix.length() - 1) + ": " + frame;
+      return prefix + ": " + frame;
     }
     return frame;
   }
@@ -149,5 +151,14 @@ public abstract class ExtensionFunctionButton {
 
   void setPrefix(String prefix) {
     this.prefix = prefix;
+  }
+  
+  @Override
+  public int compareTo(ExtensionFunctionButton o) {
+    return Comparator.comparing(ExtensionFunctionButton::getPrefix, Comparator.nullsLast(String::compareTo))
+        .thenComparing(ExtensionFunctionButton::getFrame, Comparator.nullsLast(String::compareTo))
+        .thenComparing(ExtensionFunctionButton::getGroup, Comparator.nullsLast(String::compareTo))
+        .thenComparing(ExtensionFunctionButton::getText, Comparator.nullsLast(String::compareTo))
+        .compare(this, o);
   }
 }

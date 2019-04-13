@@ -628,6 +628,7 @@ public class ExtensionFunctions implements Function, EventHandler {
             accessControlContextForExtensionFunctions);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new ParserException(e);
     }
     return result;

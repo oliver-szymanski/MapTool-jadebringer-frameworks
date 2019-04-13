@@ -130,6 +130,7 @@ import org.apache.commons.lang.StringUtils;
  */
 // @formatter:on
 
+@SuppressWarnings(value = { "unused", "rawtypes", "unchecked"})
 public class InputFunctions extends FunctionToExtensionFunctionBridge {
   private static final Pattern ASSET_PATTERN = Pattern.compile("^(.*)asset://(\\w+)");
 
@@ -1240,6 +1241,7 @@ public class InputFunctions extends FunctionToExtensionFunctionBridge {
   }
 
   /** JLabel variant that listens for new image data, and redraws its icon. */
+  @SuppressWarnings("serial")
   public class UpdatingLabel extends JLabel {
     private String macroLink;
 

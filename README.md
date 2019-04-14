@@ -133,7 +133,7 @@ that need to be run on the players side, the players need to install this as wel
 ## Requisites
 
 The only thing you need to make this extension available in MapTool is the release artifact.
-E.g. that's _MapTool-jadebringer-extension-v0.0.4.jar_
+E.g. that's _MapTool-jadebringer-extension-v0.0.5.jar_
 You can download one from the [releases](https://github.com/source-knights/MapTool-jadebringer-extension/releases) in Github or if you are a developer you can build 
 it from source as described in the [BUILD](BUILD.MD) documentation.
 
@@ -157,10 +157,10 @@ Note: You might want to copy the file just in case that you do not want to use t
 anymore. If that is the case (we hope not) just copy this backup of the original file 
 back and override the change file.
 
-Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-extension-v0.0.4.jar"
+Now open the file and change the line with "app.classpath" to include the "MapTool-jadebringer-extension-v0.0.5.jar"
 
 ~~~
-app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-extension-v0.0.4.jar
+app.classpath=MapTool-1.5.1.jar;MapTool-jadebringer-extension-v0.0.5.jar
 ~~~
 
 	
@@ -170,7 +170,7 @@ And the line with "app.mainclass" to match this:
 app.mainclass=de/jadebringer/maptool/extension/LaunchInstructionsWrapper
 ~~~
 
-Then copy the "MapTool-jadebringer-extension-v0.0.4.jar" inside this app directory. Now you can start MapTool as usual.
+Then copy the "MapTool-jadebringer-extension-v0.0.5.jar" inside this app directory. Now you can start MapTool as usual.
 
 ## First steps
 
